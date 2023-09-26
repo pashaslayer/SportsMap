@@ -25,8 +25,15 @@ def get_db_connection():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    data = request.get_json()
+    if not data:
+        return abort(404)
+
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return abort(404)
 
     conn = get_db_connection()
     if conn is not None:
@@ -37,7 +44,9 @@ def login():
         if user and bcrypt.checkpw(password.encode('utf-8'), user[2].encode('utf-8')):
             cur.close()
             conn.close()
-            return redirect(url_for('index'))
+            users_json = {"id": user[0], "username": user[1], "password": user[2]}
+            return jsonify(users_json)
+
         else:
             return abort(404)
         cur.close()
@@ -62,17 +71,15 @@ def register():
         existing_user = cur.fetchone()
 
         if existing_user:
-            return abort(404)  # Return an appropriate response indicating that the user already exists.
+            return abort(404)
         else:
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             cur.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password))
-            conn.commit()  # Commit the transaction to save the changes to the database.
+            conn.commit()
 
             cur.close()
             conn.close()
-
-            return "User registered successfully"  # Return a success message or a redirect if needed.
 
     else:
         return abort(404)
@@ -89,9 +96,8 @@ def get_all_users():
 
         cur.close()
         conn.close()
-
-        return users
-
+        users_json = [{"id": row[0], "username": row[1]} for row in users]
+        return jsonify(users_json)
     else:
         return abort(404)
 
