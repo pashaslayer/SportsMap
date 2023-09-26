@@ -1,5 +1,5 @@
 <template>
-<form>
+<form v-on:submit.prevent="registration">
   <div class="mb-3">
     <label for="firstname" class="form-label">Firstname: </label>
     <input v-model="firstname" type="text" class="form-control" id="firstname-label" 
@@ -66,7 +66,17 @@
       </div>
     </div>
   
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button v-on:click="submit" type="submit" class="btn btn-primary">Submit</button>
+
+  <br>
+  <br>
+  <br>
+
+  <p1>
+    {{ success }}
+  </p1>
+
+   
 </form>
 </template>
 
@@ -86,6 +96,7 @@
         password: "",
         birthdate: "",
         gender:"",
+        success:"",
       };
     },
     methods: {
@@ -109,6 +120,7 @@
   
           if (response.ok) {
             console.log('Login successful');
+            this.success = "Data successfully transmitted!"
           } else {
             console.error('Login failed');
           }

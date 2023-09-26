@@ -10,8 +10,15 @@
     <input v-model="password" type="password" class="form-control" id="password-label" aria-describedby="passwordHelp" required>
     <div id="passwordHelp" class="form-text">We'll never share your password with anyone else.</div>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button v-on:click="login" type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+<br>
+<br>
+<br>
+
+<p1> {{ success }}</p1>
+
   </template>
   
   
@@ -20,7 +27,8 @@
     data() {
       return {
         email: '',
-        password: ""
+        password: "",
+        success: "",
       };
     },
     methods: {
@@ -39,6 +47,7 @@
   
           if (response.ok) {
             console.log('Login successful');
+            this.success = "Login successful";
           } else {
             console.error('Login failed');
           }
