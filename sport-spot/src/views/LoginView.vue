@@ -34,7 +34,7 @@
     methods: {
       async login() {
         try {
-          const response = await fetch('YOUR_API_ENDPOINT/login', {
+          const response = await fetch('http://127.0.0.1:5000/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -52,7 +52,7 @@
             console.error('Login failed');
           }
         } catch (error) {
-          console.error('Error:', error);
+          console.error('Error gay mighdsaf:', error);
         }
       },
     },

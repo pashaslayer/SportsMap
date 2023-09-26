@@ -1,30 +1,30 @@
 <template>
-<form v-on:submit.prevent="registration">
+<form v-on:submit="registration">
   <div class="mb-3">
     <label for="firstname" class="form-label">Firstname: </label>
     <input v-model="firstname" type="text" class="form-control" id="firstname-label" 
-    onkeydown="return /[a-z]/i.test(event.key)" required>
+    onkeydown="return /[a-z]/i.test(event.key)" >
     <!-- Validation: only string + space input -->
   </div>
   <div class="mb-3">
     <label for="lastname" class="form-label">Lastname: </label>
     <input v-model="lastname" type="text" class="form-control" id="lastname-label"
-    onkeydown="return /[a-z]/i.test(event.key)" required>
+    onkeydown="return /[a-z]/i.test(event.key)" >
     <!-- Validation: only string + space input -->
   </div>
   <div class="mb-3">
     <label for="birthdate" class="form-label">Birthdate: </label>
     <input v-model="birthdate" type="date" class="form-control" id="date-label" 
-      min="1900-01-01" max="2002-12-31" required />
+      min="1900-01-01" max="2002-12-31"  />
   </div>
   <div class="mb-3">
     <label for="username" class="form-label">Username: </label>
-    <input v-model="username" type="text" class="form-control" id="username-label" onkeydown="return /[a-z,1-9,!,?,_]/i.test(event.key)" required
+    <input v-model="username" type="text" class="form-control" id="username-label" onkeydown="return /[a-z,1-9,!,?,_]/i.test(event.key)"
     minlength="6" maxlength="10">
   </div>
   <div class="mb-3">
     <label for="email-label" class="form-label">Email: </label>
-    <input v-model="email" type="email" id="email-label" aria-describedby="emailHelp" required>
+    <input v-model="email" type="email" id="email-label" aria-describedby="emailHelp">
     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
   </div>
   <div class="mb-3">
@@ -102,19 +102,19 @@
     methods: {
       async registration() {
         try {
-          const response = await fetch('YOUR_API_ENDPOINT/register', {
+          const response = await fetch('http://127.0.0.1:5000/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              email: this.email,
-              firstname: this.firstname,
-              lastname: this.lastname,
+              //email: this.email,
+              //firstname: this.firstname,
+              //lastname: this.lastname,
               username: this.username,
               password: this.password,
-              birthdate: this.birthdate,
-              gender: this.gender,
+              //birthdate: this.birthdate,
+              //gender: this.gender,
             }),
           });
   
@@ -125,7 +125,7 @@
             console.error('Login failed');
           }
         } catch (error) {
-          console.error('Error:', error);
+          console.error('Error gay:', error);
         }
       },
     },
