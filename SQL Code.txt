@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS public.users;
+
+CREATE TABLE users (
+    Id SERIAL PRIMARY KEY,
+    firstname VARCHAR(255),
+    surname VARCHAR(255),
+    username VARCHAR(255),
+    password VARCHAR(255),
+    birthdate DATE,
+    email VARCHAR(255),
+    fav_sports VARCHAR(255)[] NOT NULL DEFAULT '{}',
+    gender CHAR(1),
+    postal_code VARCHAR(10)
+);
