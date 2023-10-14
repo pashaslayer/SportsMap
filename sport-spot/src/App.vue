@@ -1,34 +1,49 @@
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page"><router-link to="/">Home</router-link></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"><router-link to="/about">About</router-link></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"><router-link to="/login">Login</router-link></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"><router-link to="/registration">Registration</router-link></a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>
+<!--  
+  data-bs-keyboard        ... schließen des bootstrap offcanvas mittels esc
+  data-bs-backdrop="true" ... schließen des offcanvas geht mit Klick auf restliche fläche falls "false" ... schließen geht nur über button rest ist mit unsichtbarem gitter
+  d-none                  ... Diese Klasse bewirkt, dass das Element nicht auf dem Bildschirm sichtbar ist, es bleibt jedoch im HTML-Dokument vorhanden
+  d-sm-block              ... Diese Klasse gehört zu den Responsive-Utilities von Bootstrap und ermöglicht es, Elemente je nach Bildschirmgröße und Breakpoint anzuzeigen oder auszublenden.
+  px-0                    ... Die CSS-Klasse px-0 wird in Bootstrap verwendet, um den horizontalen (X-Achse) Padding (Innenabstand) eines HTML-Elements auf null zu setzen
+  <i class="fs-5 bi-table"> .. für icon geht aber nicht bei links daher löäschen
 
+-->
+<div class="offcanvas offcanvas-start w-15" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="true">
+    <div class="offcanvas-header">
+        <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body px-0">
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+            <li class="nav-item">
+                <a class="nav-link text-truncate"> 
+                    <span class="ms-1 d-none d-sm-inline"><router-link to="/">Home</router-link></span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link text-truncate">
+                    <span class="ms-1 d-none d-sm-inline"><router-link to="/about">About</router-link></span> </a>
+            </li>
+            <li>
+                <a class="nav-link text-truncate">
+                    <span class="ms-1 d-none d-sm-inline"><router-link to="/login">Login</router-link></span> </a>
+            </li>
+            <li>
+                <a class="nav-link text-truncate">
+                    <span class="ms-1 d-none d-sm-inline"><router-link to="/registration">Registration</router-link></span> </a>
+            </li>
+            <li>
+                <a class="nav-link text-truncate">
+                    <span class="ms-1 d-none d-sm-inline"><router-link to="/about">About</router-link></span> </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<button class="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+  <i class="fa-solid fa-bars fa-xl" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
+            </button>
+            <br>
   <router-view/>
 </template>
 
@@ -38,7 +53,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: whitesmoke;
+  border: 5px;
+  border-color: black;
+}
+
+body{
+  background-color: #108EB3;
+  color: whitesmoke;
+  border: 5px;
+  border-color: black;
 }
 
 nav {

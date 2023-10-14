@@ -10,6 +10,7 @@
     <br>
     <input v-model="sameText" />
     <h3>{{ sameText }}</h3>
+    <p> {{ tets }}</p>
 
     <!-- 
       IF ELSE
@@ -40,7 +41,8 @@ export default {
     return {
       message: "Hello World",
       random: 0,
-      sameText: "nihao"
+      sameText: "nihao",
+      tets: localStorage.getItem('Name')
     };
   },
 
