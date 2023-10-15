@@ -1,7 +1,6 @@
 import os
 import secrets
-from datetime import datetime
-
+from datetime import datetime, timedelta
 import psycopg2
 from flask import Flask, render_template, request, url_for, redirect, flash, abort, jsonify
 from flask_cors import CORS
@@ -30,7 +29,15 @@ def get_db_connection():
 def generate_token(user_id):
     payload = {
         'user_id': user_id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        'exp': datetime.utcnow() + timedelta(hours=1)
+        # 'username': username,
+        # 'firstname': firstname,
+        # 'surname': surname,
+        # 'birthdate' : birthdate,
+        # 'email' : email,
+        # 'fav_sports' : fav_sports,
+        # 'gender' : gender,
+        # 'postal_code' : postal_code,
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -54,13 +61,16 @@ def login():
         cur.execute('SELECT * FROM users WHERE username = %s', (username,))
         user = cur.fetchone()
 
-        if user and bcrypt.checkpw(password.encode('utf-8'), user[2].encode('utf-8')):
+        # Eventuell spätere Passwortverschlüsselung auf Browserebene
+
+        if user and bcrypt.checkpw(password.encode('utf-8'), user[4].encode('utf-8')):
             cur.close()
             conn.close()
             user_id = user[0]
             token = generate_token(user_id)
+            #token = generate_token(user_id, user[1], user[2], user[3], user[4], user[5], user[6], user[7], user[8])
             user_data = {"id": user[0],  "firstname": user[1], "surname": user[2],  "username": user[3], "birthdate": user[4], "email": user[5],  "fav_sports": user[6], "gender": user[7], "postal_code": user[8]}
-            #kein Passwort
+            # kein Passwort
             return jsonify({'token': token, 'user': user_data})
 
         else:
@@ -95,18 +105,22 @@ def register():
         existing_user = cur.fetchone()
 
         if existing_user:
-            return abort(404)
+            cur.close()
+            conn.close()
+            return jsonify({'message': 'Username already exists'}), 400  # Return an error
         else:
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            salt = bcrypt.gensalt()
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
 
             cur.execute(
-                'INSERT INTO users (firstname, surname, username, password, birthdate, email, fav_sports, gender, postal_code) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                (firstname, surname, username, hashed_password, birthdate, email, fav_sports, gender, postal_code))
+                'INSERT INTO users (firstname, surname, username, password, birthdate, email, fav_sports, '
+                'gender, postal_code) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                (firstname, surname, username, hashed_password.decode('utf-8'), birthdate, email, fav_sports, gender, postal_code))
             conn.commit()
 
             cur.close()
             conn.close()
-
+            return jsonify({'message': 'Registration successful'}), 201  # Return a success
     else:
         return abort(404)
 
@@ -128,6 +142,6 @@ def get_all_users():
         return abort(404)
 
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     app.secret_key = secrets.token_hex(16)
     app.run(debug=True)

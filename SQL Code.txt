@@ -12,3 +12,15 @@ CREATE TABLE users (
     gender CHAR(1),
     postal_code VARCHAR(10)
 );
+
+{
+    "firstname": "nihao",
+    "surname": "Ma",
+    "username": "nihaoma",
+    "password": "nihaoma123",
+    "birthdate": "1990-01-15",
+    "email": "johndoe@example.com",
+    "fav_sports": ["Basketball", "Soccer", "Tennis"],
+    "gender": "M",
+    "postal_code": "1235"
+}
