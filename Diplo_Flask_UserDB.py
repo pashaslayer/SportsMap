@@ -1,6 +1,8 @@
 import os
 import secrets
 from datetime import datetime, timedelta
+from typing import re
+
 import psycopg2
 from flask import Flask, render_template, request, url_for, redirect, flash, abort, jsonify
 from flask_cors import CORS
@@ -109,6 +111,31 @@ def register():
             conn.close()
             return jsonify({'message': 'Username already exists'}), 400  # Return an error
         else:
+            # Verifizierung
+            if not firstname or len(firstname.strip()) < 2:
+                return jsonify({'message': 'Vorname muss mindestens 2 Zeichen lang sein'}), 400
+
+            if not surname or len(surname.strip()) < 2:
+                return jsonify({'message': 'Nachname muss mindestens 2 Zeichen lang sein'}), 400
+
+            if not username or len(username.strip()) < 2:
+                return jsonify({'message': 'Username muss mindestens 2 Zeichen lang sein'}), 400
+
+            if re.match(r"^(?=.*\d)(?=.*[A-Z]).{9}$", password):
+                return jsonify({'message': 'Das Passwort muss eine Ziffer, einen Großbuchstaben und neun Zeichen lang sein'}), 400
+
+            if not email or '@' not in email:
+                return jsonify({'message': 'Vorname muss mindestens 2 Zeichen lang sein'}), 400
+
+            if not postal_code:
+                return jsonify({'message': 'Wir benötigen als Sicherheitsmaßnahme ihre Postleizahl'}), 400
+
+            if not fav_sports:
+                fav_sports = {}
+
+            if not gender:
+                gender = 'o'
+
             salt = bcrypt.gensalt()
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
 
