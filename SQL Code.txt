@@ -24,3 +24,6 @@ CREATE TABLE users (
     "gender": "M",
     "postal_code": "1235"
 }
+
+
+flask-cors
