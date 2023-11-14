@@ -30,38 +30,6 @@ def get_db_connection():
         print("Error connecting to the database:", e)
         return None
 
-def generate_random_character():
-    characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    return random.choice(characters)
-
-def generate_captcha_text(length):
-    return "".join(generate_random_character() for _ in range(length))
-def Captcha():
-        dwg = svgwrite.Drawing('captcha.svg', profile='tiny', size=(150, 50))
-        captcha_text = generate_captcha_text(6)
-
-        for i in range(len(captcha_text)):
-            x = i * 25 + 10
-            y = 30
-            rotation = random.randint(-30, 30)
-            char = captcha_text[i]
-
-            # Zeichne das Zeichen mit Rotation
-            dwg.add(
-                dwg.text(char, insert=(x, y), fill='black', font_size=20, transform=f"rotate({rotation}, {x}, {y})"))
-
-            # Füge Linienmuster hinzu
-            for _ in range(10):
-                x1 = random.uniform(x - 5, x + 15)
-                y1 = random.uniform(y - 10, y + 10)
-                x2 = random.uniform(x - 5, x + 15)
-                y2 = random.uniform(y - 10, y + 10)
-                dwg.add(dwg.line(start=(x1, y1), end=(x2, y2), stroke=svgwrite.rgb(0, 0, 0, '%')))
-
-                dwg.save()
-                print("Captcha wurde in 'captcha.svg' gespeichert.")
-
-
 def generate_token(user_id):
     payload = {
         'user_id': user_id,
