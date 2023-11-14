@@ -189,10 +189,9 @@ def delete():
         # Rückruf
 
 
-###########
+##########
 # Captcha
 ##########
-
 @app.route("/getCaptcha", methods=["GET"])
 def get_captcha_data():
     svg_path = 'Captcha/captcha.svg'
@@ -204,8 +203,7 @@ def get_captcha_data():
         svg_content = svg_file.read()
 
     response_data = {
-        'svg': svg_content,
-        'text': text_captcha
+        'svg': svg_content
     }
 
     return jsonify(response_data)

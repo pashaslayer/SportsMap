@@ -43,8 +43,3 @@ def create_captcha_svg(captcha_text):
 
             dwg.save()
             print("Captcha wurde in 'captcha.svg' gespeichert.")
-
-
-if __name__ == '__main__':
-    captcha_text = generate_captcha_text(5)
-    create_captcha_svg(captcha_text)

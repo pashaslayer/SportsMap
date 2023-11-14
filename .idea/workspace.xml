@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="457d2041-82f0-46aa-bbfb-060ae57ac2b1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/SportSpot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SportSpot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Captcha/captcha.svg" beforeDir="false" afterPath="$PROJECT_DIR$/Captcha/captcha.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/captcha.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/vue.config.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,8 +52,8 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Flask server.Flask (Diplo_Flask_UserDB.py)">
-    <configuration name="SportSpot" type="PythonConfigurationType" factoryName="Python">
+  <component name="RunManager" selected="Python.SportSpot">
+    <configuration name="SportSpot" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SportSpot" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -55,11 +62,32 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Diplo_Flask_UserDB.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="first_main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SportSpot" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Captcha" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Captcha/first_main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -85,7 +113,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Flask server.Flask (Diplo_Flask_UserDB.py)" />
+        <item itemvalue="Python.SportSpot" />
+        <item itemvalue="Python.first_main" />
       </list>
     </recent_temporary>
   </component>
@@ -106,7 +135,15 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SportSpot$Flask__Diplo_Flask_UserDB_py_.coverage" NAME="Flask (Diplo_Flask_UserDB.py) Coverage Results" MODIFIED="1699965049603" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
