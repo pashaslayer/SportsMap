@@ -193,33 +193,23 @@ def delete():
 # Captcha
 ##########
 
+@app.route("/getCaptcha", methods=["GET"])
 def get_captcha_data():
-    captcha_text = generate_captcha_text(5)
-    create_captcha_svg(captcha_text)
+    svg_path = 'Captcha/captcha.svg'
 
-'''
-    # Replace 'path/to/your/svg/file.svg' with the actual path to your SVG file
-    svg_path = 'path/to/your/svg/file.svg'
+    text_captcha = generate_captcha_text(5)
+    create_captcha_svg(text_captcha)
 
-    # Read the content of the SVG file
     with open(svg_path, 'r') as svg_file:
         svg_content = svg_file.read()
 
-    # Replace 'Your Text Here' with the desired text
-    response_text = 'Your Text Here'
-
-    # Combine the SVG content and text into a response
     response_data = {
         'svg': svg_content,
-        'text': response_text
+        'text': text_captcha
     }
 
-    # You can also use send_file to send the SVG file directly
-    # return send_file(svg_path, mimetype='image/svg+xml')
-
-    # Return the response as JSON
     return jsonify(response_data)
-'''
+
 
 if __name__ == '__main__':
     app.secret_key = secrets.token_hex(16)
