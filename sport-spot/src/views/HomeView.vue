@@ -43,7 +43,7 @@ export default {
       random: 0,
       sameText: "nihao",
       tets: localStorage.getItem('Name')
-    };
+    }
   },
 
   methods: {

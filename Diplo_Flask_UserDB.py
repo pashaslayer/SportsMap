@@ -85,6 +85,12 @@ def login():
     conn.close()
 
 
+# Konvertiert das Geschlecht da Auswahl zwischen (male, female, other), aber Speicherung in der Datenbank
+# als (m, f, o)
+def convert_gender(gender):
+    return gender[0].lower() if gender in ['male', 'female'] else 'o'
+
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -96,9 +102,9 @@ def register():
     password = data.get('password')
     birthdate = data.get('birthdate')
     email = data.get('email')
-    fav_sports = data.get('fav_sports')
-    gender = data.get('gender')
-    postal_code = data.get('postal_code')
+    fav_sports = data.get('sports')
+    gender = convert_gender(data.get('gender'))
+    postal_code = data.get('postalcode')
 
     if not username or not password:
         return abort(404)

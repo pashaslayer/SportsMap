@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="457d2041-82f0-46aa-bbfb-060ae57ac2b1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/SportSpot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SportSpot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="457d2041-82f0-46aa-bbfb-060ae57ac2b1" name="Changes" comment="commitment to nepopo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Captcha/captcha.svg" beforeDir="false" afterPath="$PROJECT_DIR$/Captcha/captcha.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/captcha.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/vue.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/components/HelloWorld.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/components/HelloWorld.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/HomeView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/HomeView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/LoginView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/LoginView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/RegistrationView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/RegistrationView.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,6 +127,14 @@
       <workItem from="1699958697218" duration="1991000" />
       <workItem from="1699964443698" duration="997000" />
     </task>
+    <task id="LOCAL-00001" summary="commitment to nepopo">
+      <created>1699984532922</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1699984532922</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,5 +150,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="commitment to nepopo" />
+    <option name="LAST_COMMIT_MESSAGE" value="commitment to nepopo" />
   </component>
 </project>

@@ -4,9 +4,19 @@
       <!-- First Row (1 Column) -->
       <div class="row">
         <div class="col-12">
+          <!-- draggable verhindert das verschieben von images -->
           <img
+            v-if="!wheelAnimation"
             src="@/assets/logo_vektor_01_white.svg"
             class="rounded mx-auto d-block"
+            draggable="false"
+          />
+          <img
+            v-if="wheelAnimation"
+            src="@/assets/logo_vektor_01_white.svg"
+            class="rounded mx-auto d-block wheel-animation"
+            draggable="false"
+            @animationend="stopWheelAnimation"
           />
           <h1>{{ title }}</h1>
         </div>
@@ -24,7 +34,6 @@
               type="text"
               class="form-control"
               id="firstname-label"
-              onkeydown="return /[a-z]/i.test(event.key) required"
             />
           </div>
           <div class="col-md-2 border border-white">
@@ -37,7 +46,6 @@
               type="text"
               class="form-control"
               id="username-label"
-              onkeydown="return /[a-z,1-9,!,?,_]/i.test(event.key) required"
               minlength="6"
               maxlength="10"
             />
@@ -60,16 +68,15 @@
         <!-- Third Row (6 Columns) -->
         <div class="row">
           <div class="col-md-2 border border-white">
-            <label for="lastname" class="form-label">Lastname: </label>
+            <label for="surname" class="form-label">Surname: </label>
           </div>
           <div class="col-md-2 border border-white">
             <!--Input Nachname-->
             <input
-              v-model="postData.lastname"
+              v-model="postData.surname"
               type="text"
               class="form-control"
-              id="lastname-label"
-              onkeydown="return /[a-z]/i.test(event.key) required"
+              id="surname-label"
             />
           </div>
           <div class="col-md-2 border border-white">
@@ -96,7 +103,6 @@
               type="text"
               class="form-control"
               id="postalcode-label"
-              onkeydown="return /[1-9]/i.test(event.key)"
               maxlength="8"
             />
           </div>
@@ -113,7 +119,7 @@
         <!-- Fifth Row (2 Columns) -->
         <div class="row">
           <div class="col-md-6">
-            <input id="startDate" class="form-control" type="date" />
+            <input id="startDate" class="form-control" type="date" v-model="postData.birthdate"/>
           </div>
           <div class="col-md-6">
             <select
@@ -134,7 +140,7 @@
         <!-- Sixth Row (2 Columns for Buttons) -->
         <div class="row">
           <div class="col-md-6 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Bestätigen</button>
+            <button type="submit" class="btn btn-primary" @click="postRegister">Bestätigen</button>
           </div>
           <div class="col-md-6 d-flex justify-content-start">
             <button type="submit" class="btn btn-secondary">Abbrechen</button>
@@ -143,9 +149,9 @@
       </form>
     </div>
 
-    <div class="info">
+    <div v-if="testing" class="info">
       <p>Firstname: {{ postData.firstname }}</p>
-      <p>Lastname: {{ postData.lastname }}</p>
+      <p>Surname: {{ postData.surname }}</p>
       <p>Username: {{ postData.username }}</p>
       <p>Password: {{ postData.password }}</p>
       <p>Birthdate: {{ postData.birthdate }}</p>
@@ -183,12 +189,27 @@ Daten für die Userregistrierung
   margin-bottom: 1cm;
 }
 
+img{
+  /* Verhindert das Auswählen vom image */
+  user-select: none;
+}
+
 .tocenter {
   width: 1600px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Logik für das Drehen vom Logo */ 
+@keyframes wheelSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
 
@@ -199,9 +220,12 @@ export default {
   data() {
     return {
       title: "SportSpot Registrierung",
+      // Kleines Fenster zur Anzeige von Userinputs bei Verstellung des (testing) Wertes wird dieses angezeigt oder versteckt
+      testing: false,
+      wheelAnimation: false,
       postData: {
         firstname: "",
-        lastname: "",
+        surname: "",
         username: "",
         password: "",
         birthdate: "",
@@ -224,7 +248,26 @@ export default {
     postRegister() {
       axios
         .post("http://127.0.0.1:5000/register", this.postData)
-        .then((response) => console.log(response));
+        .then((response) => {
+          console.log(response);
+          this.startWheelAnimation();
+
+            this.startWheelAnimation();
+
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 2000);
+          
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    startWheelAnimation() {
+      this.wheelAnimation = true;
+    },
+    stopWheelAnimation() {
+      this.wheelAnimation = false;
     },
   },
 };
