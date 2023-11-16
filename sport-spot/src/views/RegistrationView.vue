@@ -5,20 +5,11 @@
       <div class="row">
         <div class="col-12">
           <!-- draggable verhindert das verschieben von images -->
-          <img
-            v-if="!wheelAnimation"
-            src="@/assets/logo_vektor_01_white.svg"
-            class="rounded mx-auto d-block"
-            draggable="false"
-          />
-          <img
-            v-if="wheelAnimation"
-            src="@/assets/logo_vektor_01_white.svg"
-            class="rounded mx-auto d-block wheel-animation"
-            draggable="false"
-            @animationend="stopWheelAnimation"
-          />
-          <h1>{{ title }}</h1>
+          <img v-if="!wheelAnimation" src="@/assets/logo_vektor_01_white.svg" class="rounded mx-auto d-block"
+            draggable="false" />
+          <img v-if="wheelAnimation" src="@/assets/logo_vektor_01_white.svg"
+            class="rounded mx-auto d-block wheel-animation" draggable="false" @animationend="stopWheelAnimation" />
+          <h1 class="title">{{ title }}</h1>
         </div>
       </div>
 
@@ -29,39 +20,22 @@
             <label for="firstname" class="form-label">Firstname:</label>
           </div>
           <div class="col-md-2 border border-white">
-            <input
-              v-model="postData.firstname"
-              type="text"
-              class="form-control"
-              id="firstname-label"
-            />
+            <input v-model="postData.firstname" type="text" class="form-control" id="firstname-label" />
           </div>
           <div class="col-md-2 border border-white">
             <label for="username" class="form-label">Username: </label>
           </div>
           <div class="col-md-2 border border-white">
             <!--Input Benutzername-->
-            <input
-              v-model="postData.username"
-              type="text"
-              class="form-control"
-              id="username-label"
-              minlength="6"
-              maxlength="10"
-            />
+            <input v-model="postData.username" type="text" class="form-control" id="username-label" minlength="6"
+              maxlength="10" />
           </div>
           <div class="col-md-2 border border-white">
             <label for="email-label" class="form-label">Email: </label>
           </div>
           <div class="col-md-2 border border-white">
             <!--Input Email-->
-            <input
-              v-model="postData.email"
-              type="email"
-              id="email-label"
-              aria-describedby="emailHelp"
-              required
-            />
+            <input v-model="postData.email" type="email" id="email-label" aria-describedby="emailHelp" required />
           </div>
         </div>
 
@@ -72,39 +46,22 @@
           </div>
           <div class="col-md-2 border border-white">
             <!--Input Nachname-->
-            <input
-              v-model="postData.surname"
-              type="text"
-              class="form-control"
-              id="surname-label"
-            />
+            <input v-model="postData.surname" type="text" class="form-control" id="surname-label" />
           </div>
           <div class="col-md-2 border border-white">
             <label for="password" class="form-label">Password: </label>
           </div>
           <div class="col-md-2 border border-white">
             <!--Input Passwort-->
-            <input
-              v-model="postData.password"
-              type="password"
-              class="form-control"
-              id="password-label"
-              aria-describedby="passwordHelp"
-              required
-            />
+            <input v-model="postData.password" type="password" class="form-control" id="password-label"
+              aria-describedby="passwordHelp" required />
           </div>
           <div class="col-md-2 border border-white">
             <label for="postalcode" class="form-label">Postalcode: </label>
           </div>
           <div class="col-md-2 border border-white">
             <!--Input Plz-->
-            <input
-              v-model="postData.postalcode"
-              type="text"
-              class="form-control"
-              id="postalcode-label"
-              maxlength="8"
-            />
+            <input v-model="postData.postalcode" type="text" class="form-control" id="postalcode-label" maxlength="8" />
           </div>
         </div>
 
@@ -119,15 +76,10 @@
         <!-- Fifth Row (2 Columns) -->
         <div class="row">
           <div class="col-md-6">
-            <input id="startDate" class="form-control" type="date" v-model="postData.birthdate"/>
+            <input id="startDate" class="form-control" type="date" v-model="postData.birthdate" />
           </div>
           <div class="col-md-6">
-            <select
-              v-model="postData.gender"
-              id="sports"
-              class="form-select"
-              required
-            >
+            <select v-model="postData.gender" id="sports" class="form-select" required>
               <option value="male">male</option>
               <option value="female">female</option>
               <option value="other">other</option>
@@ -140,10 +92,10 @@
         <!-- Sixth Row (2 Columns for Buttons) -->
         <div class="row">
           <div class="col-md-6 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary" @click="postRegister">Bestätigen</button>
+            <button type="submit" class="btn btn-primary">Bestätigen</button>
           </div>
           <div class="col-md-6 d-flex justify-content-start">
-            <button type="submit" class="btn btn-secondary">Abbrechen</button>
+            <button type="button" class="btn btn-secondary">Abbrechen</button>
           </div>
         </div>
       </form>
@@ -189,8 +141,12 @@ Daten für die Userregistrierung
   margin-bottom: 1cm;
 }
 
-img{
+img {
   /* Verhindert das Auswählen vom image */
+  user-select: none;
+}
+
+.title {
   user-select: none;
 }
 
@@ -202,11 +158,12 @@ img{
   transform: translate(-50%, -50%);
 }
 
-/* Logik für das Drehen vom Logo */ 
+/* Logik für das Drehen vom Logo */
 @keyframes wheelSpin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -252,12 +209,10 @@ export default {
           console.log(response);
           this.startWheelAnimation();
 
-            this.startWheelAnimation();
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 2000);
 
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 2000);
-          
         })
         .catch((error) => {
           console.error(error);

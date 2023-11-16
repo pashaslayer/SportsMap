@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="457d2041-82f0-46aa-bbfb-060ae57ac2b1" name="Changes" comment="commitment to nepopo">
+      <change beforePath="$PROJECT_DIR$/.idea/SportSpot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SportSpot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/components/HelloWorld.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/components/HelloWorld.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/HomeView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/HomeView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/LoginView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/LoginView.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sport-spot/src/views/RegistrationView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/RegistrationView.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,19 +34,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Pavel/AppData/Local/Programs/Python/Python311&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Pavel/AppData/Local/Programs/Python/Python311",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.SportSpot">
     <configuration name="SportSpot" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SportSpot" />
@@ -84,6 +83,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Captcha/first_main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -126,6 +126,7 @@
       <workItem from="1699958036947" duration="526000" />
       <workItem from="1699958697218" duration="1991000" />
       <workItem from="1699964443698" duration="997000" />
+      <workItem from="1700121450311" duration="2376000" />
     </task>
     <task id="LOCAL-00001" summary="commitment to nepopo">
       <created>1699984532922</created>
@@ -154,5 +155,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commitment to nepopo" />
     <option name="LAST_COMMIT_MESSAGE" value="commitment to nepopo" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Diplo_Flask_UserDB_py$SportSpot.coverage" NAME="SportSpot Coverage Results" MODIFIED="1700122183668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
