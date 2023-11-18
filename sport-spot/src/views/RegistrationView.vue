@@ -248,15 +248,7 @@ export default {
         password: "",
         birthdate: "",
         email: "",
-        sports: [
-          "running",
-          "cycling",
-          "fast-walking",
-          "hobby-horsing",
-          "hiking",
-          "skating",
-          "yoga",
-        ],
+        sports: [],
         gender: "",
         postalcode: "",
       },
@@ -270,9 +262,11 @@ export default {
           console.log(response);
           this.startWheelAnimation();
 
+          const email = this.postData.email;
+
 
           setTimeout(() => {
-            this.$router.push("/login");
+            this.$router.push({ path: '/login', query: { email } });
           }, 2000);
         })
         .catch((error) => {
