@@ -180,19 +180,16 @@ def get_all_users():
         return abort(404)
 
 
-@app.route("/delete", methods=["Post"])
-def delete():
-    data = request.get_json()
-    if not data:
-        return jsonify({'message': 'Sie sind nicht angemeldet'}), 404
-
-    id = data.get('Id')
+@app.route('/delete/user/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
     conn = get_db_connection()
     if conn is not None:
         cur = conn.cursor()
+        cur.execute('DELETE FROM users WHERE id = %s;', (user_id,))
+        conn.commit()
+        return jsonify({'message': f'User {user_id} successfully deleted'}), 201
 
-        cur.execute('DELETE FROM users WHERE id = %s;', id)
-        # Rückruf
+    return jsonify({'message': 'not deleted'}), 404
 
 
 ##########

@@ -7,8 +7,10 @@
     <list default="true" id="457d2041-82f0-46aa-bbfb-060ae57ac2b1" name="Changes" comment="commitment to nepopo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/components/HelloWorld.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/components/HelloWorld.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/HomeView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/HomeView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test-der-Methoden/verwischtes_bild.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/AdminView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/AdminView.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sport-spot/src/views/LoginView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/LoginView.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sport-spot/src/views/RegistrationView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/RegistrationView.vue" afterDir="false" />
     </list>

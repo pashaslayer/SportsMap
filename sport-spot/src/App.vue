@@ -35,7 +35,7 @@
             </li>
             <li>
                 <a class="nav-link text-truncate">
-                    <span class="ms-1 d-none d-sm-inline"><router-link to="/about">About</router-link></span> </a>
+                    <span class="ms-1 d-none d-sm-inline"><router-link to="/admin">Admin</router-link></span> </a>
             </li>
         </ul>
     </div>

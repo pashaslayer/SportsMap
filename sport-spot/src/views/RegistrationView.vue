@@ -1,20 +1,20 @@
 <template>
-  <div class="tocenter">
-    <div class="container text-center mx-auto">
+  <div class="container">
+    <div class="text-center mt-5">
       <!-- First Row (1 Column) -->
-      <div class="row">
-        <div class="col-12">
+      <div class="row text-center mx-auto">
+        <div class="col-md-12">
           <!-- draggable verhindert das verschieben von images -->
           <img
             v-if="!wheelAnimation"
             src="@/assets/logo_vektor_01_white.svg"
-            class="rounded mx-auto d-block"
+            class="rounded mx-auto d-block img-fluid"
             draggable="false"
           />
           <img
             v-if="wheelAnimation"
             src="@/assets/logo_vektor_01_white.svg"
-            class="rounded mx-auto d-block wheel-animation"
+            class="rounded mx-auto d-block wheel-animation img-fluid"
             draggable="false"
             @animationend="stopWheelAnimation"
           />
@@ -25,7 +25,8 @@
       <form @submit.prevent="postRegister">
         <!-- Second Row (6 Columns) -->
         <div class="row">
-          <div class="col-md-2 border border-white">
+          <div
+            class="col-md-2 border border-white align-items-center d-flex justify-content-center">
             <label for="firstname" class="form-label">Firstname:</label>
           </div>
           <div class="col-md-2 border border-white">
@@ -36,7 +37,8 @@
               id="firstname-label"
             />
           </div>
-          <div class="col-md-2 border border-white">
+          <div
+            class="col-md-2 border border-white align-items-center d-flex justify-content-center">
             <label for="username" class="form-label">Username: </label>
           </div>
           <div class="col-md-2 border border-white">
@@ -50,7 +52,9 @@
               maxlength="10"
             />
           </div>
-          <div class="col-md-2 border border-white">
+          <div
+            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+          >
             <label for="email-label" class="form-label">Email: </label>
           </div>
           <div class="col-md-2 border border-white">
@@ -59,6 +63,7 @@
               v-model="postData.email"
               type="email"
               id="email-label"
+              class="form-control"
               aria-describedby="emailHelp"
               required
             />
@@ -67,7 +72,9 @@
 
         <!-- Third Row (6 Columns) -->
         <div class="row">
-          <div class="col-md-2 border border-white">
+          <div
+            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+          >
             <label for="surname" class="form-label">Surname: </label>
           </div>
           <div class="col-md-2 border border-white">
@@ -79,7 +86,9 @@
               id="surname-label"
             />
           </div>
-          <div class="col-md-2 border border-white">
+          <div
+            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+          >
             <label for="password" class="form-label">Password: </label>
           </div>
           <div class="col-md-2 border border-white">
@@ -93,7 +102,9 @@
               required
             />
           </div>
-          <div class="col-md-2 border border-white">
+          <div
+            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+          >
             <label for="postalcode" class="form-label">Postalcode: </label>
           </div>
           <div class="col-md-2 border border-white">
@@ -119,7 +130,12 @@
         <!-- Fifth Row (2 Columns) -->
         <div class="row">
           <div class="col-md-6">
-            <input id="startDate" class="form-control" type="date" v-model="postData.birthdate"/>
+            <input
+              id="startDate"
+              class="form-control"
+              type="date"
+              v-model="postData.birthdate"
+            />
           </div>
           <div class="col-md-6">
             <select
@@ -137,10 +153,17 @@
 
         <div class="row" style="height: 80px"></div>
 
+        <div class="d-flex justify-content-center">
+          <span class="mr-2">Bereits registriert?: </span>
+          <router-link to="/login">Login</router-link>
+        </div>
+
         <!-- Sixth Row (2 Columns for Buttons) -->
         <div class="row">
           <div class="col-md-6 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary" @click="postRegister">Bestätigen</button>
+            <button type="submit" class="btn btn-primary" @click="postRegister">
+              Bestätigen
+            </button>
           </div>
           <div class="col-md-6 d-flex justify-content-start">
             <button type="submit" class="btn btn-secondary">Abbrechen</button>
@@ -161,7 +184,6 @@
       <p>Postalcode: {{ postData.postalcode }}</p>
     </div>
   </div>
-
 </template>
 
 <!--
@@ -177,32 +199,26 @@ Daten für die Userregistrierung
 •    Postleizahl
 -->
 
-
-
 <style>
+.border-bottom-remove {
+  border-bottom: none !important;
+}
+
 .info {
   border: 2px;
   border-color: black;
   border-style: solid;
-  margin-left: 6cm;
-  margin-right: 6cm;
+  margin-left: 6vw;
+  margin-right: 6vw;
   margin-bottom: 1cm;
 }
 
-img{
+img {
   /* Verhindert das Auswählen vom image */
   user-select: none;
 }
 
-.tocenter {
-  width: 1600px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Logik für das Drehen vom Logo */ 
+/* Logik für das Drehen vom Logo */
 @keyframes wheelSpin {
   0% {
     transform: rotate(0deg);
@@ -252,12 +268,11 @@ export default {
           console.log(response);
           this.startWheelAnimation();
 
-            this.startWheelAnimation();
+          this.startWheelAnimation();
 
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 2000);
-          
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 2000);
         })
         .catch((error) => {
           console.error(error);
