@@ -135,7 +135,7 @@ def register():
             if not postal_code:
                 return jsonify({'message': 'Wir benötigen als Sicherheitsmaßnahme ihre Postleizahl'}), 400
 
-            if not fav_sports: #nicht mehr benötigt?
+            if not fav_sports:  # nicht mehr benötigt?
                 fav_sports = []
 
             if not gender:
@@ -186,7 +186,7 @@ def save_sports_to_user():
     conn = get_db_connection()
     if conn is not None:
         cur = conn.cursor()
-        cur.execute('UPDATE users SET sports = %s WHERE email = %s', (email, sports))
+        cur.execute('UPDATE users SET fav_sports = %s WHERE email = %s;', (sports, email))
         conn.commit()
         return jsonify({'message': f'Sports to user with the email {email} successfully changed'}), 201
     return jsonify({'message': 'sports could not be added'}), 404
