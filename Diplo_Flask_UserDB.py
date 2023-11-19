@@ -64,17 +64,15 @@ def login():
         cur.execute('SELECT * FROM users WHERE username = %s', (username,))
         user = cur.fetchone()
 
-        # Eventuell spätere Passwortverschlüsselung auf Browserebene
-
         if user and bcrypt.checkpw(password.encode('utf-8'), user[4].encode('utf-8')):
             cur.close()
             conn.close()
             user_id = user[0]
             token = generate_token(user_id)
-            # token = generate_token(user_id, user[1], user[2], user[3], user[4], user[5], user[6], user[7], user[8])
+            # token = generate_token(user_id, user[1], user[2], user[3], user[5], user[6], user[7], user[8], user[9])
             user_data = {"id": user[0], "firstname": user[1], "surname": user[2], "username": user[3],
-                         "birthdate": user[4], "email": user[5], "fav_sports": user[6], "gender": user[7],
-                         "postal_code": user[8]}
+                         "birthdate": user[5], "email": user[6], "fav_sports": user[7], "gender": user[8],
+                         "postal_code": user[9]}
             # kein Passwort
             return jsonify({'token': token, 'user': user_data})
 
@@ -137,7 +135,7 @@ def register():
             if not postal_code:
                 return jsonify({'message': 'Wir benötigen als Sicherheitsmaßnahme ihre Postleizahl'}), 400
 
-            if not fav_sports:
+            if not fav_sports: #nicht mehr benötigt?
                 fav_sports = []
 
             if not gender:

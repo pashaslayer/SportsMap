@@ -13,6 +13,21 @@ CREATE TABLE users (
     postal_code VARCHAR(10)
 );
 
+CREATE TABLE eventRunning (
+    Id SERIAL PRIMARY KEY,
+    userId int,
+    maxParticipants int,
+    curParti #?
+    eventDate DATE,
+    eventLoc GEOMETRY(Point, 4123),
+    event GEOGRAPHY(, 4326)
+
+    user_id": 1,
+    "sport": "Basketball",
+    "participants": 7,
+    "EventLoc": ""
+);
+
 {
     "firstname": "nihao",
     "surname": "Ma",
@@ -20,9 +35,17 @@ CREATE TABLE users (
     "password": "nihaoma123",
     "birthdate": "1990-01-15",
     "email": "johndoe@example.com",
-    "fav_sports": ["Basketball", "Soccer", "Tennis"],
+    "sports": ["Basketball", "Soccer", "Tennis"],
     "gender": "M",
-    "postal_code": "1235"
+    "postalcode": "1235"
+}
+
+{
+    "user_id": 1,
+    "sport": "Basketball",
+    "participants": 7,
+    "postalcode": "6060"
+    "EventLoc": ""
 }
 
 
