@@ -30,14 +30,14 @@
       <!-- Second Row (6 Columns) -->
       <div class="row">
         <div class="col-md-6 border border-white align-items-center d-flex justify-content-center">
-          <label for="firstname" class="form-label">Firstname:</label>
+          <label for="username" class="form-label">Username:</label>
         </div>
         <div class="col-md-6 border border-white">
           <input
-            v-model="postData.firstname"
+            v-model="postData.username"
             type="text"
             class="form-control"
-            id="firstname-label"
+            id="username-label"
           />
         </div>
       </div>
@@ -45,16 +45,18 @@
       <!-- Third Row (6 Columns) -->
       <div class="row">
         <div class="col-md-6 border border-white align-items-center d-flex justify-content-center">
-          <label for="lastname" class="form-label">Lastname: </label>
+          <label for="password" class="form-label">Password: </label>
         </div>
         <div class="col-md-6 border border-white">
           <!--Input Nachname-->
           <input
-            v-model="postData.lastname"
-            type="text"
-            class="form-control"
-            id="lastname-label"
-          />
+              v-model="postData.password"
+              type="password"
+              class="form-control"
+              id="password-label"
+              aria-describedby="passwordHelp"
+              required
+            />
         </div>
       </div>
 
@@ -114,8 +116,8 @@ export default {
     return {
       title: "SportSpot Login",
       postData: {
-        email: "John",
-        password: "Doe",
+        username: "",
+        password: "",
       },
       wheelAnimation: false,
     };

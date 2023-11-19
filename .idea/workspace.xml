@@ -6,20 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9e7508ce-47f7-4669-a8fc-c8abae923dc5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplo_Flask_UserDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/1.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/10.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/10.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/11.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/11.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/12.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/12.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/3.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/3.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/4.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/4.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/5.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/5.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/6.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/6.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/7.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/7.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/8.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/8.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/assets/9.svg" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/assets/9.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sport-spot/src/views/PickSports.vue" beforeDir="false" afterPath="$PROJECT_DIR$/sport-spot/src/views/PickSports.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
