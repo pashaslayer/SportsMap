@@ -23,7 +23,7 @@
       </div>
 
       <form @submit.prevent="postRegister">
-        <!-- Second Row (6 Columns) -->
+        <!-- @submit.prevent="postRegister"> -->
         <div class="row">
           <div
             class="col-md-2 border border-white align-items-center d-flex justify-content-center"
@@ -163,12 +163,12 @@
         <!-- Sixth Row (2 Columns for Buttons) -->
         <div class="row">
           <div class="col-md-6 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary" @click="postRegister">
+            <button class="btn btn-primary">
               Bestätigen
             </button>
           </div>
           <div class="col-md-6 d-flex justify-content-start">
-            <button type="submit" class="btn btn-secondary">Abbrechen</button>
+            <button class="btn btn-secondary" @click="clear">Abbrechen</button>
           </div>
         </div>
       </form>
@@ -262,16 +262,30 @@ export default {
           console.log(response);
           this.startWheelAnimation();
 
+          // Holen von vue email
           const email = this.postData.email;
 
 
           setTimeout(() => {
-            this.$router.push({ path: '/login', query: { email } });
+            this.$router.push({ path: '/pickSports', query: { email } });
           }, 2000);
         })
         .catch((error) => {
           console.error(error);
         });
+    },
+    clear() {
+      // löscht alle bisher eingetragenen inputs
+      this.postData.firstname = "";
+      this.postData.surname = "";
+      this.postData.username = "";
+      this.postData.password = "";
+      this.postData.birthdate = "";
+      this.postData.email = "";
+      this.postData.sports = [];
+      this.postData.gender = "";
+      this.postData.firstname = "";
+      this.postData.postalcode = "";
     },
     startWheelAnimation() {
       this.wheelAnimation = true;

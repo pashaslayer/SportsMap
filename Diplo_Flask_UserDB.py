@@ -80,9 +80,6 @@ def login():
 
         else:
             return abort(404)
-        cur.close()
-
-    conn.close()
 
 
 # Konvertiert das Geschlecht da Auswahl zwischen (male, female, other), aber Speicherung in der Datenbank
@@ -141,7 +138,7 @@ def register():
                 return jsonify({'message': 'Wir benötigen als Sicherheitsmaßnahme ihre Postleizahl'}), 400
 
             if not fav_sports:
-                fav_sports = {}
+                fav_sports = []
 
             if not gender:
                 gender = 'o'
@@ -158,7 +155,7 @@ def register():
 
             cur.close()
             conn.close()
-            return jsonify({'message': 'Registration successful'}), 201  # Return a success
+            return jsonify({'message': 'Registration successful'}), 201
     else:
         return abort(404)
 
@@ -178,6 +175,23 @@ def get_all_users():
         return jsonify(users_json)
     else:
         return abort(404)
+
+
+@app.route('/saveSportsToUser', methods=['POST'])
+def save_sports_to_user():
+    data = request.get_json()
+    if not data:
+        return abort(404)
+    email = data.get('email')
+    sports = data.get('selectedSports')
+
+    conn = get_db_connection()
+    if conn is not None:
+        cur = conn.cursor()
+        cur.execute('UPDATE users SET sports = %s WHERE email = %s', (email, sports))
+        conn.commit()
+        return jsonify({'message': f'Sports to user with the email {email} successfully changed'}), 201
+    return jsonify({'message': 'sports could not be added'}), 404
 
 
 @app.route('/delete/user/<int:user_id>', methods=['DELETE'])
