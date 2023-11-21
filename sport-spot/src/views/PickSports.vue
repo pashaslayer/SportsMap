@@ -50,7 +50,7 @@ export default {
     return {
       title: "Favourisierte Sportarten auswählen:",
       selectedSports: [],
-      allSports: [1, 3, 5, 7, 9, 11],
+      allSports: [2, 4, 6, 8, 10, 12],
       email: "",
     };
   },
@@ -82,12 +82,12 @@ export default {
     },
     postSports() {
       let mapSports = {
-        2: "Kraftsport",
-        4: "Schwimmen",
-        6: "Skifahren",
-        8: "Laufen",
-        10: "Wandern",
-        12: "Fahrradfahren",
+        1: "Kraftsport",
+        3: "Schwimmen",
+        5: "Skifahren",
+        7: "Laufen",
+        9: "Wandern",
+        11: "Fahrradfahren",
       };
 
       let selectedSports = [];
