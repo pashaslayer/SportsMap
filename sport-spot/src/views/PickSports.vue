@@ -9,13 +9,13 @@
       <form @submit.prevent="postSports">
         <!-- Second Row (6 Columns) -->
         <div class="row row-cols-auto g-2 justify-content-center">
-          <div v-for="(image, index) in images" :key="index" class="col">
+          <div v-for="index in allSports" :key="index" class="col">
             <img
-              :src="require(`@/assets/${index * 2 + 1}.svg`)"
+              :src="require(`@/assets/${index}.svg`)"
               class="rounded mx-auto d-block"
               draggable="false"
               style="height: 200px; width: 200px"
-              @click="toggleImage(index + 1)"
+              @click="toggleImage(index)"
             />
           </div>
         </div>
@@ -50,27 +50,62 @@ export default {
     return {
       title: "Favourisierte Sportarten auswählen:",
       selectedSports: [],
+      allSports: [2, 4, 6, 8, 10, 12],
       email: "",
-      images: Array.from({ length: 6 }, (_, i) => i + 1),
     };
+  },
+  created() {
+    const query = this.$route.query;
+
+    this.email = query["email"];
   },
   methods: {
     toggleImage(index) {
       console.log(index);
-      if (this.selectedSports.includes(index)) {
-        // Unselect the image
-        this.selectedSports = this.selectedSports.filter((i) => i !== index);
-      } else {
-        // Select the image
-        this.selectedSports.push(index);
+
+      const allSports = this.allSports;
+
+      for (let i = 0; i < allSports.length; i++) {
+        if (index == allSports[i]) {
+          if (allSports[i] % 2 == 0) {
+            allSports[i] -= 1;
+          } else {
+            allSports[i] += 1;
+          }
+        }
       }
+
+      this.allSports = allSports;
     },
     resetImages() {
       this.selectedSports = [];
     },
     postSports() {
+      let mapSports = {
+        1: "Kraftsport",
+        3: "Schwimmen",
+        5: "Skifahren",
+        7: "Laufen",
+        9: "Wandern",
+        11: "Fahrradfahren",
+      };
+
+      let selectedSports = [];
+
+      for (let i = 0; i < this.allSports.length; i++) {
+        let key = this.allSports[i].toString();
+        if (key in mapSports) {
+          selectedSports.push(mapSports[key]);
+        }
+      }
+
+      const data = {
+        email: this.email,
+        selectedSports: selectedSports,
+      };
+
       axios
-        .post("http://127.0.0.1:5000/save_sports_to_user", this.selectedSports)
+        .post("http://127.0.0.1:5000/saveSportsToUser", data)
         .then((response) => {
           console.log(response);
         })
