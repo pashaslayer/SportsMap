@@ -13,19 +13,16 @@ CREATE TABLE users (
     postal_code VARCHAR(10)
 );
 
+CREATE EXTENSION postgis;
+
 CREATE TABLE eventRunning (
     Id SERIAL PRIMARY KEY,
-    userId int,
-    maxParticipants int,
-    curParti #?
+    userId INT,
+    maxParticipants INT,
+    curParticipants INT,
     eventDate DATE,
-    eventLoc GEOMETRY(Point, 4123),
-    event GEOGRAPHY(, 4326)
-
-    user_id": 1,
-    "sport": "Basketball",
-    "participants": 7,
-    "EventLoc": ""
+    eventLoc GEOMETRY(Point, 4326),
+    eventRoute GEOGRAPHY(LineStringZ, 4326)
 );
 
 {
@@ -43,10 +40,17 @@ CREATE TABLE eventRunning (
 {
     "user_id": 1,
     "sport": "Basketball",
-    "participants": 7,
-    "postalcode": "6060"
-    "EventLoc": ""
+    "max_participants": 7,
+    "cur_participants": 0,
+    "event_date": "1990-01-15"
+    "EventLoc": "LINESTRINGZ(-122.4194 37.7749 100, -122.4184 37.7759 200)"
+    "event_route": "POLYGONZ((-120.123 38.456 100, -120.456 38.789 200, -120.789 39.012 300, -120.123 38.456 100))"
+
 }
+    ST_GeomFromText('POINT(-122.4194 37.7749)', 4326),
+    ST_GeographyFromText('LINESTRINGZ(-122.4194 37.7749 100, -122.4184 37.7759 200)', 4326)
+
+
 
 
 flask-cors
