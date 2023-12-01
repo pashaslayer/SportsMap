@@ -236,10 +236,23 @@ def get_captcha_data():
 
     return jsonify(response_data)
 
-@app.route("/compareInput", methods=["GET"])
-def get_last_captcha_id():
-    pass
 
+@app.route("/compareInput", methods=["POST"])
+def compare_captcha_input():
+    data = request.get_json()
+    if not data:
+        return abort(404)
+    captcha_id = data.get('id')
+    captcha_input = data.get('input')
+
+    conn = get_db_connection()
+    if conn is not None:
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM captcha WHERE id = %s and text = %s', (captcha_id, captcha_input))
+        found = cur.fetchone()
+
+        if found:
+            return jsonify({'message': f'Captcha successfully passed'}), 201
 
 
 if __name__ == '__main__':

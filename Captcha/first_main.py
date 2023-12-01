@@ -17,7 +17,7 @@ def generate_captcha_text(length):
 
 # Funktion zur Erstellung eines SVG-Captcha-Bilds
 def create_captcha_svg(captcha_text):
-    dwg = svgwrite.Drawing('captcha.svg', profile='tiny', size=(150, 50))
+    dwg = svgwrite.Drawing('Captcha/captcha.svg', profile='tiny', size=(150, 50))
 
     for i in range(len(captcha_text)):
         x = i * 25 + 10
@@ -43,5 +43,5 @@ def create_captcha_svg(captcha_text):
             y2 = random.uniform(y - 15, y + 15)
             dwg.add(dwg.line(start=(x1, y1), end=(x2, y2), stroke=svgwrite.rgb(150, 50, 0, '%')))
 
-        dwg.save()
-        print("Captcha wurde in 'captcha.svg' gespeichert.")
+    dwg.save()
+    print("Captcha wurde in 'captcha.svg' gespeichert.")

@@ -38,6 +38,11 @@ const routes = [
     name: 'picksports',
     component: () => import(/* webpackChunkName: "picksports" */ '../views/PickSports.vue')
   },
+  {
+    path: '/captcha',
+    name: 'captcha',
+    component: () => import(/* webpackChunkName: "captcha" */ '../views/CaptchaView.vue')
+  },
 ]
 
 const router = createRouter({
