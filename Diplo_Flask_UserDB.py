@@ -217,11 +217,29 @@ def get_captcha_data():
     with open(svg_path, 'r') as svg_file:
         svg_content = svg_file.read()
 
+    conn = get_db_connection()
+
+    # Saving the SVG content and creating an ID
+    if conn is not None:
+        cur = conn.cursor()
+        cur.execute('INSERT INTO captcha (text) VALUES (%s) RETURNING id', (text_captcha,))
+        last_captcha_id = cur.fetchone()[0]
+        conn.commit()
+        cur.close()
+    else:
+        print("Not possible to save captcha")
+
     response_data = {
+        'captcha_id': last_captcha_id,
         'svg': svg_content
     }
 
     return jsonify(response_data)
+
+@app.route("/compareInput", methods=["GET"])
+def get_last_captcha_id():
+    pass
+
 
 
 if __name__ == '__main__':
