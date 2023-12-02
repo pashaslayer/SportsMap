@@ -11,6 +11,7 @@
     <input v-model="sameText" />
     <h3>{{ sameText }}</h3>
     <p> {{ tets }}</p>
+    <button v-on:click="deleteJWTFromLocalStorage">Clear Local Storage</button>
 
     <!-- 
       IF ELSE
@@ -42,13 +43,16 @@ export default {
       message: "Hello World",
       random: 0,
       sameText: "nihao",
-      tets: localStorage.getItem('Name')
+      tets: localStorage.getItem('jwt_token')
     }
   },
 
   methods: {
     giveMeARandomNumber() {
       this.random = Math.random();
+    },
+    deleteJWTFromLocalStorage(){
+      localStorage.clear();
     }
   }
 };

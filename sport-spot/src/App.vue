@@ -1,4 +1,3 @@
-
 <template>
 <!--  
   data-bs-keyboard        ... schließen des bootstrap offcanvas mittels esc

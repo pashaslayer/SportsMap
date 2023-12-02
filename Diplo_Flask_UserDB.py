@@ -29,18 +29,18 @@ def get_db_connection():
         return None
 
 
-def generate_token(user_id):
+def generate_token(user):
     payload = {
-        'user_id': user_id,
-        'exp': datetime.utcnow() + timedelta(hours=1)
-        # 'username': username,
-        # 'firstname': firstname,
-        # 'surname': surname,
-        # 'birthdate' : birthdate,
-        # 'email' : email,
-        # 'fav_sports' : fav_sports,
-        # 'gender' : gender,
-        # 'postal_code' : postal_code,
+        'user_id': user[0],
+        'exp': datetime.utcnow() + timedelta(hours=1),
+        'username': user[3],
+        'firstname': user[1],
+        'surname': user[2],
+        'birthdate': user[5].isoformat(),
+        'email': user[6],
+        'fav_sports': user[7],
+        'gender': user[8],
+        'postal_code': user[9],
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -67,14 +67,13 @@ def login():
         if user and bcrypt.checkpw(password.encode('utf-8'), user[4].encode('utf-8')):
             cur.close()
             conn.close()
-            user_id = user[0]
-            token = generate_token(user_id)
-            # token = generate_token(user_id, user[1], user[2], user[3], user[5], user[6], user[7], user[8], user[9])
-            user_data = {"id": user[0], "firstname": user[1], "surname": user[2], "username": user[3],
-                         "birthdate": user[5], "email": user[6], "fav_sports": user[7], "gender": user[8],
-                         "postal_code": user[9]}
+
+            token = generate_token(user)
+            print(user)
+            print(token)
+
             # kein Passwort
-            return jsonify({'token': token, 'user': user_data})
+            return jsonify({'token': token})
 
         else:
             return abort(404)
@@ -255,6 +254,24 @@ def compare_captcha_input():
             return jsonify({'message': f'Captcha successfully passed'}), 201
 
 
+###########
+# JWT TOKEN
+###########
+
+
+# Muss fertiggemacht werden
+'''
+@app.route("/getExpirationTime", methods=["POST"])
+def getExpirationTime():
+    data = request.get_json()
+    if not data:
+        return abort(404)
+    jwt = data.get('token')
+
+'''
+
+
 if __name__ == '__main__':
+    # Dieser Secret Key sollte aus Sicherheitsgründen außerhalb vom Code liegen
     app.secret_key = secrets.token_hex(16)
     app.run(debug=True)

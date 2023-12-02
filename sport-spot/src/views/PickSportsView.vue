@@ -78,7 +78,7 @@ export default {
       this.allSports = allSports;
     },
     resetImages() {
-      this.selectedSports = [];
+      this.allSports = [2, 4, 6, 8, 10, 12];
     },
     postSports() {
       let mapSports = {
