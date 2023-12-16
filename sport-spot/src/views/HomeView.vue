@@ -3,6 +3,9 @@
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
     <h1>This is our home page</h1>
     <p>{{ message }}</p>
+    <button v-on:click="deleteJWTFromLocalStorage">Clear Local Storage</button>
+
+    <!-- 
     <button v-on:click="message+='m'">lol</button>
     <br>
     <button v-on:click="giveMeARandomNumber">Random number</button>
@@ -11,9 +14,6 @@
     <input v-model="sameText" />
     <h3>{{ sameText }}</h3>
     <p> {{ tets }}</p>
-    <button v-on:click="deleteJWTFromLocalStorage">Clear Local Storage</button>
-
-    <!-- 
       IF ELSE
       v-if
       v-else-if
@@ -40,7 +40,7 @@
 export default {
   data() {
     return {
-      message: "Hello World",
+      message: "Press to clear the local storage",
       random: 0,
       sameText: "nihao",
       tets: localStorage.getItem('jwt_token')
