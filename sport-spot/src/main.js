@@ -4,6 +4,9 @@ import App from './App.vue'
 
 import "bootstrap/dist/js/bootstrap.js"
 import '@fortawesome/fontawesome-free/js/all'
+// import from ol-vue-example
+import './assets/styles.js';
+
 
 // importing and registration route
 import router from './router'
