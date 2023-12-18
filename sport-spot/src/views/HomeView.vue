@@ -3,6 +3,7 @@
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
     <h1>This is our home page</h1>
     <p>{{ message }}</p>
+    <p>{{ tets }}</p>
     <button v-on:click="deleteJWTFromLocalStorage">Clear Local Storage</button>
 
     <!-- 

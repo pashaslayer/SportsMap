@@ -2,7 +2,6 @@
 
 <!-- HTML -->
 <template>
-    <main id="app">
       <aside>
         <LayersControl
           :mapTypeId="mapTypeId"
@@ -22,7 +21,6 @@
         :interactions="interactions">
       </MapContainer>
   
-    </main>
   </template>
   
   <!-- LOGIC -->
