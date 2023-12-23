@@ -52,8 +52,8 @@
 <script setup>
 import { ref } from "vue";
 
-const center = ref([34, 39.13]);
-const zoom = ref(6);
+const center = ref([11.434438109096805, 47.265666027358435]);
+const zoom = ref(12.75);
 const projection = ref("EPSG:4326");
 
 const vectorSource = ref(null);
