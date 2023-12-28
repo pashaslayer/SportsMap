@@ -47,6 +47,10 @@
         />
       </ol-source-vector>
     </ol-vector-layer>
+    <popup-form
+    :showPopup="showPopup"
+    :onClose="handlePopupClose"
+  ></popup-form>
   </ol-map>
 
   <br>
@@ -74,6 +78,9 @@ const vectorSource = ref(null);
 const drawEnable = ref(false);
 const drawType = ref("Point");
 const drawKey = reactive({ value: 0 });
+
+// Popup: 
+const showPopup = ref(false);
 
 let coords;
 let type;
@@ -112,7 +119,6 @@ const postMap = async () => {
   }
 };
 
-
 const drawend = (event) => {
   const feature = event.feature;
   const geometry = feature.getGeometry();
@@ -134,11 +140,30 @@ const drawend = (event) => {
     default:
       console.log('Unknown geometry type');
   }
+  showPopup.value = true;
+};
+
+const handlePopupClose = () => {
+  showPopup.value = false;
+
+  // Hier sollte der letzte Punkt den man bereits erstellt hat löschen
+  ```
+  if (vectorSource.value) {
+    const features = vectorSource.value.getFeatures();
+    if (features.length > 0) {
+      // Remove the last feature in the array
+      vectorSource.value.removeFeature(features[features.length - 1]);
+    }
+  }
+  ```
+  // Reset coordinates
+  coords = null;
 };
 
 </script>
 
 <script>
+import PopupForm from './SavePointPop.vue'; // Adjust the path as necessary
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Dieser ganze Block ist unwichtig is erst später für JWT wichtig!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -159,6 +184,10 @@ export default {
       }
       return true;
     },
+  },
+  components: {
+    PopupForm,
+    // ... other components
   },
 };
 </script>

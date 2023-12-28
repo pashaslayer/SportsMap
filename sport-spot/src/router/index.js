@@ -3,7 +3,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CaptchaView from '../views/CaptchaView.vue'
-import PickSportsView from '../views/PickSportsView.vue'
 
 // route array that contains paths as elements
 const routes = [
@@ -41,24 +40,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "map" */ '../views/TheMap.vue')
   },
   {
-    // here a example of 
-    path: '/picksports',
+    path: '/pickSports',
     name: 'PickSportsView',
-    component: PickSportsView,
-    // Add a beforeEnter guard to check if the user has a valid JWT token
-    beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem('jwt_token');
-      if (token) {
-        // User has a token, allow access to the route
-        next();
-      } else {
-        // User does not have a token, redirect to the login page
-        next('/login');
-      }
-    },
+    component: () => import(/* webpackChunkName: "map" */ '../views/PickSportsView.vue')
   },
   {
-    // here a example of 
     path: '/captcha',
     name: 'CaptchaView',
     component: CaptchaView,
