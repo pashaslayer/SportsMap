@@ -33,14 +33,12 @@ def generate_token(user):
     payload = {
         'user_id': user[0],
         'exp': datetime.utcnow() + timedelta(hours=1),
-        'username': user[3],
-        'firstname': user[1],
-        'surname': user[2],
-        'birthdate': user[5].isoformat(),
-        'email': user[6],
-        'fav_sports': user[7],
-        'gender': user[8],
-        'postal_code': user[9],
+        # 'username': user[3],
+        # 'firstname': user[1],
+        # 'surname': user[2],
+        # 'fav_sports': user[7],
+        # 'gender': user[8],
+        # 'postal_code': user[9],
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
