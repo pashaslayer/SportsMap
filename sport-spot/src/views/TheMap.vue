@@ -128,6 +128,9 @@ export default {
       console.log("Popup closed");
       this.showPopup = false;
 
+      // this brings back the ability to draw points on the map
+      this.drawEnable = true; 
+
       const vectorSourceComponent = this.$refs.vectorSource;
       console.log(vectorSourceComponent); // Inspect the object
       // Attempt to directly access the OpenLayers object, if exposed
@@ -147,10 +150,12 @@ export default {
 
 
     }, drawend (event)  {
+      if(!this.showPopup){
+      // this disables the ability to draw points after the popup has been opened
+      this.drawEnable = false; 
       console.log(typeof (event));
       const feature = event.feature;
       const geometry = feature.getGeometry();
-
       // Hier wird bei jedem Klick von geometrischen Daten der Typ und die Koordinaten geholt
       switch (geometry.getType()) {
         case 'Point':
@@ -168,12 +173,15 @@ export default {
         default:
           console.log('Unknown geometry type');
       }
+    }
       this.showPopup = true;
     }, changeDrawType (active, newType)  {
+      if (!this.showPopup) {
       this.drawEnable = active;
       this.drawType = newType;
       this.drawKey++; // Increment the key each time the type changes
       this.type = newType; // Update the type
+      }
     },
 
     async postMap() {
