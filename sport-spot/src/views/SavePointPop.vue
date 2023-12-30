@@ -47,11 +47,15 @@ export default {
   },
   methods: {
     closePopup() {
-      this.onClose(); // This should call the function passed as a prop
+      console.log('closePopup');
+      console.log("onClose", this.onClose);
+      this.$emit('handleclose');
+      //this.onClose; // This should call the function passed as a prop
+
     },
     submitDetails() {
       console.log('Submitting:', this.length, this.duration, this.difficulty, this.participants);
-      this.closePopup();
+      //this.closePopup();
     },
   },
 };
@@ -95,7 +99,7 @@ input[type="number"], select {
 }
 
 #description{
-height: 2cm;
+  height: 2cm;
 }
 
 .buttons {
