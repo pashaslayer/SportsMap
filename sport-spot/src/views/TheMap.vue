@@ -1,4 +1,4 @@
-<template>
+<<template>
   <ol-map
       ref="olMap"
       :loadTilesWhileAnimating="true"

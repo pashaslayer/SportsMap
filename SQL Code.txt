@@ -1,11 +1,17 @@
+CREATE EXTENSION postgis;
+
+DROP TABLE IF EXISTS public.event_participants;
+DROP TABLE IF EXISTS public.event_route;
+DROP TABLE IF EXISTS public.event_point;
+DROP TABLE IF EXISTS public.event;
 DROP TABLE IF EXISTS public.users;
 
 CREATE TABLE users (
-    Id SERIAL PRIMARY KEY,
+    user_id SERIAL PRIMARY KEY,
     firstname VARCHAR(255),
     surname VARCHAR(255),
     username VARCHAR(255),
-    password VARCHAR(255),
+    password VARCHAR(500),
     birthdate DATE,
     email VARCHAR(255),
     fav_sports VARCHAR(255)[] NOT NULL DEFAULT '{}',
@@ -13,26 +19,115 @@ CREATE TABLE users (
     postal_code VARCHAR(10)
 );
 
-# Captcha benötigt eine eigene Tabelle für den Späteren vergleich
+CREATE TABLE event(
+    event_id SERIAL PRIMARY KEY,
+    event_loc jsonb,
+    sport INT,
+    creator_id INT NOT NULL,
+    event_date timestamp,
+    type CHAR(1),
+
+    FOREIGN KEY (creator_id) REFERENCES users (user_id)
+);
+
+CREATE TABLE event_point (
+    event_name VARCHAR(100) NOT NULL,
+    eventPoint jsonb,
+    info varchar(500),
+    max_participants INT NOT NULL,
+
+    FOREIGN KEY (creator_id) REFERENCES users (user_id)
+)INHERITS (event);
+
+CREATE TABLE event_route (
+    event_name VARCHAR(100) NOT NULL,
+    eventRoute jsonb,
+    info varchar(500),
+    max_participants INT NOT NULL,
+
+    FOREIGN KEY (creator_id) REFERENCES users (user_id)
+) INHERITS (event);
+
+CREATE TABLE event_participants(
+    event_id INT,
+    user_id INT,
+    PRIMARY KEY (event_id, user_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (event_id) REFERENCES event(event_id)
+
+);
+
+CREATE OR REPLACE FUNCTION insert_event_point(
+    p_event_loc JSONB,
+    p_sport INT,
+    p_creator_id INT,
+    p_event_date TIMESTAMP,
+    p_type CHAR(1),
+    p_event_name VARCHAR(100),
+    p_eventPoint JSONB,
+    p_info VARCHAR(500),
+    p_max_participants INT
+) RETURNS VOID AS $$
+BEGIN
+    p_event_loc = p_event_loc::jsonb;
+    p_eventPoint = p_eventPoint::jsonb;
+    INSERT INTO event_point (event_loc, sport, creator_id, event_date, type, event_name, eventpoint, info, max_participants)
+    VALUES (
+        p_event_loc,
+        p_sport,
+        p_creator_id,
+        p_event_date,
+        p_type,
+        p_event_name,
+        p_eventPoint,
+        p_info,
+        p_max_participants
+    );
+
+    COMMIT;
+
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION trigger_event_point()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO event (event_loc, sport, creator_id, event_date, type)
+    VALUES (NEW.event_loc, NEW.sport, NEW.creator_id ,NEW.event_date, 'p');
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER before_insert_event_point
+BEFORE INSERT ON event_point
+FOR EACH ROW EXECUTE FUNCTION trigger_event_point();
+
+
+CREATE OR REPLACE FUNCTION trigger_event_route()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO event (event_loc, sport, creator_id, event_date, type)
+    VALUES (NEW.event_loc, NEW.sport, NEW.creator_id ,NEW.event_date, 'r')
+    RETURNING event_id INTO NEW.event_id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER before_insert_event_route
+BEFORE INSERT ON event_route
+FOR EACH ROW EXECUTE FUNCTION trigger_event_point();
+
+
+
 CREATE TABLE IF NOT EXISTS captcha (
     id SERIAL PRIMARY KEY,
     text VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-CREATE EXTENSION postgis;
-
-CREATE TABLE eventRunning (
-    Id SERIAL PRIMARY KEY,
-    userId INT,
-    maxParticipants INT,
-    curParticipants INT,
-    eventDate DATE,
-    eventLoc GEOMETRY(Point, 4326),
-    eventRoute GEOGRAPHY(LineStringZ, 4326)
-);
-
+##Test Json
 {
     "firstname": "nihao",
     "surname": "Ma",
@@ -57,6 +152,32 @@ CREATE TABLE eventRunning (
 }
     ST_GeomFromText('POINT(-122.4194 37.7749)', 4326),
     ST_GeographyFromText('LINESTRINGZ(-122.4194 37.7749 100, -122.4184 37.7759 200)', 4326)
+
+
+
+INSERT INTO users (firstname, surname, username, password, birthdate, email, fav_sports, gender, postal_code)
+VALUES (
+    'Max',
+    'Mustermann',
+    'max_muster',
+    'hashed_password_here', -- Hier sollte das gehashte Passwort stehen
+    '1990-05-15', -- Geburtsdatum
+    'max@example.com',
+    ARRAY['Football', 'Tennis'], -- Bevorzugte Sportarten (als Array)
+    'M', -- Geschlecht (M für männlich, F für weiblich, o.ä.)
+    '12345' -- Postleitzahl
+);
+
+INSERT INTO event_point (event_name, eventPoint, info, max_participants, creator_id, event_date, type)
+VALUES (
+    'Football Match',
+    ST_GeogFromText('POINTZ(13.405 52.52 10)'),
+    'Details zum Event',
+    20,
+    123, -- Hier den tatsächlichen creator_id-Wert einsetzen
+    '2024-01-15 15:30:00',
+    'p'
+);
 
 
 

@@ -1,3 +1,4 @@
+import json
 import secrets
 from datetime import datetime, timedelta
 from re import match
@@ -7,6 +8,7 @@ from flask import Flask, render_template, request, url_for, redirect, flash, abo
 import bcrypt
 import jwt
 from flask_cors import CORS
+from psycopg2.extras import Json
 
 from Captcha.first_main import *
 
@@ -34,11 +36,13 @@ def generate_token(user):
         'user_id': user[0],
         'exp': datetime.utcnow() + timedelta(hours=1),
         # 'username': user[3],
-        # 'firstname': user[1],
+        # 'firstname': user[1], //nicht wichtig
         # 'surname': user[2],
         # 'fav_sports': user[7],
         # 'gender': user[8],
         # 'postal_code': user[9],
+
+        #
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -67,8 +71,8 @@ def login():
             conn.close()
 
             token = generate_token(user)
-            print(user)
-            print(token)
+            # print(user)
+            # print(token)
 
             # kein Passwort
             return jsonify({'token': token})
@@ -201,6 +205,108 @@ def delete_user(user_id):
     return jsonify({'message': 'not deleted'}), 404
 
 
+@app.route('/maps/add', methods=['POST'])
+def event_hinzuegen():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+
+    event_loc = data.get('event_loc')
+    sport = data.get('sport')
+    creator_id = data.get('user_id')
+    event_date = data.get('event_date')
+    type = data.get('type')  # am Anfang nur 'p'
+    event_name = data.get('event_name')
+    info = data.get('info')
+    max_participants = data.get('max_participants')
+
+
+    if None in [event_loc, sport, creator_id, event_date, type, event_name]:
+        return jsonify({'message': 'Bad Request: Fehlende Daten'}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        if type == 'p':
+            eventPoint = data.get('eventPoint')
+            jsonstring = json.dumps(eventPoint)
+            elJson = json.dumps(event_loc)
+            #print(jsonstring)
+            json_string_in_quotes = "'" + jsonstring + "'"
+            #print(json_string_in_quotes)
+            cur.execute(
+                'INSERT INTO event_point (event_loc, sport, creator_id, event_date, type, event_name, eventPoint, '
+                'info, max_participants) VALUES (%s::jsonb, %s, %s, %s, %s, %s, %s::jsonb,'
+                '%s, %s)',
+                (
+                    elJson, sport, creator_id, event_date, type, event_name, jsonstring, info,
+                    max_participants))
+            conn.commit()
+            return jsonify({'message':f'Sucessful'}),201
+        elif type == 'r':
+            eventRoute = data.get('eventRoute')
+            cur.execute(
+                'INSERT INTO event_route (event_loc, sport, creator_id, event_date, type, event_name, eventRoute, '
+                'info, max_participants) VALUES (ST_GeomFromGeoJSON(%s), %s, %s, %s, %s, %s, ST_GeogFromGeoJSON(%s), '
+                '%s, %s)',
+                (
+                    Json(event_loc), sport, creator_id, event_date, type, event_name, Json(eventRoute), info,
+                    max_participants))
+            return jsonify({'message':f'Sucessful'}),201
+        else:
+            return jsonify({'message': f'Not Found: Eventtyp nicht gefunden'}), 404
+
+    except Exception as e:
+        return jsonify({'message': f'Internal Server Error: {str(e)}'}), 500
+    finally:
+        cur.close()
+        conn.close()
+
+
+
+@app.route('/maps/anzeigen', methods=['POST'])
+def event_anzeigen():
+    data = request.get_json()
+    event_id = data.get('event_id')
+    if not event_id:
+        return jsonify({'message': f'Bad Request'}), 400
+    else:
+        conn = get_db_connection()
+        if conn is not None:
+            cur = conn.cursor()
+            cur.execute("SELECT type FROM event WHERE event_id = %s;", (event_id,))
+            result = cur.fetchone()
+            if result is not None:
+                v_event_type = result[0]
+                if v_event_type == 'p':
+                    cur.execute("SELECT * FROM event_point WHERE event_id = %s;", (event_id,))
+
+                elif v_event_type == 'r':
+                    cur.execute("SELECT * FROM event_route WHERE event_id = %s;", (event_id,))
+                event = cur.fetchone()
+                return jsonify({'message': f'Sucessful'}, event), 201
+            else:
+                return jsonify({'message': f'Bad Request'}), 400
+
+        else:
+            return jsonify({'message': f'Internal Server Error'}), 500
+
+
+@app.route('/maps', methods=['GET'])
+def all_events():
+    conn = get_db_connection()
+    if conn is not None:
+        cur = conn.cursor()
+        cur.execute('SELECT event_id, event_loc, sport FROM event')
+        events = cur.fetchall()
+        cur.close()
+        conn.close()
+        event_json = [{"event_id": row[0], "event_loc": row[1], "sport": row[2]} for row in events]
+        return jsonify(event_json)
+    else:
+        return abort(404)
+
+
 ##########
 # Captcha
 ##########
@@ -267,7 +373,6 @@ def getExpirationTime():
     jwt = data.get('token')
 
 '''
-
 
 if __name__ == '__main__':
     # Dieser Secret Key sollte aus Sicherheitsgründen außerhalb vom Code liegen
