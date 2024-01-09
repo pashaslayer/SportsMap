@@ -1,4 +1,4 @@
-<<template>
+<template>
   <ol-map
       ref="olMap"
       :loadTilesWhileAnimating="true"
@@ -41,18 +41,32 @@
 
       <ol-source-vector ref="vectorSource" @change="source_change" >
 
+        <!-- Drwing interaction -->
         <ol-interaction-draw
             v-if="drawEnable"
             :key="drawKey.value"
             :type="drawType"
             @drawend="drawend"
         />
+
+        <!-- Feature Selection Interaction -->
+        <ol-interaction-select
+          @select="featureSelected"
+       >
+        <ol-style>
+            <!-- Define your style for selected features here -->
+            <ol-style-stroke color="green" :width="3"></ol-style-stroke>
+            <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
+          </ol-style>
+        </ol-interaction-select>
+
       </ol-source-vector>
     </ol-vector-layer>
 
     <popup-form
         :showPopup="showPopup"
         @handleclose="handlePopupClose"
+        @closePopup="closePopupOnly"
     ></popup-form>
   </ol-map>
 
@@ -65,14 +79,12 @@
   </button>
 </template>
 
-<script setup>
-
-</script>
-
 <script>
 import PopupForm from './SavePointPop.vue';
 import axios from "axios";
 import 'ol/ol.css';
+
+
 
 //import Map from 'ol/Map';
 //import View from 'ol/View';
@@ -116,6 +128,15 @@ export default {
       console.log(e)
     },
 
+    featureSelected(event) {
+      if (event.selected.length > 0) {
+        const selectedFeature = event.selected[0];
+        console.log("Selected feature:", selectedFeature);
+        // Here, use 'selectedFeature' as per your application's requirement
+      }
+    },
+
+
     // Check for Token Expiration Date compare it with current time
     isTokenExpired() {
       const expirationTime = localStorage.getItem("jwt_token_exp");
@@ -123,6 +144,10 @@ export default {
         return new Date().getTime() > parseInt(expirationTime, 10);
       }
       return true;
+    },
+    closePopupOnly(){
+      this.showPopup = false;
+      this.drawEnable = true; 
     },
     handlePopupClose() {
       console.log("Popup closed");

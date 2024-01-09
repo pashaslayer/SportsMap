@@ -4,10 +4,10 @@
       <h2>Route</h2>
 
       <label for="length">Length (km):</label>
-      <input type="number" id="length" v-model="length">
+      <input type="number" min="0" id="length" v-model="length">
 
       <label for="duration">Duration (hours):</label>
-      <input type="number" id="duration" v-model="duration">
+      <input type="number" min="0" id="duration" v-model="duration">
 
       <label for="difficulty">Difficulty:</label>
       <select id="difficulty" v-model="difficulty">
@@ -17,7 +17,7 @@
       </select>
 
       <label for="participants">Participants:</label>
-      <input type="number" id="participants" v-model="participants">
+      <input type="number" min="1" id="participants" v-model="participants">
 
       <label> Description: </label>
       <textarea placeholder="enter the description" v-model="description"></textarea>
@@ -55,7 +55,7 @@ export default {
     },
     submitDetails() {
       console.log('Submitting:', this.length, this.duration, this.difficulty, this.participants);
-      //this.closePopup();
+      this.$emit('closePopup');
     },
   },
 };
