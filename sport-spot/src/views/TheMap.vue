@@ -56,6 +56,14 @@
           </ol-style>
         </ol-interaction-select>
       </ol-source-vector>
+
+
+      <!-- Here we are able to set an icon for the drawing/placing of a feature -->
+      <ol-style>
+            <ol-style-stroke color="red" :width="20"></ol-style-stroke>
+            <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
+            <ol-style-icon :src="markerIcon" :scale="0.80"></ol-style-icon>
+          </ol-style>
     </ol-vector-layer>
 
     <popup-form
@@ -124,8 +132,11 @@ export default {
     featureSelected(event) {
       if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
+        console.log("-----------------------------------------");
         console.log("Selected feature:", selectedFeature);
-        // Here, use 'selectedFeature' as per your application's requirement
+        console.log("-----------------------------------------");
+
+        // here we can work with the selectedFeature
       }
     },
 
