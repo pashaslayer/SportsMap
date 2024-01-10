@@ -64,6 +64,8 @@
             <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
             <ol-style-icon :src="markerIcon" :scale="0.80"></ol-style-icon>
           </ol-style>
+
+
     </ol-vector-layer>
 
     <popup-form
@@ -120,6 +122,8 @@ export default {
       drawKey: 0,
       map: null, // Referenz zur OpenLayers-Karte
       vectorLayer: null, // Referenz zum VectorLayer
+
+      symbolLink: ""
     };
   },
 
@@ -159,6 +163,9 @@ export default {
       // this brings back the ability to draw points on the map
       this.drawEnable = true;
 
+
+      // Dieser Teil sollte ins mountet ausgelagert werden 
+      /////////////////////////////////////////////////////////
       const vectorSourceComponent = this.$refs.vectorSource;
       console.log(vectorSourceComponent); // Inspect the object
       // Attempt to directly access the OpenLayers object, if exposed
@@ -166,6 +173,7 @@ export default {
         vectorSourceComponent?.olSource || vectorSourceComponent?.source;
       console.log("VS:" + olVectorSource.getFeatures());
       let features = olVectorSource.getFeatures();
+      ///////////////////////////////////////////////////////////////////////
 
       features.forEach((feature, index) => {
         console.log(`Feature ${index}:`, feature);
