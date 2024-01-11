@@ -3,11 +3,20 @@
     <div class="popup-content">
       <h2>Route</h2>
 
-      <label for="length">Length (km):</label>
-      <input type="number" min="0" id="length" v-model="length">
-
       <label for="duration">Duration (hours):</label>
       <input type="number" min="0" id="duration" v-model="duration">
+
+      <label for="sports">Sport:</label>
+      <select id="sports" v-model="sports">
+        <option value="1">Cycling</option>
+        <option value="2">Hiking</option>
+        <option value="3">Running</option>
+        <option value="4">Skiing</option>
+        <option value="5">Weightlifting</option>
+      </select>
+
+      <label for="startdate">Date: </label>
+      <input type="datetime-local" id="startdate" v-model="startdate">
 
       <label for="difficulty">Difficulty:</label>
       <select id="difficulty" v-model="difficulty">
@@ -31,6 +40,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: {
     showPopup: Boolean,
@@ -38,11 +49,13 @@ export default {
   },
   data() {
     return {
-      length: null,
+      sports: null,
       duration: null,
+      startdate: "",
       difficulty: 'easy',
       participants: null,
       description: "",
+      
     };
   },
   methods: {
@@ -53,10 +66,45 @@ export default {
       //this.onClose; // This should call the function passed as a prop
 
     },
+    formatDatetime(originalDatetimeStr) {
+      // Convert the string to a Date object
+      const originalDatetime = new Date(originalDatetimeStr);
+
+      // Format the Date object to the desired format
+      const formattedDatetimeStr = originalDatetime.toISOString().slice(0, 19).replace("T", " ");
+
+      return formattedDatetimeStr;
+    },
     submitDetails() {
-      console.log('Submitting:', this.length, this.duration, this.difficulty, this.participants);
+      console.log('Submitting:', this.duration, this.sports, this.formatDatetime(this.startdate), this.difficulty, this.participants);
       this.$emit('closePopup');
     },
+    async postPoint() {
+      if (this.coords && this.coords.length !== 0) {
+        console.log(this.type);
+        console.log(this.coords);
+        try {
+          const response = await axios.post(
+            "http://127.0.0.1:5000/[YOUR_ENDPOINT]",
+            {
+              type: this.type,
+              coords: this.coords,
+            }
+          );
+          // Ausgabe von Typ und geoDaten
+          console.log("Type:", this.type);
+          console.log("Coordinates:", this.coords);
+          if (response.data.success) {
+            console.warn("Success!");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        console.log("No coordinates to send");
+      }
+    },
+
   },
 };
 </script>

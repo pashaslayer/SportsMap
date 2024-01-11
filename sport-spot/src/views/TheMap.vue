@@ -52,20 +52,17 @@
           <ol-style>
             <ol-style-stroke color="green" :width="20"></ol-style-stroke>
             <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
-            <ol-style-icon :src="markerIcon" :scale="0.40"></ol-style-icon>
+            <ol-style-icon :src="markerIcon" :scale="0.4"></ol-style-icon>
           </ol-style>
         </ol-interaction-select>
       </ol-source-vector>
 
-
       <!-- Here we are able to set an icon for the drawing/placing of a feature -->
       <ol-style>
-            <ol-style-stroke color="red" :width="20"></ol-style-stroke>
-            <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
-            <ol-style-icon :src="markerIcon" :scale="0.80"></ol-style-icon>
-          </ol-style>
-
-
+        <ol-style-stroke color="red" :width="20"></ol-style-stroke>
+        <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
+        <ol-style-icon :src="markerIcon" :scale="0.8"></ol-style-icon>
+      </ol-style>
     </ol-vector-layer>
 
     <popup-form
@@ -91,7 +88,6 @@ import markerIcon from "../assets/marker.png";
 import PopupForm from "./SavePointPop.vue";
 import axios from "axios";
 import "ol/ol.css";
-
 
 //import Map from 'ol/Map';
 //import View from 'ol/View';
@@ -123,11 +119,25 @@ export default {
       map: null, // Referenz zur OpenLayers-Karte
       vectorLayer: null, // Referenz zum VectorLayer
 
-      symbolLink: ""
+      symbolLink: "",
+
+      // features
+      features: [],
+      vectorSourceComponent: "",
+      olVectorSource: "",
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.vectorSourceComponent = this.$refs.vectorSource;
+    console.log(this.vectorSourceComponent); // Inspect the object
+    // Attempt to directly access the OpenLayers object, if exposed
+    this.olVectorSource =
+      this.vectorSourceComponent?.olSource ||
+      this.vectorSourceComponent?.source;
+    console.log("VS:" + this.olVectorSource.getFeatures());
+    this.features = this.olVectorSource.getFeatures();
+  },
   methods: {
     source_change(e) {
       console.log(e);
@@ -137,7 +147,10 @@ export default {
       if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
         console.log("-----------------------------------------");
-        console.log("Selected feature:", selectedFeature);
+        console.log(
+          "Selected feature:",
+          selectedFeature.getGeometry()
+        );
         console.log("-----------------------------------------");
 
         // here we can work with the selectedFeature
@@ -163,26 +176,24 @@ export default {
       // this brings back the ability to draw points on the map
       this.drawEnable = true;
 
-
-      // Dieser Teil sollte ins mountet ausgelagert werden 
+      // Dieser Teil sollte ins mountet ausgelagert werden
       /////////////////////////////////////////////////////////
-      const vectorSourceComponent = this.$refs.vectorSource;
-      console.log(vectorSourceComponent); // Inspect the object
-      // Attempt to directly access the OpenLayers object, if exposed
-      const olVectorSource =
-        vectorSourceComponent?.olSource || vectorSourceComponent?.source;
-      console.log("VS:" + olVectorSource.getFeatures());
-      let features = olVectorSource.getFeatures();
+
       ///////////////////////////////////////////////////////////////////////
 
-      features.forEach((feature, index) => {
-        console.log(`Feature ${index}:`, feature);
+      this.features.forEach((feature, index) => {
+        console.log(`Feature ${index}:`, this.feature);
         // If you want to print specific properties of the feature:
-        console.log(`Feature ${index} Properties:`, feature.getProperties());
+        console.log(
+          `Feature ${index} Properties:`,
+          this.feature.getProperties()
+        );
       });
 
-      if (features.length > 0)
-        olVectorSource.removeFeature(features[features.length - 1]);
+      if (this.features.length > 0)
+        this.olVectorSource.removeFeature(
+          this.features[this.features.length - 1]
+        );
     },
     drawend(event) {
       if (!this.showPopup) {
@@ -221,6 +232,7 @@ export default {
     },
 
     async postMap() {
+      console.error(this.duration);
       if (this.coords && this.coords.length !== 0) {
         // JOHNNY: Hier wird der Typ + Koordinaten ausgegeben wenn man auf den Button klickt + prüfung ob eine Koordinate überhaupt gesetzt wurde
         console.log(this.type);
@@ -232,7 +244,12 @@ export default {
           const response = await axios.post(
             "http://127.0.0.1:5000/[YOUR_ENDPOINT]",
             {
-              type: this.type,
+              sports: this.sports,
+              duration: this.duration,
+              startdate: this.startdate,
+              difficulty: this.difficulty,
+              participants: this.participants,
+              description: this.description,
               coords: this.coords,
             }
           );
@@ -248,6 +265,15 @@ export default {
       } else {
         console.log("No coordinates to send");
       }
+    },
+    // Method to add a feature with a dynamic style
+    addFeatureWithStyle(feature) {
+      feature.setStyle();
+      this.vectorSource.addFeature(feature);
+    },
+    // Call this method to update the style of a feature reactively
+    updateFeatureStyle(feature) {
+      feature.setStyle();
     },
   },
   components: {
