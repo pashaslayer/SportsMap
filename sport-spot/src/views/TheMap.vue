@@ -68,7 +68,9 @@
     <popup-form
       :showPopup="showPopup"
       @handleclose="handlePopupClose"
+      @sportIconChange="changeIcon"
       @closePopup="closePopupOnly"
+      @sendData="postMap"
     ></popup-form>
   </ol-map>
 
@@ -139,6 +141,23 @@ export default {
     this.features = this.olVectorSource.getFeatures();
   },
   methods: {
+    handleData(
+      sport,
+      duration,
+      startdate,
+      difficulty,
+      participants,
+      description
+    ) {
+      console.log(
+        sport,
+        duration,
+        startdate,
+        difficulty,
+        participants,
+        description
+      );
+    },
     source_change(e) {
       console.log(e);
     },
@@ -147,10 +166,7 @@ export default {
       if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
         console.log("-----------------------------------------");
-        console.log(
-          "Selected feature:",
-          selectedFeature.getGeometry()
-        );
+        console.log("Selected feature:", selectedFeature.getGeometry());
         console.log("-----------------------------------------");
 
         // here we can work with the selectedFeature
@@ -169,31 +185,40 @@ export default {
       this.showPopup = false;
       this.drawEnable = true;
     },
-    handlePopupClose() {
-      console.log("Popup closed");
-      this.showPopup = false;
+    changeIcon(iconSourcename) {
+      const iconSrc = `../assets/symbols/${iconSourcename}`;
 
-      // this brings back the ability to draw points on the map
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(
+          /** @type {olx.style.IconOptions} */ ({
+            opacity: 0.75,
+            src: iconSrc,
+          })
+        ),
+      });
+      this.features[this.features.length - 1].setStyle(iconStyle);
+    },
+    handlePopupClose() {
+      // Close the popup and enable drawing
+      this.showPopup = false;
       this.drawEnable = true;
 
-      // Dieser Teil sollte ins mountet ausgelagert werden
-      /////////////////////////////////////////////////////////
+      // Update the local features array to reflect the current state of the vector source
+      this.features = this.olVectorSource.getFeatures();
 
-      ///////////////////////////////////////////////////////////////////////
-
-      this.features.forEach((feature, index) => {
-        console.log(`Feature ${index}:`, this.feature);
-        // If you want to print specific properties of the feature:
-        console.log(
-          `Feature ${index} Properties:`,
-          this.feature.getProperties()
-        );
-      });
-
-      if (this.features.length > 0)
+      // Check if there are any features present
+      if (this.features.length > 0) {
+        // Remove the last feature from the vector source
         this.olVectorSource.removeFeature(
           this.features[this.features.length - 1]
         );
+      }
+
+      // Optionally, you can log the remaining features for debugging
+      console.log(
+        "Remaining features after removal:",
+        this.olVectorSource.getFeatures()
+      );
     },
     drawend(event) {
       if (!this.showPopup) {
@@ -231,28 +256,32 @@ export default {
       }
     },
 
-    async postMap() {
+    async postMap(
+      sport,
+      duration,
+      startdate,
+      difficulty,
+      participants,
+      description
+    ) {
       console.error(this.duration);
+
+      let jwt = localStorage.getItem("jwt_token");
+      console.log(jwt);
+
       if (this.coords && this.coords.length !== 0) {
-        // JOHNNY: Hier wird der Typ + Koordinaten ausgegeben wenn man auf den Button klickt + prüfung ob eine Koordinate überhaupt gesetzt wurde
         console.log(this.type);
         console.log(this.coords);
         try {
-          // JOHNNY: Hier musst du dann deine URL anpassen
-          // JOHNNY: Die geometrischen Daten müssen später zu einem betimmten user abgespeichert werden, können wir aber erst dann machen wenn JWT fertig ist
-
-          const response = await axios.post(
-            "http://127.0.0.1:5000/[YOUR_ENDPOINT]",
-            {
-              sports: this.sports,
-              duration: this.duration,
-              startdate: this.startdate,
-              difficulty: this.difficulty,
-              participants: this.participants,
-              description: this.description,
-              coords: this.coords,
-            }
-          );
+          const response = await axios.post("http://127.0.0.1:5000/map/test", {
+            sport: sport,
+            duration: duration,
+            startdate: startdate,
+            difficulty: difficulty,
+            participants: participants,
+            description: description,
+            coords: this.coords,
+          });
           // Ausgabe von Typ und geoDaten
           console.log("Type:", this.type);
           console.log("Coordinates:", this.coords);

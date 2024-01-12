@@ -4,10 +4,10 @@
       <h2>Route</h2>
 
       <label for="duration">Duration (hours):</label>
-      <input type="number" min="0" id="duration" v-model="duration">
+      <input type="number" min="0" id="duration" v-model="duration" />
 
-      <label for="sports">Sport:</label>
-      <select id="sports" v-model="sports">
+      <label for="sport">Sport:</label>
+      <select id="sport" v-model="sport">
         <option value="1">Cycling</option>
         <option value="2">Hiking</option>
         <option value="3">Running</option>
@@ -16,7 +16,7 @@
       </select>
 
       <label for="startdate">Date: </label>
-      <input type="datetime-local" id="startdate" v-model="startdate">
+      <input type="datetime-local" id="startdate" v-model="startdate" />
 
       <label for="difficulty">Difficulty:</label>
       <select id="difficulty" v-model="difficulty">
@@ -26,10 +26,13 @@
       </select>
 
       <label for="participants">Participants:</label>
-      <input type="number" min="1" id="participants" v-model="participants">
+      <input type="number" min="1" id="participants" v-model="participants" />
 
       <label> Description: </label>
-      <textarea placeholder="enter the description" v-model="description"></textarea>
+      <textarea
+        placeholder="enter the description"
+        v-model="description"
+      ></textarea>
 
       <div class="buttons">
         <button @click="submitDetails">Submit</button>
@@ -49,35 +52,78 @@ export default {
   },
   data() {
     return {
-      sports: null,
+      sport: null,
       duration: null,
       startdate: "",
-      difficulty: 'easy',
+      difficulty: "easy",
       participants: null,
       description: "",
-      
     };
+  },
+  watch: {
+    // This watcher looks at the property (sport). If it changes -> I will convert the number into a string and send out the converted string as
+    // an emit to it's parent's component in order to change the feature icon for future reasons
+    sport(value){
+      this.$emit('sportIconChange', this.convertIntToSport(value));
+    }
   },
   methods: {
     closePopup() {
-      console.log('closePopup');
+      console.log("closePopup");
       console.log("onClose", this.onClose);
-      this.$emit('handleclose');
+      this.$emit("handleclose");
       //this.onClose; // This should call the function passed as a prop
-
     },
     formatDatetime(originalDatetimeStr) {
       // Convert the string to a Date object
       const originalDatetime = new Date(originalDatetimeStr);
-
-      // Format the Date object to the desired format
-      const formattedDatetimeStr = originalDatetime.toISOString().slice(0, 19).replace("T", " ");
+      const formattedDatetimeStr = originalDatetime
+        .toISOString()
+        .slice(0, 19)
+        .replace("T", " ");
 
       return formattedDatetimeStr;
     },
+    convertIntToSport() {
+      let sport;
+      switch (this.sport) {
+        case 1:
+          sport = "cycling_kreis_blau";
+          break;
+        case 2:
+          sport = "hiking_kreis_blau";
+          break;
+        case 3:
+          sport = "running_kreis_blau";
+          break;
+        case 4:
+          sport = "skiing_kreis_blau";
+          break;
+        case 5:
+          sport = "weightlifting_kreis_blau";
+          break;
+      }
+      return sport;
+    },
     submitDetails() {
-      console.log('Submitting:', this.duration, this.sports, this.formatDatetime(this.startdate), this.difficulty, this.participants);
-      this.$emit('closePopup');
+      console.log(
+        "Submitting:",
+        this.duration,
+        this.sport,
+        this.formatDatetime(this.startdate),
+        this.difficulty,
+        this.participants
+      );
+      this.$emit(
+        "sendData",
+        this.sport,
+        this.duration,
+        this.startdate,
+        this.difficulty,
+        this.participants,
+        this.description
+      );
+      this.$emit("closePopup");
     },
     async postPoint() {
       if (this.coords && this.coords.length !== 0) {
@@ -104,7 +150,6 @@ export default {
         console.log("No coordinates to send");
       }
     },
-
   },
 };
 </script>
@@ -138,7 +183,8 @@ label {
   font-weight: bold;
 }
 
-input[type="number"], select {
+input[type="number"],
+select {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -146,7 +192,7 @@ input[type="number"], select {
   border: 1px solid #ddd;
 }
 
-#description{
+#description {
   height: 2cm;
 }
 
