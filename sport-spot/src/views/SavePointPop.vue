@@ -3,9 +3,6 @@
     <div class="popup-content">
       <h2>Route</h2>
 
-      <label for="duration">Duration (hours):</label>
-      <input type="number" min="0" id="duration" v-model="duration" />
-
       <label for="sport">Sport:</label>
       <select id="sport" v-model="sport">
         <option value="1">Cycling</option>
@@ -17,6 +14,9 @@
 
       <label for="startdate">Date: </label>
       <input type="datetime-local" id="startdate" v-model="startdate" />
+
+      <label for="duration">Duration (hours):</label>
+      <input type="number" min="0" id="duration" v-model="duration" />
 
       <label for="difficulty">Difficulty:</label>
       <select id="difficulty" v-model="difficulty">
@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   props: {
     showPopup: Boolean,
@@ -54,7 +52,7 @@ export default {
     return {
       sport: null,
       duration: null,
-      startdate: "",
+      startdate: null,
       difficulty: "easy",
       participants: null,
       description: "",
@@ -64,7 +62,7 @@ export default {
     // This watcher looks at the property (sport). If it changes -> I will convert the number into a string and send out the converted string as
     // an emit to it's parent's component in order to change the feature icon for future reasons
     sport(value){
-      this.$emit('sportIconChange', this.convertIntToSport(value));
+      this.$emit('sportIconChange', value);
     }
   },
   methods: {
@@ -83,27 +81,6 @@ export default {
         .replace("T", " ");
 
       return formattedDatetimeStr;
-    },
-    convertIntToSport() {
-      let sport;
-      switch (this.sport) {
-        case 1:
-          sport = "cycling_kreis_blau";
-          break;
-        case 2:
-          sport = "hiking_kreis_blau";
-          break;
-        case 3:
-          sport = "running_kreis_blau";
-          break;
-        case 4:
-          sport = "skiing_kreis_blau";
-          break;
-        case 5:
-          sport = "weightlifting_kreis_blau";
-          break;
-      }
-      return sport;
     },
     submitDetails() {
       console.log(
@@ -124,31 +101,6 @@ export default {
         this.description
       );
       this.$emit("closePopup");
-    },
-    async postPoint() {
-      if (this.coords && this.coords.length !== 0) {
-        console.log(this.type);
-        console.log(this.coords);
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:5000/[YOUR_ENDPOINT]",
-            {
-              type: this.type,
-              coords: this.coords,
-            }
-          );
-          // Ausgabe von Typ und geoDaten
-          console.log("Type:", this.type);
-          console.log("Coordinates:", this.coords);
-          if (response.data.success) {
-            console.warn("Success!");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      } else {
-        console.log("No coordinates to send");
-      }
     },
   },
 };

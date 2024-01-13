@@ -84,18 +84,19 @@
 <script setup>
 // Adding a icon for the selection, for test reasons: marker.png
 import markerIcon from "../assets/marker.png";
+import cyclingIcon from "../assets/symbols/cycling_kreis_blau.svg";
+import hikingIcon from "../assets/symbols/hiking_kreis_blau.svg";
+import runningIcon from "../assets/symbols/running_kreis_blau.svg";
+import skiingIcon from "../assets/symbols/skiing_kreis_blau.svg";
+import weightliftingIcon from "../assets/symbols/weightlifting_kreis_blau.svg";
 </script>
 
 <script>
 import PopupForm from "./SavePointPop.vue";
 import axios from "axios";
+import { Style, Icon } from "ol/style";
 import "ol/ol.css";
 
-//import Map from 'ol/Map';
-//import View from 'ol/View';
-//import VectorLayer from 'ol/layer/Vector';
-//import VectorSource from 'ol/source/Vector';
-//import {ref} from "vue"; // Adjust the path as necessary
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Dieser ganze Block ist unwichtig is erst später für JWT wichtig!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -127,6 +128,8 @@ export default {
       features: [],
       vectorSourceComponent: "",
       olVectorSource: "",
+
+      curFeature: null,
     };
   },
 
@@ -185,19 +188,50 @@ export default {
       this.showPopup = false;
       this.drawEnable = true;
     },
-    changeIcon(iconSourcename) {
-      const iconSrc = `../assets/symbols/${iconSourcename}`;
 
-      var iconStyle = new ol.style.Style({
-        image: new ol.style.Icon(
+    changeIcon(iconSourceInt) {
+      console.log(iconSourceInt);
+      let iconSrc = this.convertIntToSport(iconSourceInt);
+      console.log("source: ");
+      console.log(iconSrc);
+
+      var iconStyle = new Style({
+        image: new Icon(
           /** @type {olx.style.IconOptions} */ ({
-            opacity: 0.75,
+            anchor: [0.5, 46],
+            anchorXUnits: "fraction",
+            anchorYUnits: "pixels",
+            opacity: 1,
             src: iconSrc,
+            scale: 0.05,
           })
         ),
       });
-      this.features[this.features.length - 1].setStyle(iconStyle);
+      this.curFeature.setStyle(iconStyle);
     },
+        convertIntToSport(value) {
+      let sport = "";
+      let valueToInt = parseInt(value);
+      switch (valueToInt) {
+        case 1:
+          sport = cyclingIcon;
+          break;
+        case 2:
+          sport = hikingIcon;
+          break;
+        case 3:
+          sport = runningIcon;
+          break;
+        case 4:
+          sport = skiingIcon;
+          break;
+        case 5:
+          sport = weightliftingIcon;
+          break;
+      }
+      return sport;
+    },
+
     handlePopupClose() {
       // Close the popup and enable drawing
       this.showPopup = false;
@@ -226,6 +260,7 @@ export default {
         this.drawEnable = false;
         console.log(typeof event);
         const feature = event.feature;
+        this.curFeature = event.feature;
         const geometry = feature.getGeometry();
         // Hier wird bei jedem Klick von geometrischen Daten der Typ und die Koordinaten geholt
         switch (geometry.getType()) {
