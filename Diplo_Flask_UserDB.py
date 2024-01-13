@@ -215,14 +215,33 @@ def event_hinzuegen():
     if not data:
         return jsonify({'message': f'Bad Request: Keine Daten'}), 400
 
-    event_loc = data.get('event_loc')
-    sport = data.get('sport')
-    creator_id = data.get('user_id')
-    event_date = data.get('event_date')
-    type = data.get('type')  # am Anfang nur 'p'
-    event_name = data.get('event_name')
-    info = data.get('info')
-    max_participants = data.get('max_participants')
+    jwt_data = data.get('jwt')
+    payload = decode_token(jwt_data)
+
+    dataset = {
+        'event_loc': data['coords'],
+        'sport': data['sport'],
+        'user_id': payload["user_id"],
+        'event_date': data['startdate'],
+        'event_name': "Event name",
+        'info': data['description'],
+        'difficulty': data['difficulty'],
+        'participants': data['participants'],
+        'duration': data['duration'],
+    }
+
+    event_loc = dataset.get('event_loc')
+    sport = dataset.get('sport')
+    creator_id = dataset.get('user_id')
+    event_date = dataset.get('event_date')
+    type = "p"  # am Anfang nur 'p'
+    event_name = dataset.get('event_name')
+    info = dataset.get('info')
+    max_participants = dataset.get('max_participants')
+    duration = dataset.get('duration')
+    difficulty = dataset.get('difficulty')
+
+    print(dataset)
 
     if None in [event_loc, sport, creator_id, event_date, type, event_name]:
         return jsonify({'message': 'Bad Request: Fehlende Daten'}), 400
@@ -234,16 +253,16 @@ def event_hinzuegen():
             eventPoint = data.get('eventPoint')
             jsonstring = json.dumps(eventPoint)
             elJson = json.dumps(event_loc)
-            # print(jsonstring)
+            print(jsonstring)
             json_string_in_quotes = "'" + jsonstring + "'"
             # print(json_string_in_quotes)
             cur.execute(
-                'INSERT INTO event_point (event_loc, sport, creator_id, event_date, type, event_name, eventPoint, '
-                'info, max_participants) VALUES (%s::jsonb, %s, %s, %s, %s, %s, %s::jsonb,'
-                '%s, %s)',
+                'SELECT insert_event_point(%s::jsonb,%s, %s, %s, %s, %s, %s::jsonb, %s, %s, %s, %s);',
                 (
                     elJson, sport, creator_id, event_date, type, event_name, jsonstring, info,
-                    max_participants))
+                    max_participants, duration, difficulty
+                )
+            )
             conn.commit()
             return jsonify({'message': f'Sucessful'}), 201
         elif type == 'r':
@@ -260,6 +279,7 @@ def event_hinzuegen():
             return jsonify({'message': f'Not Found: Eventtyp nicht gefunden'}), 404
 
     except Exception as e:
+        print(e)
         return jsonify({'message': f'Internal Server Error: {str(e)}'}), 500
     finally:
         cur.close()
@@ -320,13 +340,15 @@ def test_point_data():
     print(data)
 
     dataset = {
-        'id': payload["user_id"],
-        'sport': payload['sport'],
-        'duration': payload['duration'],
-        'startdate': payload['startdate'],
-        'difficulty': payload['difficulty'],
-        'description': payload['description'],
-        'coords': payload['coords']
+        'event_loc': data['coords'],
+        'sport': data['sport'],
+        'user_id': payload["user_id"],
+        'event_date': data['startdate'],
+        'event_name': "Event name",
+        'info': data['description'],
+        'difficulty': data['difficulty'],
+        'participants': data['participants'],
+        'duration': data['duration'],
     }
 
     print("dataset")

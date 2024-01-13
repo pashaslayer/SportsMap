@@ -305,7 +305,7 @@ export default {
         console.log(this.type);
         console.log(this.coords);
         try {
-          const response = await axios.post("http://127.0.0.1:5000/map/test", {
+          const response = await axios.post("http://127.0.0.1:5000/maps/add", {
             jwt: jwt,
             sport: parseInt(sport),
             duration: duration,

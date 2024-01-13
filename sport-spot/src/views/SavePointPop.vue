@@ -80,6 +80,7 @@ export default {
         .slice(0, 19)
         .replace("T", " ");
 
+        console.log(formattedDatetimeStr);
       return formattedDatetimeStr;
     },
     submitDetails() {
