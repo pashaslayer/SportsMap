@@ -95,7 +95,7 @@ export default {
         "sendData",
         this.sport,
         this.duration,
-        this.startdate,
+        this.formatDatetime(this.startdate),
         this.difficulty,
         this.participants,
         this.description

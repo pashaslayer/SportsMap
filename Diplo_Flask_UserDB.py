@@ -35,17 +35,23 @@ def generate_token(user):
     payload = {
         'user_id': user[0],
         'exp': datetime.utcnow() + timedelta(hours=1),
-        # 'username': user[3],
-        # 'firstname': user[1], //nicht wichtig
-        # 'surname': user[2],
-        # 'fav_sports': user[7],
-        # 'gender': user[8],
-        # 'postal_code': user[9],
-
-        #
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
+
+
+def decode_token(token):
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload
+    except jwt.ExpiredSignatureError:
+        # Handle expired token
+        print("Token has expired")
+        return None
+    except jwt.InvalidTokenError:
+        # Handle invalid token
+        print("Invalid Token")
+        return None
 
 
 @app.route('/login', methods=['POST'])
@@ -71,8 +77,6 @@ def login():
             conn.close()
 
             token = generate_token(user)
-            # print(user)
-            # print(token)
 
             # kein Passwort
             return jsonify({'token': token})
@@ -220,7 +224,6 @@ def event_hinzuegen():
     info = data.get('info')
     max_participants = data.get('max_participants')
 
-
     if None in [event_loc, sport, creator_id, event_date, type, event_name]:
         return jsonify({'message': 'Bad Request: Fehlende Daten'}), 400
 
@@ -231,9 +234,9 @@ def event_hinzuegen():
             eventPoint = data.get('eventPoint')
             jsonstring = json.dumps(eventPoint)
             elJson = json.dumps(event_loc)
-            #print(jsonstring)
+            # print(jsonstring)
             json_string_in_quotes = "'" + jsonstring + "'"
-            #print(json_string_in_quotes)
+            # print(json_string_in_quotes)
             cur.execute(
                 'INSERT INTO event_point (event_loc, sport, creator_id, event_date, type, event_name, eventPoint, '
                 'info, max_participants) VALUES (%s::jsonb, %s, %s, %s, %s, %s, %s::jsonb,'
@@ -242,7 +245,7 @@ def event_hinzuegen():
                     elJson, sport, creator_id, event_date, type, event_name, jsonstring, info,
                     max_participants))
             conn.commit()
-            return jsonify({'message':f'Sucessful'}),201
+            return jsonify({'message': f'Sucessful'}), 201
         elif type == 'r':
             eventRoute = data.get('eventRoute')
             cur.execute(
@@ -252,7 +255,7 @@ def event_hinzuegen():
                 (
                     Json(event_loc), sport, creator_id, event_date, type, event_name, Json(eventRoute), info,
                     max_participants))
-            return jsonify({'message':f'Sucessful'}),201
+            return jsonify({'message': f'Sucessful'}), 201
         else:
             return jsonify({'message': f'Not Found: Eventtyp nicht gefunden'}), 404
 
@@ -261,7 +264,6 @@ def event_hinzuegen():
     finally:
         cur.close()
         conn.close()
-
 
 
 @app.route('/maps/anzeigen', methods=['POST'])
@@ -305,6 +307,33 @@ def all_events():
         return jsonify(event_json)
     else:
         return abort(404)
+
+
+@app.route('/map/test', methods=['POST'])
+def test_point_data():
+    data = request.get_json()
+    jwt_data = data.get('jwt')
+    payload = decode_token(jwt_data)
+    print(payload["user_id"])
+
+    print("data")
+    print(data)
+
+    dataset = {
+        'id': payload["user_id"],
+        'sport': payload['sport'],
+        'duration': payload['duration'],
+        'startdate': payload['startdate'],
+        'difficulty': payload['difficulty'],
+        'description': payload['description'],
+        'coords': payload['coords']
+    }
+
+    print("dataset")
+    print(dataset)
+
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
 
 
 ##########
@@ -361,7 +390,11 @@ def compare_captcha_input():
 ###########
 # JWT TOKEN
 ###########
-
+'''
+@app.route("/getUserFromJWT", methods=["GET"])
+def get_user_from_jwt():
+    data = request.get_json()
+'''
 
 # Muss fertiggemacht werden
 '''

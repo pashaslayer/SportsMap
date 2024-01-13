@@ -52,7 +52,7 @@
           <ol-style>
             <ol-style-stroke color="green" :width="20"></ol-style-stroke>
             <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
-            <ol-style-icon :src="markerIcon" :scale="0.4"></ol-style-icon>
+            <ol-style-icon :src="markerIcon" :scale="0.1"></ol-style-icon>
           </ol-style>
         </ol-interaction-select>
       </ol-source-vector>
@@ -61,7 +61,7 @@
       <ol-style>
         <ol-style-stroke color="red" :width="20"></ol-style-stroke>
         <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
-        <ol-style-icon :src="markerIcon" :scale="0.8"></ol-style-icon>
+        <ol-style-icon :src="markerIcon" :scale="0.05"></ol-style-icon>
       </ol-style>
     </ol-vector-layer>
 
@@ -83,7 +83,7 @@
 
 <script setup>
 // Adding a icon for the selection, for test reasons: marker.png
-import markerIcon from "../assets/marker.png";
+import markerIcon from "../assets/symbols/kreis_blau.svg";
 import cyclingIcon from "../assets/symbols/cycling_kreis_blau.svg";
 import hikingIcon from "../assets/symbols/hiking_kreis_blau.svg";
 import runningIcon from "../assets/symbols/running_kreis_blau.svg";
@@ -168,6 +168,7 @@ export default {
     featureSelected(event) {
       if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
+        console.log(event.selected.iconSourceInt);
         console.log("-----------------------------------------");
         console.log("Selected feature:", selectedFeature.getGeometry());
         console.log("-----------------------------------------");
@@ -198,10 +199,6 @@ export default {
       var iconStyle = new Style({
         image: new Icon(
           /** @type {olx.style.IconOptions} */ ({
-            anchor: [0.5, 46],
-            anchorXUnits: "fraction",
-            anchorYUnits: "pixels",
-            opacity: 1,
             src: iconSrc,
             scale: 0.05,
           })
@@ -299,17 +296,18 @@ export default {
       participants,
       description
     ) {
-      console.error(this.duration);
 
       let jwt = localStorage.getItem("jwt_token");
-      console.log(jwt);
+
+      console.log("JWT: " + jwt);
 
       if (this.coords && this.coords.length !== 0) {
         console.log(this.type);
         console.log(this.coords);
         try {
           const response = await axios.post("http://127.0.0.1:5000/map/test", {
-            sport: sport,
+            jwt: jwt,
+            sport: parseInt(sport),
             duration: duration,
             startdate: startdate,
             difficulty: difficulty,
