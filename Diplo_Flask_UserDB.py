@@ -237,7 +237,7 @@ def event_hinzuegen():
     type = "p"  # am Anfang nur 'p'
     event_name = dataset.get('event_name')
     info = dataset.get('info')
-    max_participants = dataset.get('max_participants')
+    max_participants = dataset.get('participants')
     duration = dataset.get('duration')
     difficulty = dataset.get('difficulty')
 
@@ -258,7 +258,6 @@ def event_hinzuegen():
             json_string_in_quotes = str(event_loc).replace('[', '{').replace(']', '}')
             event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
 
-            info = "Test"
             print(event_loc_convert)
             print(json_string_in_quotes)
             cur.execute(

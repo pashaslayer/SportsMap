@@ -53,7 +53,6 @@ CREATE OR REPLACE FUNCTION insert_event_point(
     p_event_date TIMESTAMP,
     p_type CHAR(1),
     p_event_name VARCHAR(100),
-    --p_eventPoint JSONB,
     p_info VARCHAR(500),
     p_max_participants INT,
     p_duration decimal,
@@ -61,7 +60,6 @@ CREATE OR REPLACE FUNCTION insert_event_point(
 ) RETURNS VOID AS $$
 BEGIN
     p_event_loc = p_event_loc::jsonb;
-    --p_eventPoint = p_eventPoint::jsonb;
     INSERT INTO event_point (event_loc, sport, creator_id, event_date, type, event_name, info, max_participants, duration, difficulty)
     VALUES (
         p_event_loc,
