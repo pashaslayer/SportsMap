@@ -96,6 +96,8 @@ import PopupForm from "./SavePointPop.vue";
 import axios from "axios";
 import { Style, Icon } from "ol/style";
 import "ol/ol.css";
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point.js";
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Dieser ganze Block ist unwichtig is erst später für JWT wichtig!
@@ -142,6 +144,9 @@ export default {
       this.vectorSourceComponent?.source;
     console.log("VS:" + this.olVectorSource.getFeatures());
     this.features = this.olVectorSource.getFeatures();
+
+    // loading of the map at the beginning
+    this.loadPoints();
   },
   methods: {
     handleData(
@@ -206,7 +211,7 @@ export default {
       });
       this.curFeature.setStyle(iconStyle);
     },
-        convertIntToSport(value) {
+    convertIntToSport(value) {
       let sport = "";
       let valueToInt = parseInt(value);
       switch (valueToInt) {
@@ -288,6 +293,49 @@ export default {
       }
     },
 
+    async loadPoints() {
+      try {
+        const response = await axios.get("http://127.0.0.1:5000/maps");
+        console.log(response);
+
+        response.data.forEach((element) => {
+          let pointCor1 = element["event_loc"]["latitude"];
+          let pointCor2 = element["event_loc"]["longitude"];
+          let iconSourceInt = element["sport"];
+          let geoData = new Array(pointCor1, pointCor2);
+
+          console.log(
+          "Selected Point Coordinates: " +
+          geoData +
+            "\n" +
+            "Selected Point Type: " +
+            iconSourceInt
+        );
+
+          var iconFeature = new Feature({
+            geometry: new Point(geoData),
+          });
+
+          let iconSrc = this.convertIntToSport(iconSourceInt);
+          console.log("source: ");
+          console.log(iconSrc);
+
+          var iconStyle = new Style({
+            image: new Icon(
+              /** @type {olx.style.IconOptions} */ ({
+                src: iconSrc,
+                scale: 0.05,
+              })
+            ),
+          });
+          iconFeature.setStyle(iconStyle);
+          this.olVectorSource.addFeature(iconFeature);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async postMap(
       sport,
       duration,
@@ -296,7 +344,6 @@ export default {
       participants,
       description
     ) {
-
       let jwt = localStorage.getItem("jwt_token");
 
       console.log("JWT: " + jwt);

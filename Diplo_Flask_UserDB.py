@@ -251,10 +251,10 @@ def event_hinzuegen():
         cur = conn.cursor()
         if type == 'p':
             eventPoint = data.get('eventPoint')
-            #jsonstring = json.dumps(eventPoint)
-            #ElJson = json.dumps(event_loc)
-            #print(event_loc)
-            #print(ElJson)
+            # jsonstring = json.dumps(eventPoint)
+            # ElJson = json.dumps(event_loc)
+            # print(event_loc)
+            # print(ElJson)
             json_string_in_quotes = str(event_loc).replace('[', '{').replace(']', '}')
             event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
 
@@ -293,22 +293,23 @@ def event_hinzuegen():
 @app.route('/maps/anzeigen', methods=['POST'])
 def event_anzeigen():
     data = request.get_json()
-    event_id = data.get('event_id')
-    if not event_id:
-        return jsonify({'message': f'Bad Request'}), 400
+    event_loc = data.get('coords')
+    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+    if not event_loc:
+        return jsonify({'message': f'Bad Request'}), 405
     else:
         conn = get_db_connection()
         if conn is not None:
             cur = conn.cursor()
-            cur.execute("SELECT type FROM event WHERE event_id = %s;", (event_id,))
+            cur.execute("SELECT type FROM event WHERE event_loc = %s;", (event_loc_convert,))
             result = cur.fetchone()
             if result is not None:
                 v_event_type = result[0]
                 if v_event_type == 'p':
-                    cur.execute("SELECT * FROM event_point WHERE event_id = %s;", (event_id,))
+                    cur.execute("SELECT * FROM event_point WHERE event_loc = %s;", (event_loc_convert,))
 
                 elif v_event_type == 'r':
-                    cur.execute("SELECT * FROM event_route WHERE event_id = %s;", (event_id,))
+                    cur.execute("SELECT * FROM event_route WHERE event_loc = %s;", (event_loc_convert,))
                 event = cur.fetchone()
                 return jsonify({'message': f'Sucessful'}, event), 201
             else:
