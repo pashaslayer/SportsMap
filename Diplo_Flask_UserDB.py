@@ -214,7 +214,7 @@ def event_hinzuegen():
     data = request.get_json()
     if not data:
         return jsonify({'message': f'Bad Request: Keine Daten'}), 400
-
+    print(data)
     jwt_data = data.get('jwt')
     payload = decode_token(jwt_data)
 
@@ -251,15 +251,20 @@ def event_hinzuegen():
         cur = conn.cursor()
         if type == 'p':
             eventPoint = data.get('eventPoint')
-            jsonstring = json.dumps(eventPoint)
-            elJson = json.dumps(event_loc)
-            print(jsonstring)
-            json_string_in_quotes = "'" + jsonstring + "'"
-            # print(json_string_in_quotes)
+            #jsonstring = json.dumps(eventPoint)
+            #ElJson = json.dumps(event_loc)
+            #print(event_loc)
+            #print(ElJson)
+            json_string_in_quotes = str(event_loc).replace('[', '{').replace(']', '}')
+            event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+
+            info = "Test"
+            print(event_loc_convert)
+            print(json_string_in_quotes)
             cur.execute(
-                'SELECT insert_event_point(%s::jsonb,%s, %s, %s, %s, %s, %s::jsonb, %s, %s, %s, %s);',
+                'SELECT insert_event_point(%s::jsonb,%s, %s, %s, %s, %s, %s, %s, %s, %s);',
                 (
-                    elJson, sport, creator_id, event_date, type, event_name, jsonstring, info,
+                    event_loc_convert, sport, creator_id, event_date, type, event_name, info,
                     max_participants, duration, difficulty
                 )
             )
