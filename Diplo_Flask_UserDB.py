@@ -290,33 +290,37 @@ def event_hinzuegen():
         conn.close()
 
 
-@app.route('/maps/anzeigen', methods=['POST'])
+@app.route('/maps/anzeigen', methods=['GET'])
 def event_anzeigen():
     data = request.get_json()
     event_loc = data.get('coords')
-    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
     if not event_loc:
         return jsonify({'message': f'Bad Request'}), 405
     else:
+        event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
         conn = get_db_connection()
         if conn is not None:
-            cur = conn.cursor()
-            cur.execute("SELECT type FROM event WHERE event_loc = %s;", (event_loc_convert,))
-            result = cur.fetchone()
-            if result is not None:
-                v_event_type = result[0]
-                if v_event_type == 'p':
-                    cur.execute("SELECT * FROM event_point WHERE event_loc = %s;", (event_loc_convert,))
+            try:
+                cur = conn.cursor()
+                cur.execute("SELECT type FROM event WHERE event_loc = %s;", (event_loc_convert,))
+                result = cur.fetchone()
 
-                elif v_event_type == 'r':
-                    cur.execute("SELECT * FROM event_route WHERE event_loc = %s;", (event_loc_convert,))
-                event = cur.fetchone()
-                return jsonify({'message': f'Sucessful'}, event), 201
-            else:
-                return jsonify({'message': f'Bad Request'}), 400
+                if result is not None:
+                    v_event_type = result[0]
+                    if v_event_type == 'p':
+                        cur.execute("SELECT * FROM event_point WHERE event_loc = %s;", (event_loc_convert,))
 
+                    elif v_event_type == 'r':
+                        cur.execute("SELECT * FROM event_route WHERE event_loc = %s;", (event_loc_convert,))
+                    event = cur.fetchone()
+                    return jsonify({'message': f'Sucessful'}, event), 201
+                else:
+                    return jsonify({'message': f'Bad Request'}), 400
+            except Exception as e:
+                print(e)
         else:
             return jsonify({'message': f'Internal Server Error'}), 500
+
 
 
 @app.route('/maps', methods=['GET'])

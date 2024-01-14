@@ -72,13 +72,17 @@
       @closePopup="closePopupOnly"
       @sendData="postMap"
     ></popup-form>
-  </ol-map>
+
+    <show-point-pop
+    :showPopupPoint="showPopupPoint"
+    :selectedEventCoordinates="selectedEventCoordinates"
+  ></show-point-pop>
+  </ol-map>                                                                
+
+
 
   <br />
 
-  <button type="submit" class="btn btn-primary" @click="postMap">
-    Koordinaten Abschicken
-  </button>
 </template>
 
 <script setup>
@@ -93,6 +97,7 @@ import weightliftingIcon from "../assets/symbols/weightlifting_kreis_blau.svg";
 
 <script>
 import PopupForm from "./SavePointPop.vue";
+import ShowPointPop from "./ShowPointPop.vue";
 import axios from "axios";
 import { Style, Icon } from "ol/style";
 import "ol/ol.css";
@@ -132,6 +137,10 @@ export default {
       olVectorSource: "",
 
       curFeature: null,
+
+      // Select single coordinate
+      showPopupPoint: false,
+      selectedEventCoordinates: null,
     };
   },
 
@@ -173,12 +182,17 @@ export default {
     featureSelected(event) {
       if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
+        const geometry = selectedFeature.getGeometry();
+         
         console.log(event.selected.iconSourceInt);
         console.log("-----------------------------------------");
         console.log("Selected feature:", selectedFeature.getGeometry());
         console.log("-----------------------------------------");
 
         // here we can work with the selectedFeature
+        this.selectedEventCoordinates = geometry.getCoordinates();
+        console.log(this.selectedEventCoordinates);
+        this.showPopupPoint = true;
       }
     },
 
@@ -387,7 +401,7 @@ export default {
   },
   components: {
     PopupForm,
-    // ... other components
+    ShowPointPop
   },
 };
 </script>
