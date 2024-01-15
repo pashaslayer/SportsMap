@@ -290,7 +290,7 @@ def event_hinzuegen():
         conn.close()
 
 
-@app.route('/maps/anzeigen', methods=['GET'])
+@app.route('/maps/anzeigen', methods=['POST'])
 def event_anzeigen():
     data = request.get_json()
     event_loc = data.get('coords')
