@@ -19,7 +19,7 @@
   
         <div class="buttons">
           <button @click="enterEvent">Take part</button>
-          <button @click="closePopup">Close</button>
+          <button @click="closePointPopup">Close</button>
         </div>
       </div>
     </div>
@@ -46,7 +46,6 @@
       };
     },
     watch: {
-      // If the popup opens, the Point data should be received from the database
       showPopupPoint(value){
       if(value == true){
         this.loadPointData();
@@ -54,11 +53,8 @@
     }
     },
     methods: {
-      closePopup() {
-        console.log("closePopup");
-        console.log("onClose", this.onClose);
-        this.$emit("handleclose");
-        //this.onClose; // This should call the function passed as a prop
+      closePointPopup() {
+        this.$emit("handlepointclose");
       },
       formatDatetime(originalDatetimeStr) {
         // Convert the string to a Date object
@@ -67,37 +63,13 @@
           .toISOString()
           .slice(0, 19)
           .replace("T", " ");
-  
-          console.log(formattedDatetimeStr);
         return formattedDatetimeStr;
       },
       enterEvent(){
 
       },
-      submitDetails() {
-        console.log(
-          "Submitting:",
-          this.duration,
-          this.sport,
-          this.formatDatetime(this.startdate),
-          this.difficulty,
-          this.participants
-        );
-        this.$emit(
-          "sendData",
-          this.sport,
-          this.duration,
-          this.formatDatetime(this.startdate),
-          this.difficulty,
-          this.participants,
-          this.description
-        );
-        this.$emit("closePopup");
-      },
       async loadPointData() {
-      try {
-        
-        console.log("pwnisdifnsdofn " + this.selectedEventCoordinates);
+      try {        
         const response = await axios.post("http://127.0.0.1:5000/maps/anzeigen", {
             coords: this.selectedEventCoordinates
           });
@@ -117,7 +89,7 @@
     background-color: tan;
     position: absolute;
     top: 50px;
-    left: 50px;
+    right: 50px;
     z-index: 1000; /* Ensure it's above the map */
     padding: 15px;
     border-radius: 8px;

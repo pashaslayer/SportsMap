@@ -50,8 +50,6 @@
         <!-- Feature Selection Interaction -->
         <ol-interaction-select @select="featureSelected">
           <ol-style>
-            <ol-style-stroke color="green" :width="20"></ol-style-stroke>
-            <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
             <ol-style-icon :src="markerIcon" :scale="0.1"></ol-style-icon>
           </ol-style>
         </ol-interaction-select>
@@ -59,8 +57,6 @@
 
       <!-- Here we are able to set an icon for the drawing/placing of a feature -->
       <ol-style>
-        <ol-style-stroke color="red" :width="20"></ol-style-stroke>
-        <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
         <ol-style-icon :src="markerIcon" :scale="0.05"></ol-style-icon>
       </ol-style>
     </ol-vector-layer>
@@ -76,6 +72,7 @@
     <show-point-pop
     :showPopupPoint="showPopupPoint"
     :selectedEventCoordinates="selectedEventCoordinates"
+    @handlepointclose="handlePointPopupClose"
   ></show-point-pop>
   </ol-map>                                                                
 
@@ -180,7 +177,11 @@ export default {
     },
 
     featureSelected(event) {
-      if (event.selected.length > 0) {
+      // Diese if schließt das Point Popup weil beim Erstellen von einem Punkt, gleichzeitig die Selektion ausgewählt wird
+      if(this.showPopup){
+        this.handlePointPopupClose();
+      }
+      else if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
         const geometry = selectedFeature.getGeometry();
          
@@ -269,6 +270,9 @@ export default {
         "Remaining features after removal:",
         this.olVectorSource.getFeatures()
       );
+    },
+    handlePointPopupClose(){
+      this.showPopupPoint = false; 
     },
     drawend(event) {
       if (!this.showPopup) {
