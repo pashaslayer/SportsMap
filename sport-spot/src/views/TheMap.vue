@@ -197,14 +197,6 @@ export default {
       }
     },
 
-    // Check for Token Expiration Date compare it with current time
-    isTokenExpired() {
-      const expirationTime = localStorage.getItem("jwt_token_exp");
-      if (expirationTime) {
-        return new Date().getTime() > parseInt(expirationTime, 10);
-      }
-      return true;
-    },
     closePopupOnly() {
       this.showPopup = false;
       this.drawEnable = true;

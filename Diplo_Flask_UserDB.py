@@ -34,7 +34,7 @@ def get_db_connection():
 def generate_token(user):
     payload = {
         'user_id': user[0],
-        'exp': datetime.utcnow() + timedelta(hours=1),
+        'exp': datetime.utcnow() + timedelta(minutes=1),
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -45,11 +45,9 @@ def decode_token(token):
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         return payload
     except jwt.ExpiredSignatureError:
-        # Handle expired token
         print("Token has expired")
         return None
     except jwt.InvalidTokenError:
-        # Handle invalid token
         print("Invalid Token")
         return None
 
@@ -370,6 +368,7 @@ def test_point_data():
 ##########
 # Captcha
 ##########
+
 @app.route("/getCaptcha", methods=["GET"])
 def get_captcha_data():
     svg_path = 'Captcha/captcha.svg'
@@ -422,11 +421,14 @@ def compare_captcha_input():
 # JWT TOKEN
 ###########
 '''
-@app.route("/getUserFromJWT", methods=["GET"])
+@app.route("/getTimeFromJWT", methods=["GET"])
 def get_user_from_jwt():
-    data = request.get_json()
-'''
+    jwt_data = request
+    payload = decode_token(jwt_data)
+    print(payload)
+    return payload["exp"]
 
+'''
 # Muss fertiggemacht werden
 '''
 @app.route("/getExpirationTime", methods=["POST"])
