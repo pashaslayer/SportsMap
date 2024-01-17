@@ -35,7 +35,7 @@ def get_db_connection():
 def generate_token(user):
     payload = {
         'user_id': user[0],
-        'exp': datetime.utcnow() + timedelta(minutes=1),
+        'exp': datetime.utcnow() + timedelta(minutes=15),
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
