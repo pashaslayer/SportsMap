@@ -58,16 +58,18 @@
           required
         />
       </div>
+      <div class="d-flex justify-content-center">
+      <span class="mr-2" >Noch nicht registriert?: </span>
+      <router-link to="/registration">Register</router-link>
+    </div>
     </div>
 
     <div class="row" style="height: 20px"></div>
 
-    <div class="row" style="height: 80px"></div>
+    <captcha-view></captcha-view>
 
-    <div class="d-flex justify-content-center">
-      <span class="mr-2">Noch nicht registriert?: </span>
-      <router-link to="/registration">Register</router-link>
-    </div>
+
+
 
     <div class="row">
       <div class="col-md-6 d-flex justify-content-end">
@@ -79,6 +81,7 @@
         <button type="submit" class="btn btn-secondary">Abbrechen</button>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -108,6 +111,7 @@ body {
 </style>
 
 <script>
+import CaptchaView from "./CaptchaView.vue";
 import axios from "axios";
 
 export default {
@@ -186,6 +190,9 @@ export default {
       }
       return true;
     },
+  },
+  components: {
+    CaptchaView
   },
 };
 

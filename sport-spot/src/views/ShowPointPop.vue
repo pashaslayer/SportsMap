@@ -1,12 +1,14 @@
 <template>
   <div v-if="this.showPopupPoint" class="popup-form">
     <div class="popup-content">
-      <h2> {{ sport }}</h2>
+      <h2>{{ convertSportIdToString() }}</h2>
 
-      <h4> Organisator: </h4>
-      <label for="creator_firstname"> {{ creator_firstname + " " }} {{ creator_surname }}</label>
-
-      <label for="sport">Sport:</label>
+      <h4>Organisator:</h4>
+      <label for="creator_firstname">
+        Name: {{ creator_firstname + " " }} {{ creator_surname }}</label
+      >
+      <label for="email">Email: {{ creator_email }}</label>
+      <label for="age">Age: {{ age }}</label>
 
       <label for="startdate">Date: {{ event_date }}</label>
 
@@ -27,16 +29,15 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 import axios from "axios";
-
 
 export default {
   props: {
     showPopupPoint: Boolean,
     onClose: Function,
-    selectedEventCoordinates: Array
+    selectedEventCoordinates: Array,
   },
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
       creator_surname: "",
       creator_username: "",
 
-      // Event 
+      // Event
       event_date: "",
       event_id: null,
       event_lat: null,
@@ -63,14 +64,10 @@ export default {
     };
   },
   watch: {
-    showPopupPoint(value) {
-      if (value == true) {
-        this.loadPointData();
-      }
+    // Dieser watcher schaut auf Änderungen von den Koordinaten und macht dann einen call zur Datenbank
+    selectedEventCoordinates() {
+      this.loadPointData();
     },
-    sport(value) {
-      this.$emit("sendselectedicon"), value;
-    }
   },
   methods: {
     closePointPopup() {
@@ -85,14 +82,36 @@ export default {
         .replace("T", " ");
       return formattedDatetimeStr;
     },
-    enterEvent() {
-
+    enterEvent() {},
+    convertSportIdToString() {
+      var sportInString = "";
+      switch (this.sport) {
+        case 1:
+          sportInString = "Cycling";
+          break;
+        case 2:
+          sportInString = "Hiking";
+          break;
+        case 3:
+          sportInString = "Running";
+          break;
+        case 4:
+          sportInString = "Skiing";
+          break;
+        case 5:
+          sportInString = "Weightlifting";
+          break;
+      }
+      return sportInString;
     },
     async loadPointData() {
       try {
-        const response = await axios.post("http://127.0.0.1:5000/maps/anzeigen", {
-          coords: this.selectedEventCoordinates
-        });
+        const response = await axios.post(
+          "http://127.0.0.1:5000/maps/anzeigen",
+          {
+            coords: this.selectedEventCoordinates,
+          }
+        );
 
         this.event_id = response.data["event_id"];
         this.creator_email = response.data["creator_email"];
@@ -109,9 +128,6 @@ export default {
 
         console.log(response.data);
         console.log(response.data["age"]);
-
-
-
       } catch (error) {
         console.log(error);
       }
@@ -119,7 +135,7 @@ export default {
   },
 };
 </script>
-  
+
 <style>
 .popup-form {
   background-color: tan;
@@ -182,4 +198,3 @@ button:hover {
   background-color: #555;
 }
 </style>
-  

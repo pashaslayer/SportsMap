@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 style="user-select: none; justify-content: center; align-items: center;">Captcha</h1>
     <div
       v-if="svg"
       v-html="svg"

@@ -49,9 +49,6 @@
 
         <!-- Feature Selection Interaction -->
         <ol-interaction-select @select="featureSelected">
-          <ol-style>
-            <ol-style-icon :src="convertIntToSport(selectedIconValue)" :scale="0.1"></ol-style-icon>
-          </ol-style>
         </ol-interaction-select>
       </ol-source-vector>
 
@@ -72,7 +69,6 @@
     <show-point-pop
     :showPopupPoint="showPopupPoint"
     :selectedEventCoordinates="selectedEventCoordinates"
-    @sendselectedicon="changeIconSelect"
     @handlepointclose="handlePointPopupClose"
   ></show-point-pop>
   </ol-map>                                                                
@@ -84,13 +80,23 @@
 </template>
 
 <script setup>
-// Adding a icon for the selection, for test reasons: marker.png
-import markerIcon from "../assets/symbols/kreis_blau.svg";
-import cyclingIcon from "../assets/symbols/cycling_kreis_blau.svg";
-import hikingIcon from "../assets/symbols/hiking_kreis_blau.svg";
-import runningIcon from "../assets/symbols/running_kreis_blau.svg";
-import skiingIcon from "../assets/symbols/skiing_kreis_blau.svg";
-import weightliftingIcon from "../assets/symbols/weightlifting_kreis_blau.svg";
+// Blaue Symbole 
+import markerIcon from "../assets/symbols_blau/kreis_blau.svg";
+import cyclingIcon from "../assets/symbols_blau/cycling_kreis_blau.svg";
+import hikingIcon from "../assets/symbols_blau/hiking_kreis_blau.svg";
+import runningIcon from "../assets/symbols_blau/running_kreis_blau.svg";
+import skiingIcon from "../assets/symbols_blau/skiing_kreis_blau.svg";
+import weightliftingIcon from "../assets/symbols_blau/weightlifting_kreis_blau.svg";
+
+// Grüne Symbole
+//import markerIconGreen from "../assets/symbols_gruen/kreis_grün.svg";
+//import cyclingIconGreen from "../assets/symbols_gruen/cycling_kreis_grün.svg";
+//import hikingIconGreen from "../assets/symbols_gruen/hiking_kreis_grün.svg";
+//import runningIconGreen from "../assets/symbols_gruen/running_kreis_grün.svg";
+//import skiingIconGreen from "../assets/symbols_gruen/skiing_kreis_grün.svg";
+//import weightliftingIconGreen from "../assets/symbols_gruen/weightlifting_kreis_grün.svg";
+
+
 </script>
 
 <script>
@@ -139,8 +145,6 @@ export default {
       // Select single coordinate
       showPopupPoint: false,
       selectedEventCoordinates: null,
-
-      selectedIconValue: 0
     };
   },
   mounted() {
@@ -196,6 +200,16 @@ export default {
         this.selectedEventCoordinates = geometry.getCoordinates();
         console.log(this.selectedEventCoordinates);
         this.showPopupPoint = true;
+        
+        var iconStyle = new Style({
+            image: new Icon(
+              /** @type {olx.style.IconOptions} */ ({
+                src: this.convertIntToSport(selectedFeature["values_"]["sport"]),
+                scale: 0.08,
+              })
+            ),
+          });
+          selectedFeature.setStyle(iconStyle);
       }
     },
 
@@ -329,6 +343,7 @@ export default {
 
           var iconFeature = new Feature({
             geometry: new Point(geoData),
+            sport: iconSourceInt
           });
 
           let iconSrc = this.convertIntToSport(iconSourceInt);
@@ -350,7 +365,6 @@ export default {
         console.log(error);
       }
     },
-
     async postMap(
       sport,
       duration,
@@ -399,9 +413,6 @@ export default {
     updateFeatureStyle(feature) {
       feature.setStyle();
     },
-    changeIconSelect(value){
-      self.selectedIconValue = value;
-    }
   },
   components: {
     PopupForm,
