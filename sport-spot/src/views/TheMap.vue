@@ -50,7 +50,7 @@
         <!-- Feature Selection Interaction -->
         <ol-interaction-select @select="featureSelected">
           <ol-style>
-            <ol-style-icon :src="markerIcon" :scale="0.1"></ol-style-icon>
+            <ol-style-icon :src="convertIntToSport(selectedIconValue)" :scale="0.1"></ol-style-icon>
           </ol-style>
         </ol-interaction-select>
       </ol-source-vector>
@@ -72,6 +72,7 @@
     <show-point-pop
     :showPopupPoint="showPopupPoint"
     :selectedEventCoordinates="selectedEventCoordinates"
+    @sendselectedicon="changeIconSelect"
     @handlepointclose="handlePointPopupClose"
   ></show-point-pop>
   </ol-map>                                                                
@@ -138,9 +139,10 @@ export default {
       // Select single coordinate
       showPopupPoint: false,
       selectedEventCoordinates: null,
+
+      selectedIconValue: 0
     };
   },
-
   mounted() {
     this.vectorSourceComponent = this.$refs.vectorSource;
     console.log(this.vectorSourceComponent); // Inspect the object
@@ -222,6 +224,9 @@ export default {
       let sport = "";
       let valueToInt = parseInt(value);
       switch (valueToInt) {
+        case 0:
+          sport = markerIcon;
+          break;
         case 1:
           sport = cyclingIcon;
           break;
@@ -394,6 +399,9 @@ export default {
     updateFeatureStyle(feature) {
       feature.setStyle();
     },
+    changeIconSelect(value){
+      self.selectedIconValue = value;
+    }
   },
   components: {
     PopupForm,
