@@ -308,13 +308,15 @@ def event_anzeigen():
                     v_event_type = result[0]
                     if v_event_type == 'p':
                         cur.execute("SELECT e.event_id, e.event_loc AS event_loc, e.sport AS sport, e.event_date, "
-                                    "e.type, e.creator_id AS creator_id, u.firstname AS creator_firstname, "
+                                    "e.type, e.difficulty, e.duration, e.info, e.max_participants, "
+                                    "e.creator_id AS creator_id, u.firstname AS creator_firstname,"
                                     "u.surname AS creator_surname, u.username AS creator_username, EXTRACT(YEAR FROM "
                                     "CURRENT_DATE) - EXTRACT(YEAR FROM u.birthdate) AS birthdate, u.email AS "
                                     "creator_email, COUNT(ep.user_id) AS participants FROM event_point e JOIN users u "
                                     "ON e.creator_id = u.user_id LEFT JOIN event_participants ep ON e.event_id = "
                                     "ep.event_id LEFT JOIN users up ON ep.user_id = up.user_id WHERE e.event_loc = %s "
-                                    "GROUP BY e.event_id, e.event_loc, e.sport, e.event_date, e.type, e.creator_id, "
+                                    "GROUP BY e.event_id, e.event_loc, e.sport, e.event_date, e.type, e.difficulty, "
+                                    "e.duration, e.info, e.max_participants, e.creator_id,"
                                     "u.firstname, u.surname, u.username, u.email, u.user_id; ", (event_loc_convert,))
                         event = cur.fetchone()
                         if event:
@@ -325,13 +327,17 @@ def event_anzeigen():
                                 "sport": event[2],
                                 "event_date": event[3],
                                 "type": event[4],
-                                "creator_id": event[5],
-                                "creator_firstname": event[6],
-                                "creator_surname": event[7],
-                                "creator_username": event[8],
-                                "age": event[9],
-                                "creator_email": event[10],
-                                "participants": event[11]
+                                "difficulty": event[5],
+                                "duration": event[6],
+                                "description": event[7],
+                                "max_participants": event[8],
+                                "creator_id": event[9],
+                                "creator_firstname": event[10],
+                                "creator_surname": event[11],
+                                "creator_username": event[12],
+                                "age": event[13],
+                                "creator_email": event[14],
+                                "participants": event[15]
                             }
 
                         else:
