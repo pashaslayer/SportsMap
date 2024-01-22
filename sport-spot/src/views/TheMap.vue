@@ -23,6 +23,7 @@
         title="Point"
         :onToggle="(active) => changeDrawType(active, 'Point')"
       />
+      <!--
       <ol-toggle-control
         html="🔹"
         className="edit"
@@ -35,6 +36,7 @@
         title="LineString"
         :onToggle="(active) => changeDrawType(active, 'LineString')"
       />
+      -->
     </ol-control-bar>
 
     <ol-vector-layer ref="vectorLayer">

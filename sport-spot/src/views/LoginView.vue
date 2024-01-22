@@ -59,17 +59,12 @@
         />
       </div>
       <div class="d-flex justify-content-center">
-      <span class="mr-2" >Noch nicht registriert?: </span>
-      <router-link to="/registration">Register</router-link>
-    </div>
+        <span class="mr-2">Noch nicht registriert?: </span>
+        <router-link to="/registration">Register</router-link>
+      </div>
     </div>
 
     <div class="row" style="height: 20px"></div>
-
-    <captcha-view></captcha-view>
-
-
-
 
     <div class="row">
       <div class="col-md-6 d-flex justify-content-end">
@@ -81,7 +76,18 @@
         <button type="submit" class="btn btn-secondary">Abbrechen</button>
       </div>
     </div>
+  </div>
 
+  <br>
+  <br>
+  <button type="submit" class="btn btn-secondary" @click="handleCaptchaSuccess">Cheat Button für Testzwecke um Captcha nicht ausfüllen zu müssen</button>
+
+  <div v-if="showCaptchaModal" class="modal">
+    <CaptchaView
+      @captcha-success="handleCaptchaSuccess"
+      @captcha-fail="handleCaptchaFail"
+      @close-modal="closeModal"
+    />
   </div>
 </template>
 
@@ -123,30 +129,36 @@ export default {
         password: "",
       },
       wheelAnimation: false,
+      showCaptchaModal: false,
     };
   },
   methods: {
-    async postLogin() {
+    postLogin() {
+      this.showCaptchaModal = true;
+    },
+    closeModal(){
+      this.showCaptchaModal = false;
+    },
+    handleCaptchaSuccess() {
+      // Hide Captcha modal
+      this.showCaptchaModal = false;
+
+      // Proceed with sending login data
       axios
         .post("http://127.0.0.1:5000/login", this.postData)
         .then((response) => {
-          const token = response.data.token;
-
-          // setting the JWT Token inside the local storage
-          this.storeTokenInLocalStorage(token);
-
-          if (response.data.success) {
-            this.startWheelAnimation();
-
-            setTimeout(() => {
-              window.location.href = "/home";
-            }, 2000);
-          }
+          this.storeTokenInLocalStorage(response.data.token);
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
         });
     },
+
+    handleCaptchaFail() {
+      // Show an error message and fetch a new captcha
+      // You might need to implement a method in CaptchaView.vue to refresh the captcha
+    },
+
     async getExpirationTime() {
       try {
         const response = await axios.post(
@@ -192,7 +204,7 @@ export default {
     },
   },
   components: {
-    CaptchaView
+    CaptchaView,
   },
 };
 

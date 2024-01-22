@@ -1,32 +1,29 @@
 <template>
-  <div>
-    <div
-      v-if="svg"
-      v-html="svg"
-      class="rounded mx-auto d-block"
-      style="
-        margin: auto;
-        padding: auto;
-        height: fit-content;
-        width: fit-content;
-        user-select: none;
-      "
-      @click="fetchCaptcha"
-    ></div>
+  <div class="modal fade show" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Captcha Verification</h5>
+          <button type="button" class="close" @click="$emit('close-modal')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div v-if="svg" v-html="svg" class="captcha-image rounded mx-auto d-block" @click="fetchCaptcha"></div>
+          <input v-model="compare.input" type="text" class="form-control mt-3" required placeholder="Enter Captcha Here" />
+          <p v-if="compare.input.length < 5 || compare.input.length > 5" class="text-danger mt-2">
+            Input should be exactly 5 characters.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" @click="compareCaptcha">Send</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <input
-    v-model="compare.input"
-    type="text"
-    class="form-control"
-    required
-  />
-  <button type="submit" class="btn btn-primary" @click="compareCaptcha">
-    Send
-  </button>
-  <p v-if="compare.input.length < 5 || compare.input.length > 5">
-      Input should be exactly 5 characters.
-    </p>
+  <div class="modal-backdrop fade show"></div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -57,22 +54,93 @@ export default {
       }
     },
     async compareCaptcha() {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:5000/compareInput",
-          this.compare
-        );
-        if (response.status == 201) {
-          console.log("very nice");
-        }
-        else {
-          console.log("Input should be exactly 5 characters.");
-        }
-      } catch (error) {
-        console.error("Error comparing captcha:", error);
-        this.fetchCaptcha();
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5000/compareInput",
+        this.compare
+      );
+      if (response.status == 201) {
+        this.$emit('captcha-success');
+      } else {
+        this.$emit('captcha-fail');
       }
-    },
+    } catch (error) {
+      console.error("Error comparing captcha:", error);
+      this.fetchCaptcha();
+    }
+  },
   },
 };
 </script>
+<style>
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modal-header, .modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h5 {
+  margin: 0;
+}
+
+.modal-body {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.captcha-image {
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.text-danger {
+  color: #dc3545;
+  margin-top: 10px;
+}
+
+button {
+  cursor: pointer;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 900;
+}
+</style>

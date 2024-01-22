@@ -16,7 +16,7 @@
 
       <label for="difficulty">Difficulty: {{ difficulty }}</label>
 
-      <label for="participants">Participants: {{ participants }}</label>
+      <label for="participants">Participants: {{ participants }} / {{ maxParticipants }}</label>
 
       <label> Description: {{ description }}</label>
 
@@ -43,8 +43,9 @@ export default {
     return {
       sport: 0,
       duration: null,
-      difficulty: "easy",
-      participants: null,
+      difficulty: "",
+      participants: 0,
+      maxParticipants: "",
       description: "",
 
       // User
@@ -125,6 +126,10 @@ export default {
         this.event_lon = response.data["event_loc"]["longitude"];
         this.cur_participants = response.data["participants"];
         this.sport = response.data["sport"];
+        this.difficulty = response.data["difficulty"];
+        this.description = response.data["description"];
+        this.maxParticipants = response.data["max_participants"];
+        this.duration = response.data["duration"];
 
         console.log(response.data);
         console.log(response.data["age"]);
