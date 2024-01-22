@@ -324,7 +324,12 @@ export default {
 
     async loadPoints() {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/maps");
+        let jwt = localStorage.getItem("jwt_token");
+
+        const response = await axios.get("http://127.0.0.1:5000/maps", {
+          jwt: jwt
+        }
+        );
         console.log(response);
 
         response.data.forEach((element) => {
