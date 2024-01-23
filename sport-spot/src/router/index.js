@@ -37,7 +37,17 @@ const routes = [
   {
     path: '/map',
     name: 'map',
-    component: () => import(/* webpackChunkName: "map" */ '../views/TheMap.vue')
+    component: () => import(/* webpackChunkName: "map" */ '../views/TheMap.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('jwt_token');
+      if (token) {
+        // User has a token, allow access to the route
+        next();
+      } else {
+        // User does not have a token, redirect to the login page
+        next('/login');
+      }
+    },
   },
   {
     path: '/pickSports',
@@ -59,7 +69,15 @@ const routes = [
         next('/login');
       }
     },
+  },
+
+  // for every other route it should redirect back to the home page
+  {
+    // This route will match any other route that is not explicitly defined
+    path: '/:catchAll(.*)',
+    redirect: '/'
   }
+  
 ]
 
 const router = createRouter({

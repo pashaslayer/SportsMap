@@ -200,7 +200,10 @@ def delete_user(user_id):
     conn = get_db_connection()
     if conn is not None:
         cur = conn.cursor()
-        cur.execute('DELETE FROM users WHERE user_id = %s;', (user_id,))
+        cur.execute('DELETE From event_participants WHERE user_id = %s;'
+                    'DELETE FROM event WHERE creator_id = %s;'
+                    'DELETE FROM Event_point WHERE creator_id = %s;'
+                    'DELETE FROM users WHERE user_id = %s;', (user_id,user_id,user_id,user_id))
         conn.commit()
         return jsonify({'message': f'User {user_id} successfully deleted'}), 201
 

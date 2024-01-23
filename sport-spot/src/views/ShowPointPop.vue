@@ -36,7 +36,6 @@ import axios from "axios";
 export default {
   props: {
     showPopupPoint: Boolean,
-    onClose: Function,
     selectedEventCoordinates: Array,
   },
   data() {
