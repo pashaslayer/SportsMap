@@ -40,10 +40,16 @@
       </form>
     </div>
   </div>
+
+  <div style="display: none;">
+  <registration-view @sendemail="getEmailHandle"></registration-view>
+  </div>
+
 </template>
 
 <script>
 import axios from "axios";
+import RegistrationView from "./RegistrationView.vue";
 
 export default {
   data() {
@@ -53,11 +59,6 @@ export default {
       allSports: [2, 4, 6, 8, 10, 12],
       email: "",
     };
-  },
-  created() {
-    const query = this.$route.query;
-
-    this.email = query["email"];
   },
   methods: {
     toggleImage(index) {
@@ -79,6 +80,10 @@ export default {
     },
     resetImages() {
       this.allSports = [2, 4, 6, 8, 10, 12];
+    },
+    getEmailHandle(value){
+      console.log(value);
+      this.email = value;
     },
     postSports() {
       let mapSports = {
@@ -113,6 +118,9 @@ export default {
           console.error(error);
         });
     },
+  },
+  components: {
+    RegistrationView
   },
 };
 </script>

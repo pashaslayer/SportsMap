@@ -267,7 +267,8 @@ export default {
 
 
           setTimeout(() => {
-            this.$router.push({ path: '/pickSports', query: { email } });
+            this.$router.push({ path: '/pickSports'});
+            this.$emit('sendemail', email);
           }, 2000);
         })
         .catch((error) => {
