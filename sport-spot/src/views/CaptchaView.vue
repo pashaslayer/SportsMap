@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade show" style="display: block;">
+  <div class="modal" style="display: block;">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -9,7 +9,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <div v-if="svg" v-html="svg" class="captcha-image rounded mx-auto d-block" @click="fetchCaptcha"></div>
+          <div v-if="svg" v-html="svg" class="captcha-image" @click="fetchCaptcha"></div>
           <input v-model="compare.input" type="text" class="form-control mt-3" required placeholder="Enter Captcha Here" />
           <p v-if="compare.input.length < 5 || compare.input.length > 5" class="text-danger mt-2">
             Input should be exactly 5 characters.
@@ -21,7 +21,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-backdrop fade show"></div>
+  <div class="modal-backdrop"></div>
 </template>
 
 
@@ -86,6 +86,10 @@ export default {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+.modal-title{
+  color:#0056b3;
+}
+
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -110,9 +114,9 @@ export default {
 }
 
 .captcha-image {
-  cursor: pointer;
-  display: block;
   margin: 0 auto;
+  width: 100%;
+  width: 5cm;
   user-select: none;
 }
 
