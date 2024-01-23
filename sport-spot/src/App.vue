@@ -1,6 +1,5 @@
-
 <template>
-<!--  
+  <!--  
   data-bs-keyboard        ... schließen des bootstrap offcanvas mittels esc
   data-bs-backdrop="true" ... schließen des offcanvas geht mit Klick auf restliche fläche falls "false" ... schließen geht nur über button rest ist mit unsichtbarem gitter
   d-none                  ... Diese Klasse bewirkt, dass das Element nicht auf dem Bildschirm sichtbar ist, es bleibt jedoch im HTML-Dokument vorhanden
@@ -9,43 +8,120 @@
   <i class="fs-5 bi-table"> .. für icon geht aber nicht bei links daher löäschen
 
 -->
-<div class="offcanvas offcanvas-start w-15" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="true">
+  <div
+    class="offcanvas offcanvas-start w-15"
+    id="offcanvas"
+    data-bs-keyboard="false"
+    data-bs-backdrop="true"
+  >
     <div class="offcanvas-header">
-        <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+      <button
+        type="button"
+        class="btn-close text-reset"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"
+      ></button>
     </div>
     <div class="offcanvas-body px-0">
-        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
-            <li class="nav-item">
-                <a class="nav-link text-truncate"> 
-                    <span class="ms-1 d-none d-sm-inline"><router-link to="/">Home</router-link></span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link text-truncate">
-                    <span class="ms-1 d-none d-sm-inline"><router-link to="/about">About</router-link></span> </a>
-            </li>
-            <li>
-                <a class="nav-link text-truncate">
-                    <span class="ms-1 d-none d-sm-inline"><router-link to="/login">Login</router-link></span> </a>
-            </li>
-            <li>
-                <a class="nav-link text-truncate">
-                    <span class="ms-1 d-none d-sm-inline"><router-link to="/registration">Registration</router-link></span> </a>
-            </li>
-            <li>
-                <a class="nav-link text-truncate">
-                    <span class="ms-1 d-none d-sm-inline"><router-link to="/admin">Admin</router-link></span> </a>
-            </li>
-        </ul>
+      <ul
+        class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start"
+        id="menu"
+      >
+        <li class="nav-item">
+          <a class="nav-link text-truncate">
+            <span class="ms-1 d-none d-sm-inline"
+              ><router-link to="/">Home</router-link></span
+            >
+          </a>
+        </li>
+        <li>
+          <a class="nav-link text-truncate">
+            <span class="ms-1 d-none d-sm-inline"
+              ><router-link to="/about">About</router-link></span
+            >
+          </a>
+        </li>
+        <li>
+          <a class="nav-link text-truncate">
+            <span class="ms-1 d-none d-sm-inline"
+              ><router-link to="/login">Login</router-link></span
+            >
+          </a>
+        </li>
+        <li>
+          <a class="nav-link text-truncate">
+            <span class="ms-1 d-none d-sm-inline"
+              ><router-link to="/registration">Registration</router-link></span
+            >
+          </a>
+        </li>
+        <li>
+          <a class="nav-link text-truncate">
+            <span class="ms-1 d-none d-sm-inline"
+              ><router-link to="/admin">Admin</router-link></span
+            >
+          </a>
+        </li>
+      </ul>
     </div>
-</div>
-<button class="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
-  <i class="fa-solid fa-bars fa-xl" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
-            </button>
-            <br>
-  <router-view/>
+  </div>
+  <button
+    class="btn float-end"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#offcanvas"
+    role="button"
+  >
+    <i
+      class="fa-solid fa-bars fa-xl"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvas"
+    ></i>
+  </button>
+  <br />
+  <router-view />
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {};
+  },
+  mounted() {
+    // Call the checkJWTExpired method every 5 seconds
+    this.interval = setInterval(this.checkJWTExpired, 5000);
+  },
+  beforeUnmount() {
+    // Clear the interval when the component is destroyed
+    clearInterval(this.interval);
+  },
+  methods: {
+    async checkJWTExpired() {
+      try {
+        let jwt = localStorage.getItem("jwt_token");
+        if (!jwt) {
+          return;
+        }
+
+        const response = await axios.post("http://127.0.0.1:5000/jwt/isExpired", {jwt: jwt});
+        console.log(response);
+
+        if (response.data.expired) {
+          clearInterval(this.interval);
+          alert("Your session has expired, please login again");
+          // Redirect to login page or other actions
+        }
+      } catch (error) {
+        console.error("Error checking JWT expiration:", error);
+        // Handle the error appropriately
+      }
+    },
+  },
+};
+</script>
+
 
 <style>
 #app {
@@ -58,8 +134,8 @@
   border-color: black;
 }
 
-body{
-  background-color: #108EB3;
+body {
+  background-color: #108eb3;
   color: whitesmoke;
   border: 5px;
   border-color: black;

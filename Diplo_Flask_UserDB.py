@@ -1,4 +1,3 @@
-
 import json
 import secrets
 from datetime import datetime, timedelta
@@ -35,7 +34,7 @@ def get_db_connection():
 def generate_token(user):
     payload = {
         'user_id': user[0],
-        'exp': datetime.utcnow() + timedelta(minutes=15),
+        'exp': datetime.utcnow() + timedelta(minutes=5),
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -47,7 +46,7 @@ def decode_token(token):
         return payload
     except jwt.ExpiredSignatureError:
         print("Token has expired")
-        return None
+        raise jwt.ExpiredSignatureError
     except jwt.InvalidTokenError:
         print("Invalid Token")
         return None
@@ -355,18 +354,28 @@ def event_anzeigen():
         else:
             return jsonify({'message': f'Internal Server Error'}), 500
 
-
-@app.route('/maps', methods=['GET'])
+@app.route('/maps', methods=['POST'])
 def all_events():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+    jwt_data = data.get('jwt')
+    payload = decode_token(jwt_data)
+
+    creator_id = payload.get('user_id')
+
     conn = get_db_connection()
     if conn is not None:
         cur = conn.cursor()
-        cur.execute('SELECT event_id, event_loc, sport FROM event')
+        cur.execute("SELECT event_id, event_loc, sport FROM event WHERE creator_id != %s;", (creator_id,))
         events = cur.fetchall()
+        cur.execute("SELECT event_id, event_loc, sport FROM event WHERE creator_id = %s;", (creator_id,))
+        my_events = cur.fetchall()
         cur.close()
         conn.close()
         event_json = [{"event_id": row[0], "event_loc": row[1], "sport": row[2]} for row in events]
-        return jsonify(event_json)
+        my_event_json = [{"event_id": row[0], "event_loc": row[1], "sport": row[2]} for row in my_events]
+        return jsonify(event_json, my_event_json)
     else:
         return abort(404)
 
@@ -464,16 +473,23 @@ def get_user_from_jwt():
     return payload["exp"]
 
 '''
-# Muss fertiggemacht werden
-'''
-@app.route("/getExpirationTime", methods=["POST"])
-def getExpirationTime():
+
+
+@app.route("/jwt/isExpired", methods=["POST"])
+def get_expired():
     data = request.get_json()
     if not data:
-        return abort(404)
-    jwt = data.get('token')
+        return jsonify({'message': 'Bad Request: Keine Daten'}), 400
+    jwt_data = data.get('jwt')
+    try:
+        # Assuming you have a method decode_token that correctly validates the token
+        decode_token(jwt_data)
+    except jwt.ExpiredSignatureError:
+        return jsonify({'expired': True}), 401  # 401 Unauthorized
+    except Exception as e:  # General exception handling
+        return jsonify({'error': str(e)}), 500
+    return jsonify({'expired': False}), 200
 
-'''
 
 if __name__ == '__main__':
     # Dieser Secret Key sollte aus Sicherheitsgründen außerhalb vom Code liegen

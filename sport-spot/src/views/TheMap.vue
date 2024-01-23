@@ -328,11 +328,11 @@ export default {
       try {
         let jwt = localStorage.getItem("jwt_token");
 
-        const response = await axios.get("http://127.0.0.1:5000/maps", {
+        const response = await axios.post("http://127.0.0.1:5000/maps", {
           jwt: jwt
         }
         );
-        console.log(response);
+        console.log("REREREREER" + response.data.events);
 
         response.data.forEach((element) => {
           let pointCor1 = element["event_loc"]["latitude"];
@@ -388,7 +388,7 @@ export default {
         console.log(this.type);
         console.log(this.coords);
         try {
-          const response = await axios.post("http://127.0.0.1:5000/maps/add", {
+          const response = await axios.get("http://127.0.0.1:5000/maps/add", {
             jwt: jwt,
             sport: parseInt(sport),
             duration: duration,
