@@ -10,13 +10,8 @@
         <!-- Second Row (6 Columns) -->
         <div class="row row-cols-auto g-2 justify-content-center">
           <div v-for="index in allSports" :key="index" class="col">
-            <img
-              :src="require(`@/assets/${index}.svg`)"
-              class="rounded mx-auto d-block"
-              draggable="false"
-              style="height: 200px; width: 200px"
-              @click="toggleImage(index)"
-            />
+            <img :src="require(`@/assets/${index}.svg`)" class="rounded mx-auto d-block" draggable="false"
+              style="height: 200px; width: 200px" @click="toggleImage(index)" />
           </div>
         </div>
 
@@ -28,11 +23,7 @@
             <button type="submit" class="btn btn-primary">Bestätigen</button>
           </div>
           <div class="col-md-6 d-flex justify-content-start">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="resetImages"
-            >
+            <button type="button" class="btn btn-secondary" @click="resetImages">
               Abbrechen
             </button>
           </div>
@@ -40,18 +31,16 @@
       </form>
     </div>
   </div>
-
-  <div style="display: none;">
-  <registration-view @sendemail="getEmailHandle"></registration-view>
-  </div>
-
 </template>
 
 <script>
 import axios from "axios";
-import RegistrationView from "./RegistrationView.vue";
 
 export default {
+  mounted(){
+    this.email = localStorage.getItem('email');
+    localStorage.clear();
+  },
   data() {
     return {
       title: "Favourisierte Sportarten auswählen:",
@@ -81,8 +70,9 @@ export default {
     resetImages() {
       this.allSports = [2, 4, 6, 8, 10, 12];
     },
-    getEmailHandle(value){
+    getEmailHandle(value) {
       console.log(value);
+      console.log("hehle");
       this.email = value;
     },
     postSports() {
@@ -118,9 +108,6 @@ export default {
           console.error(error);
         });
     },
-  },
-  components: {
-    RegistrationView
   },
 };
 </script>

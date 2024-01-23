@@ -262,13 +262,11 @@ export default {
           console.log(response);
           this.startWheelAnimation();
 
-          // Holen von vue email
-          const email = this.postData.email;
-
+          console.log(this.postData.email);
 
           setTimeout(() => {
-            this.$router.push({ path: '/pickSports'});
-            this.$emit('sendemail', email);
+            localStorage.setItem("email", this.postData.email);
+            this.$router.push({ name:'PickSportsView'});
           }, 2000);
         })
         .catch((error) => {
