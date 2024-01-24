@@ -378,7 +378,8 @@ def all_events():
         conn.close()
         event_json = [{"event_id": row[0], "event_loc": row[1], "sport": row[2]} for row in events]
         my_event_json = [{"event_id": row[0], "event_loc": row[1], "sport": row[2]} for row in my_events]
-        return jsonify(event_json, my_event_json)
+        event_dict = {"events": event_json, "my_events": my_event_json}
+        return jsonify(event_dict)
     else:
         return abort(404)
 

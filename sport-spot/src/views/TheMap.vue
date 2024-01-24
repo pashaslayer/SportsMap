@@ -1,28 +1,14 @@
 <template>
-  <ol-map
-    ref="olMap"
-    :loadTilesWhileAnimating="true"
-    :loadTilesWhileInteracting="true"
-    style="height: 800px"
-  >
-    <ol-view
-      ref="view"
-      :center="center"
-      :zoom="zoom"
-      :projection="projection"
-    />
+  <ol-map ref="olMap" :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height: 800px">
+    <ol-view ref="view" :center="center" :zoom="zoom" :projection="projection" />
 
     <ol-tile-layer ref="osmLayer" title="OSM">
       <ol-source-osm />
     </ol-tile-layer>
 
     <ol-control-bar>
-      <ol-toggle-control
-        html="🔘"
-        className="edit"
-        title="Point"
-        :onToggle="(active) => changeDrawType(active, 'Point')"
-      />
+      <ol-toggle-control html="🔘" className="edit" title="Point"
+        :onToggle="(active) => changeDrawType(active, 'Point')" />
       <!--
       <ol-toggle-control
         html="🔹"
@@ -42,12 +28,7 @@
     <ol-vector-layer ref="vectorLayer">
       <ol-source-vector ref="vectorSource" @change="source_change">
         <!-- Drwing interaction -->
-        <ol-interaction-draw
-          v-if="drawEnable"
-          :key="drawKey.value"
-          :type="drawType"
-          @drawend="drawend"
-        />
+        <ol-interaction-draw v-if="drawEnable" :key="drawKey.value" :type="drawType" @drawend="drawend" />
 
         <!-- Feature Selection Interaction -->
         <ol-interaction-select @select="featureSelected">
@@ -60,25 +41,16 @@
       </ol-style>
     </ol-vector-layer>
 
-    <popup-form
-      :showPopup="showPopup"
-      @handleclose="handlePopupClose"
-      @sportIconChange="changeIcon"
-      @closePopup="closePopupOnly"
-      @sendData="postMap"
-    ></popup-form>
+    <popup-form :showPopup="showPopup" @handleclose="handlePopupClose" @sportIconChange="changeIcon"
+      @closePopup="closePopupOnly" @sendData="postMap"></popup-form>
 
-    <show-point-pop
-    :showPopupPoint="showPopupPoint"
-    :selectedEventCoordinates="selectedEventCoordinates"
-    @handlepointclose="handlePointPopupClose"
-  ></show-point-pop>
-  </ol-map>                                                                
+    <show-point-pop :showPopupPoint="showPopupPoint" :selectedEventCoordinates="selectedEventCoordinates"
+      @handlepointclose="handlePointPopupClose"></show-point-pop>
+  </ol-map>
 
 
 
   <br />
-
 </template>
 
 <script setup>
@@ -91,12 +63,12 @@ import skiingIcon from "../assets/symbols_blau/skiing_kreis_blau.svg";
 import weightliftingIcon from "../assets/symbols_blau/weightlifting_kreis_blau.svg";
 
 // Grüne Symbole
-//import markerIconGreen from "../assets/symbols_gruen/kreis_grün.svg";
-//import cyclingIconGreen from "../assets/symbols_gruen/cycling_kreis_grün.svg";
-//import hikingIconGreen from "../assets/symbols_gruen/hiking_kreis_grün.svg";
-//import runningIconGreen from "../assets/symbols_gruen/running_kreis_grün.svg";
-//import skiingIconGreen from "../assets/symbols_gruen/skiing_kreis_grün.svg";
-//import weightliftingIconGreen from "../assets/symbols_gruen/weightlifting_kreis_grün.svg";
+import markerIconGreen from "../assets/symbols_gruen/kreis_grün.svg";
+import cyclingIconGreen from "../assets/symbols_gruen/cycling_kreis_grün.svg";
+import hikingIconGreen from "../assets/symbols_gruen/hiking_kreis_grün.svg";
+import runningIconGreen from "../assets/symbols_gruen/running_kreis_grün.svg";
+import skiingIconGreen from "../assets/symbols_gruen/skiing_kreis_grün.svg";
+import weightliftingIconGreen from "../assets/symbols_gruen/weightlifting_kreis_grün.svg";
 
 
 </script>
@@ -147,6 +119,9 @@ export default {
       // Select single coordinate
       showPopupPoint: false,
       selectedEventCoordinates: null,
+
+      // Mypoints
+      my_points: []
     };
   },
   mounted() {
@@ -186,13 +161,13 @@ export default {
 
     featureSelected(event) {
       // Diese if schließt das Point Popup weil beim Erstellen von einem Punkt, gleichzeitig die Selektion ausgewählt wird
-      if(this.showPopup){
+      if (this.showPopup) {
         this.handlePointPopupClose();
       }
       else if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
         const geometry = selectedFeature.getGeometry();
-         
+
         console.log(event.selected.iconSourceInt);
         console.log("-----------------------------------------");
         console.log("Selected feature:", selectedFeature.getGeometry());
@@ -202,17 +177,33 @@ export default {
         this.selectedEventCoordinates = geometry.getCoordinates();
         console.log(this.selectedEventCoordinates);
         this.showPopupPoint = true;
-        
-        var iconStyle = new Style({
+
+        if (selectedFeature["values_"]["myPoint"] == true) {
+          var myIconStyle = new Style({
             image: new Icon(
-              /** @type {olx.style.IconOptions} */ ({
+              /** @type {olx.style.IconOptions} */({
+                src: this.convertIntToSport(selectedFeature["values_"]["sport"]+10),
+                scale: 0.08,
+              })
+            ),
+          });
+          selectedFeature.setStyle(myIconStyle);
+        }
+        else {
+          var iconStyle = new Style({
+            image: new Icon(
+              /** @type {olx.style.IconOptions} */({
                 src: this.convertIntToSport(selectedFeature["values_"]["sport"]),
                 scale: 0.08,
               })
             ),
           });
           selectedFeature.setStyle(iconStyle);
+        }
       }
+
+
+
     },
 
     closePopupOnly() {
@@ -228,7 +219,7 @@ export default {
 
       var iconStyle = new Style({
         image: new Icon(
-          /** @type {olx.style.IconOptions} */ ({
+          /** @type {olx.style.IconOptions} */({
             src: iconSrc,
             scale: 0.05,
           })
@@ -258,6 +249,24 @@ export default {
         case 5:
           sport = weightliftingIcon;
           break;
+        case 10:
+          sport = markerIconGreen;
+          break;
+        case 11:
+          sport = cyclingIconGreen;
+          break;
+        case 12:
+          sport = hikingIconGreen;
+          break;
+        case 13:
+          sport = runningIconGreen;
+          break;
+        case 14:
+          sport = skiingIconGreen;
+          break;
+        case 15:
+          sport = weightliftingIconGreen;
+          break;
       }
       return sport;
     },
@@ -284,8 +293,8 @@ export default {
         this.olVectorSource.getFeatures()
       );
     },
-    handlePointPopupClose(){
-      this.showPopupPoint = false; 
+    handlePointPopupClose() {
+      this.showPopupPoint = false;
     },
     drawend(event) {
       if (!this.showPopup) {
@@ -332,34 +341,51 @@ export default {
           jwt: jwt
         }
         );
-        console.log("REREREREER" + response.data.events);
 
-        response.data.forEach((element) => {
+        response.data.events.forEach((element) => {
           let pointCor1 = element["event_loc"]["latitude"];
           let pointCor2 = element["event_loc"]["longitude"];
           let iconSourceInt = element["sport"];
           let geoData = new Array(pointCor1, pointCor2);
 
-          console.log(
-          "Selected Point Coordinates: " +
-          geoData +
-            "\n" +
-            "Selected Point Type: " +
-            iconSourceInt
-        );
-
           var iconFeature = new Feature({
             geometry: new Point(geoData),
-            sport: iconSourceInt
+            sport: iconSourceInt,
+            myPoint: false
           });
 
           let iconSrc = this.convertIntToSport(iconSourceInt);
-          console.log("source: ");
-          console.log(iconSrc);
 
           var iconStyle = new Style({
             image: new Icon(
-              /** @type {olx.style.IconOptions} */ ({
+              /** @type {olx.style.IconOptions} */({
+                src: iconSrc,
+                scale: 0.05,
+              })
+            ),
+          });
+          iconFeature.setStyle(iconStyle);
+          this.olVectorSource.addFeature(iconFeature);
+        });
+
+        response.data.my_events.forEach((elementt) => {
+          this.my_points.push(elementt);
+          let pointCor1 = elementt["event_loc"]["latitude"];
+          let pointCor2 = elementt["event_loc"]["longitude"];
+          let iconSourceInt = elementt["sport"];
+          let geoData = new Array(pointCor1, pointCor2);
+
+          var iconFeature = new Feature({
+            geometry: new Point(geoData),
+            sport: iconSourceInt,
+            myPoint: true
+          });
+
+          let iconSrc = this.convertIntToSport(iconSourceInt + 10);
+
+          var iconStyle = new Style({
+            image: new Icon(
+              /** @type {olx.style.IconOptions} */({
                 src: iconSrc,
                 scale: 0.05,
               })
@@ -382,11 +408,11 @@ export default {
     ) {
       let jwt = localStorage.getItem("jwt_token");
 
-      console.log("JWT: " + jwt);
+      // console.log("JWT: " + jwt);
 
       if (this.coords && this.coords.length !== 0) {
-        console.log(this.type);
-        console.log(this.coords);
+        // console.log(this.type);
+        // console.log(this.coords);
         try {
           const response = await axios.get("http://127.0.0.1:5000/maps/add", {
             jwt: jwt,
