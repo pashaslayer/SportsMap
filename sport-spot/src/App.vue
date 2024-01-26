@@ -104,18 +104,19 @@ export default {
         if (!jwt) {
           return;
         }
-
         const response = await axios.post("http://127.0.0.1:5000/jwt/isExpired", {jwt: jwt});
+        console.log(response.data);
+        console.log(response.data["expired"]);
         console.log(response);
-
-        if (response.data.expired) {
+      } catch (error) {
+        if(error.response.status === 401){
           clearInterval(this.interval);
           alert("Your session has expired, please login again");
-          // Redirect to login page or other actions
+          setTimeout(() => {
+            localStorage.clear();
+            this.$router.push({ name:'login'});
+          }, 500);
         }
-      } catch (error) {
-        console.error("Error checking JWT expiration:", error);
-        // Handle the error appropriately
       }
     },
   },

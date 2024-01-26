@@ -41,11 +41,25 @@
       </ol-style>
     </ol-vector-layer>
 
-    <popup-form :showPopup="showPopup" @handleclose="handlePopupClose" @sportIconChange="changeIcon"
-      @closePopup="closePopupOnly" @sendData="postMap"></popup-form>
+    <popup-form 
+    :showPopup="showPopup" 
+    @handleclose="handlePopupClose" 
+    @sportIconChange="changeIcon"
+    @closePopup="closePopupOnly" 
+    @sendData="postMap"
+    ></popup-form>
 
-    <show-point-pop :showPopupPoint="showPopupPoint" :selectedEventCoordinates="selectedEventCoordinates"
-      @handlepointclose="handlePointPopupClose"></show-point-pop>
+    <show-point-pop 
+    :showPopupPoint="showPopupPoint" 
+    :selectedEventCoordinates="selectedEventCoordinates"
+    @handlepointclose="handlePointPopupClose"
+    ></show-point-pop>
+
+    <personal-point
+    :showPersonalPoint="showPersonalPoint"
+    :selectedEventCoordinates="selectedEventCoordinates"
+    @handlepersonalpointclose="handlePersonalPopupClose"
+    ></personal-point>
   </ol-map>
 
 
@@ -69,22 +83,17 @@ import hikingIconGreen from "../assets/symbols_gruen/hiking_kreis_grün.svg";
 import runningIconGreen from "../assets/symbols_gruen/running_kreis_grün.svg";
 import skiingIconGreen from "../assets/symbols_gruen/skiing_kreis_grün.svg";
 import weightliftingIconGreen from "../assets/symbols_gruen/weightlifting_kreis_grün.svg";
-
-
 </script>
 
 <script>
 import PopupForm from "./SavePointPop.vue";
 import ShowPointPop from "./ShowPointPop.vue";
+import PersonalPoint from "./PersonalPoint.vue";
 import axios from "axios";
 import { Style, Icon } from "ol/style";
 import "ol/ol.css";
 import Feature from "ol/Feature";
 import Point from "ol/geom/Point.js";
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Dieser ganze Block ist unwichtig is erst später für JWT wichtig!
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 export default {
   data() {
@@ -119,6 +128,9 @@ export default {
       // Select single coordinate
       showPopupPoint: false,
       selectedEventCoordinates: null,
+
+      // Edit / delete single coordinate
+      showPersonalPoint: false,
 
       // Mypoints
       my_points: []
@@ -161,8 +173,11 @@ export default {
 
     featureSelected(event) {
       // Diese if schließt das Point Popup weil beim Erstellen von einem Punkt, gleichzeitig die Selektion ausgewählt wird
+      this.handlePointPopupClose();
+      this.handlePersonalPopupClose();
       if (this.showPopup) {
         this.handlePointPopupClose();
+        this.handlePersonalPopupClose();
       }
       else if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
@@ -176,9 +191,11 @@ export default {
         // here we can work with the selectedFeature
         this.selectedEventCoordinates = geometry.getCoordinates();
         console.log(this.selectedEventCoordinates);
-        this.showPopupPoint = true;
+        
 
         if (selectedFeature["values_"]["myPoint"] == true) {
+          // Opens the menu to edit / delete a personal made point
+          this.showPersonalPoint = true;
           var myIconStyle = new Style({
             image: new Icon(
               /** @type {olx.style.IconOptions} */({
@@ -190,6 +207,8 @@ export default {
           selectedFeature.setStyle(myIconStyle);
         }
         else {
+          // Opens the menu watch / take part 
+          this.showPopupPoint = true;
           var iconStyle = new Style({
             image: new Icon(
               /** @type {olx.style.IconOptions} */({
@@ -201,18 +220,13 @@ export default {
           selectedFeature.setStyle(iconStyle);
         }
       }
-
-
-
     },
-
     closePopupOnly() {
       this.showPopup = false;
       this.drawEnable = true;
     },
-
-    changeIcon(iconSourceInt) {
-      console.log(iconSourceInt);
+    changeIcon(iconSource) {
+      let iconSourceInt = parseInt(iconSource)+10;
       let iconSrc = this.convertIntToSport(iconSourceInt);
       console.log("source: ");
       console.log(iconSrc);
@@ -295,6 +309,9 @@ export default {
     },
     handlePointPopupClose() {
       this.showPopupPoint = false;
+    },
+    handlePersonalPopupClose(){
+      this.showPersonalPoint = false;
     },
     drawend(event) {
       if (!this.showPopup) {
@@ -414,7 +431,7 @@ export default {
         // console.log(this.type);
         // console.log(this.coords);
         try {
-          const response = await axios.get("http://127.0.0.1:5000/maps/add", {
+          const response = await axios.post("http://127.0.0.1:5000/maps/add", {
             jwt: jwt,
             sport: parseInt(sport),
             duration: duration,
@@ -449,7 +466,8 @@ export default {
   },
   components: {
     PopupForm,
-    ShowPointPop
+    ShowPointPop,
+    PersonalPoint
   },
 };
 </script>

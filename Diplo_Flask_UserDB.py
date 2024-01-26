@@ -34,7 +34,7 @@ def get_db_connection():
 def generate_token(user):
     payload = {
         'user_id': user[0],
-        'exp': datetime.utcnow() + timedelta(minutes=5),
+        'exp': datetime.utcnow() + timedelta(minutes=15),
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -356,6 +356,30 @@ def event_anzeigen():
                 print(e)
         else:
             return jsonify({'message': f'Internal Server Error'}), 500
+        
+
+@app.route('/map/anzeigen/delete', methods=['POST'])
+def delete_event():
+    data = request.get_json()
+    event_loc = data.get('coords')
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT event_id FROM event WHERE event_loc = %s;", (event_loc,))
+        event_id = cur.fetchone()
+
+        if event_id is None:
+            return jsonify({'message': f'Kein event gefunden'}), 512
+
+        cur.execute("DELETE FROM event_participants WHERE event_id = %s;"
+                    "DELETE FROM event_point WHERE event_id = %s;"
+                    "DELETE FROM event WHERE event_id = %s;",
+                    (event_id, event_id, event_id))
+        return jsonify({'message': f'Succesful'}), 201
+    except Exception as e:
+        print(e)
 
 @app.route('/maps', methods=['POST'])
 def all_events():
