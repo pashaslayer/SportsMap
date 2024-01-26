@@ -10,13 +10,12 @@ receiver_email = "pavel.khakhlou@gmx.at"
 smtp_server = "smtp-mail.outlook.com"
 smtp_port = 587  # For SSL, use 465
 smtp_user = "sportspotaustria@outlook.com"
-smtp_password = "NZZeT2zpCdLxBJx"
+smtp_password = ""
 
 # Email content
-subject = "Your Subject Here"
+subject = "Subject"
 body = """
-This is an example email sent via Python's smtplib.
-You can include your message here.
+Example body
 """
 
 # Setup MIME
