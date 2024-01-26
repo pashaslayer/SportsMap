@@ -82,7 +82,9 @@ export default {
         .replace("T", " ");
       return formattedDatetimeStr;
     },
-    enterEvent() {},
+    enterEvent() {
+      
+    },
     convertSportIdToString() {
       var sportInString = "";
       switch (this.sport) {
