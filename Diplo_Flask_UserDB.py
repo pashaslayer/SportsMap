@@ -361,25 +361,37 @@ def event_anzeigen():
 @app.route('/map/anzeigen/delete', methods=['POST'])
 def delete_event():
     data = request.get_json()
-    event_loc = data.get('coords')
     if not data:
-        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+        return jsonify({'message': 'Bad Request: Keine Daten'}), 400
+
+    event_loc = data.get('coords')
+    if not event_loc:
+        return jsonify({'message': 'Bad Request: Fehlende Koordinaten'}), 400
+
+    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT event_id FROM event WHERE event_loc = %s;", (event_loc,))
-        event_id = cur.fetchone()
+        cur.execute("SELECT event_id FROM event WHERE event_loc = %s;", (event_loc_convert,))
+        event_id_result = cur.fetchone()
 
-        if event_id is None:
-            return jsonify({'message': f'Kein event gefunden'}), 512
+        if event_id_result is None:
+            return jsonify({'message': 'Kein event gefunden'}), 404  # Using 404 Not Found for consistency
 
-        cur.execute("DELETE FROM event_participants WHERE event_id = %s;"
-                    "DELETE FROM event_point WHERE event_id = %s;"
-                    "DELETE FROM event WHERE event_id = %s;",
-                    (event_id, event_id, event_id))
-        return jsonify({'message': f'Succesful'}), 201
+        event_id = event_id_result[0]  # Extract the ID from the tuple
+
+        # Execute each DELETE statement separately
+        cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
+        cur.execute("DELETE FROM event_point WHERE event_id = %s;", (event_id,))
+        cur.execute("DELETE FROM event WHERE event_id = %s;", (event_id,))
+
+        conn.commit()  # Don't forget to commit your changes to the database
+
+        return jsonify({'message': 'Successful'}), 200  # Using 200 OK for successful deletion
     except Exception as e:
         print(e)
+        return jsonify({'message': 'Internal Server Error'}), 500  # Return a 500 Internal Server Error on exception
 
 @app.route('/maps', methods=['POST'])
 def all_events():

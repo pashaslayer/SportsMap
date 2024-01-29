@@ -1,8 +1,8 @@
 <template>
   <div v-if="showPersonalPoint" class="popup-form">
     <div class="popup-content">
-      <h2>{{ convertSportIdToString() }}</h2>
-      <h4>{{ creator_username }}</h4>
+      <h2>{{ creator_username }}</h2>
+      <h4>{{ convertSportIdToString() }}</h4>
 
       <!-- Date -->
       <div v-if="edit">
