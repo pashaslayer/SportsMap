@@ -379,7 +379,7 @@ def delete_event():
         if event_id_result is None:
             return jsonify({'message': 'Kein event gefunden'}), 404  # Using 404 Not Found for consistency
 
-        event_id = event_id_result[0]  # Extract the ID from the tuple
+        event_id = event_id_result[0]  
 
         # Execute each DELETE statement separately
         cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))

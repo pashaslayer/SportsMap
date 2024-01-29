@@ -186,8 +186,8 @@ export default {
               coords: this.selectedEventCoordinates,
             }
           );
-          console.log(response.data);
           console.log(response);
+          this.closePersonalPopup();
         } catch (error) {
           console.log(error);
         }
