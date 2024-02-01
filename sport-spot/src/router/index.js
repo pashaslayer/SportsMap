@@ -50,6 +50,21 @@ const routes = [
     },
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: () => import(/* webpackChunkName: "profile" */ '../views/MyPage.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('jwt_token');
+      if (token) {
+        // User has a token, allow access to the route
+        next();
+      } else {
+        // User does not have a token, redirect to the login page
+        next('/login');
+      }
+    },
+  },
+  {
     path: '/pickSports',
     name: 'PickSportsView',
     component: () => import(/* webpackChunkName: "map" */ '../views/PickSportsView.vue')

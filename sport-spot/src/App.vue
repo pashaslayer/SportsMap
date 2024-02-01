@@ -8,12 +8,14 @@
   <i class="fs-5 bi-table"> .. für icon geht aber nicht bei links daher löäschen
 
 -->
-<button v-if="isAuthenticated"
-    class="btn position-absolute top-0 start-0 ms-0 mt-0" 
+  <button
+    v-if="isAuthenticated"
+    @click="redirectToProfile"
+    class="btn position-absolute top-0 start-0 ms-0 mt-0"
   >
-  <!-- Font awesome icon -->
-  <i class="fa-solid fa-user"></i> My Profile
- </button>
+    <!-- Font awesome icon -->
+    <i class="fa-solid fa-user"></i> {{ username }}
+  </button>
 
   <div
     class="offcanvas offcanvas-start w-15"
@@ -90,12 +92,13 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
-            isAuthenticated: false,
+      isAuthenticated: false,
+      username: "",
     };
   },
   mounted() {
@@ -107,10 +110,6 @@ export default {
     clearInterval(this.interval);
   },
   methods: {
-    checkTokenPresence() {
-      const jwt = localStorage.getItem("jwt_token");
-      this.isAuthenticated = !!jwt; // Update isAuthenticated based on token presence
-    },
     async checkJWTExpired() {
       try {
         let jwt = localStorage.getItem("jwt_token");
@@ -118,25 +117,43 @@ export default {
           this.isAuthenticated = false; // Update isAuthenticated if no token
           return;
         }
-        const response = await axios.post("http://127.0.0.1:5000/jwt/isExpired", {jwt: jwt});
+        const response = await axios.post(
+          "http://127.0.0.1:5000/jwt/isExpired",
+          { jwt: jwt }
+        );
         // Update isAuthenticated based on the expiration status
+        this.getNickname();
         this.isAuthenticated = !response.data.expired;
       } catch (error) {
-        if(error.response && error.response.status === 401){
+        if (error.response && error.response.status === 401) {
           this.isAuthenticated = false; // Ensure isAuthenticated is updated on error
           clearInterval(this.interval);
           alert("Your session has expired, please login again");
           setTimeout(() => {
             localStorage.clear();
-            this.$router.push({ name:'login'});
+            this.$router.push({ name: "login" });
           }, 500);
         }
       }
     },
+    async getNickname() {
+      try {
+        let jwt = localStorage.getItem("jwt_token");
+        const response = await axios.post("http://127.0.0.1:5000/user", {
+          jwt: jwt,
+        });
+
+        this.username = response.data.username;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    redirectToProfile() {
+      this.$router.push("/profile");
+    },
   },
 };
 </script>
-
 
 <style>
 #app {

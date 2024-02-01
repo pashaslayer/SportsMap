@@ -208,9 +208,27 @@ def userprofile():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute('SELECT * FROM users WHERE user_id = %s', user_id)
-
+        cur.execute('SELECT * FROM users WHERE user_id = %s', (user_id,))
+        user = cur.fetchone()  # Fetches the first row from the result
         conn.commit()
+        cur.close()
+        conn.close()
+        if user is None:
+            return jsonify({'message': 'User not found'}), 404
+        
+        userdata = {
+        'userid': user[0],
+        'firstname': user[1],
+        'surname': user[2],
+        'username': user[3],
+        'birthdate': user[5],
+        'email': user[6],
+        'sports': user[7],
+        'gender': user[8],
+        'postalcode': user[9],
+        }
+        
+        return userdata, 200
 
     except Exception as e:
         print(e)
