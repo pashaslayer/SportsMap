@@ -23,16 +23,18 @@ CREATE TABLE event(
     FOREIGN KEY (creator_id) REFERENCES users (user_id)
 );
 
-CREATE TABLE event_point (
-    event_name VARCHAR(100) NOT NULL,
-    --eventPoint jsonb,
-    info varchar(500),
-    max_participants INT NOT NULL,
-    duration decimal,
-    difficulty VARCHAR(100),
-
-    FOREIGN KEY (creator_id) REFERENCES users (user_id)
-)INHERITS (event);
+CREATE TABLE IF NOT EXISTS public.event_point
+(
+    event_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    info character varying(500) COLLATE pg_catalog."default",
+    max_participants integer NOT NULL,
+    duration numeric,
+    difficulty character varying(100) COLLATE pg_catalog."default",
+    CONSTRAINT event_point_creator_id_fkey FOREIGN KEY (creator_id)
+        REFERENCES public.users (user_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)INHERITS (public.event);
 
 CREATE TABLE event_route (
     event_name VARCHAR(100) NOT NULL,
@@ -45,6 +47,20 @@ CREATE TABLE event_route (
     FOREIGN KEY (creator_id) REFERENCES users (user_id)
 ) INHERITS (event);
 
+CREATE TABLE IF NOT EXISTS public.event_participants
+(
+    event_id integer NOT NULL,
+    user_id integer NOT NULL,
+    CONSTRAINT event_participants_pkey PRIMARY KEY (event_id, user_id),
+    CONSTRAINT event_participants_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.users (user_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT event_participants_event_id_fkey FOREIGN KEY (event_id)
+        REFERENCES public.event (event_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
 
 CREATE OR REPLACE FUNCTION insert_event_point(
     p_event_loc JSONB,
@@ -168,7 +184,7 @@ VALUES (
     'p'
 );
 
+SELECT p.*, c.* FROM event p
+LEFT JOIN event_point c ON c.creator_id = p.creator_id
 
 
-
-flask-cors

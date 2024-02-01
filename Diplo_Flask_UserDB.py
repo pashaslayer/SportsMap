@@ -195,6 +195,28 @@ def save_sports_to_user():
     return jsonify({'message': 'sports could not be added'}), 404
 
 
+@app.route('/user', methods=['POST'])
+def userprofile():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+    jwt_data = data.get('jwt')
+    payload = decode_token(jwt_data)
+
+    user_id = payload.get('user_id')
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM users WHERE user_id = %s', user_id)
+
+        conn.commit()
+
+    except Exception as e:
+        print(e)
+        return jsonify({'message': f'Internal Server Error: {str(e)}'}), 500
+
+
 @app.route('/delete/user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     conn = get_db_connection()
@@ -203,7 +225,7 @@ def delete_user(user_id):
         cur.execute('DELETE From event_participants WHERE user_id = %s;'
                     'DELETE FROM event WHERE creator_id = %s;'
                     'DELETE FROM Event_point WHERE creator_id = %s;'
-                    'DELETE FROM users WHERE user_id = %s;', (user_id,user_id,user_id,user_id))
+                    'DELETE FROM users WHERE user_id = %s;', (user_id, user_id, user_id, user_id))
         conn.commit()
         return jsonify({'message': f'User {user_id} successfully deleted'}), 201
 
@@ -356,7 +378,44 @@ def event_anzeigen():
                 print(e)
         else:
             return jsonify({'message': f'Internal Server Error'}), 500
-        
+
+
+@app.route('/maps/anzeigen/teilnehmen', methods=['POST'])
+def take_part():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+
+    jwt_data = data.get('jwt')
+    payload = decode_token(jwt_data)
+
+    dataset = {
+        'event_loc': data['coords'],
+        'user_id': payload["user_id"],
+    }
+
+    event_loc = dataset.get('event_loc')
+    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+
+    user_id = dataset.get('user_id')
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT event_id FROM event WHERE event_loc = %s", (event_loc_convert,))
+        event_id = cur.fetchone()
+        event_id = event_id[1]
+        if event_id:
+            return jsonify({event_id}), 501
+
+        cur.execute("INSERT INTO public.event_participants(event_id, user_id) VALUES (%s, %s);", (event_id, user_id))
+
+        conn.commit()
+        return jsonify({'message': 'Successful'}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Internal Server Error'}), 500
+
 
 @app.route('/map/anzeigen/delete', methods=['POST'])
 def delete_event():
@@ -379,7 +438,7 @@ def delete_event():
         if event_id_result is None:
             return jsonify({'message': 'Kein event gefunden'}), 404  # Using 404 Not Found for consistency
 
-        event_id = event_id_result[0]  
+        event_id = event_id_result[0]
 
         # Execute each DELETE statement separately
         cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
@@ -392,6 +451,7 @@ def delete_event():
     except Exception as e:
         print(e)
         return jsonify({'message': 'Internal Server Error'}), 500  # Return a 500 Internal Server Error on exception
+
 
 @app.route('/maps', methods=['POST'])
 def all_events():
@@ -418,6 +478,49 @@ def all_events():
         return jsonify(event_dict)
     else:
         return abort(404)
+
+
+@app.route('/maps/change', methods=['POST'])
+def change_point():
+    data = request.get_json()
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+
+    dataset = {
+        'event_loc': data['coords'],
+        'event_date': data['startdate'],
+        'info': data['description'],
+        'difficulty': data['difficulty'],
+        'participants': data['participants'],
+        'duration': data['duration'],
+    }
+
+    event_loc = dataset.get('event_loc')
+    event_date = dataset.get('event_date')
+    info = dataset.get('info')
+    max_participants = dataset.get('participants')
+    duration = dataset.get('duration')
+    difficulty = dataset.get('difficulty')
+
+    event_loc = data.get('coords')
+    if not event_loc:
+        return jsonify({'message': 'Bad Request: Fehlende Koordinaten'}), 400
+
+    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("UPDATE event_point SET event_date = %s, duration = %s, difficulty = %s, max_participants = %s, "
+                    "info = %s  WHERE event_loc = %s;", (event_date, duration, difficulty, max_participants, info,
+                                                         event_loc_convert,))
+        cur.execute("UPDATE event SET event_date = %s WHERE event_loc = %s;", (event_date, event_loc_convert,))
+
+        conn.commit()
+        return jsonify({'message': 'Successful'}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Internal Server Error'}), 500
 
 
 @app.route('/map/test', methods=['POST'])
