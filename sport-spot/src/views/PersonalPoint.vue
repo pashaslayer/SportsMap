@@ -26,10 +26,10 @@
       <div v-if="edit">
         <label for="difficulty">Difficulty:</label>
         <select id="difficulty" v-model="difficulty">
-        <option value="easy">Easy</option>
-        <option value="moderate">Moderate</option>
-        <option value="hard">Hard</option>
-      </select>
+          <option value="easy">Easy</option>
+          <option value="moderate">Moderate</option>
+          <option value="hard">Hard</option>
+        </select>
       </div>
       <div v-else>
         <label for="difficulty">Difficulty: {{ difficulty }}</label>
@@ -41,7 +41,9 @@
         <input v-model="maxParticipants" type="number" id="maxParticipants" />
       </div>
       <div v-else>
-        <label for="participants">Participants: {{ participants }} / {{ maxParticipants }}</label>
+        <label for="participants"
+          >Participants: {{ participants }} / {{ maxParticipants }}</label
+        >
       </div>
 
       <!-- Description -->
@@ -55,14 +57,15 @@
 
       <div class="buttons">
         <button v-if="!edit" @click="editPoint">Edit</button>
-        <button v-if="edit" class="button-save" @click="saveEdits">Save</button>
+        <button v-if="edit" class="button-save" @click="changePoint">Save</button>
         <button @click="closePersonalPopup">Close</button>
-        <button v-if="edit" class="button-delete" @click="deleteEvent">Delete</button>
+        <button v-if="edit" class="button-delete" @click="deleteEvent">
+          Delete
+        </button>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -193,6 +196,24 @@ export default {
         }
       }
     },
+    async changePoint() {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/maps/change",
+          {
+            coords: this.selectedEventCoordinates,
+            startdate: this.startdate,
+            difficulty: this.difficulty,
+            participants: this.participants,
+            duration: this.duration,
+          }
+        );
+        console.log(response);
+        this.closePersonalPopup();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
@@ -259,8 +280,8 @@ button {
   background-color: red;
 }
 
-.button-save:hover{
-    background-color: green;
+.button-save:hover {
+  background-color: green;
 }
 
 button:hover {
