@@ -8,6 +8,13 @@
   <i class="fs-5 bi-table"> .. für icon geht aber nicht bei links daher löäschen
 
 -->
+<button v-if="isAuthenticated"
+    class="btn position-absolute top-0 start-0 ms-0 mt-0" 
+  >
+  <!-- Font awesome icon -->
+  <i class="fa-solid fa-user"></i> My Profile
+ </button>
+
   <div
     class="offcanvas offcanvas-start w-15"
     id="offcanvas"
@@ -87,7 +94,9 @@ import axios from 'axios';
 
 export default {
   data() {
-    return {};
+    return {
+            isAuthenticated: false,
+    };
   },
   mounted() {
     // Call the checkJWTExpired method every 5 seconds
@@ -98,18 +107,23 @@ export default {
     clearInterval(this.interval);
   },
   methods: {
+    checkTokenPresence() {
+      const jwt = localStorage.getItem("jwt_token");
+      this.isAuthenticated = !!jwt; // Update isAuthenticated based on token presence
+    },
     async checkJWTExpired() {
       try {
         let jwt = localStorage.getItem("jwt_token");
         if (!jwt) {
+          this.isAuthenticated = false; // Update isAuthenticated if no token
           return;
         }
         const response = await axios.post("http://127.0.0.1:5000/jwt/isExpired", {jwt: jwt});
-        console.log(response.data);
-        console.log(response.data["expired"]);
-        console.log(response);
+        // Update isAuthenticated based on the expiration status
+        this.isAuthenticated = !response.data.expired;
       } catch (error) {
-        if(error.response.status === 401){
+        if(error.response && error.response.status === 401){
+          this.isAuthenticated = false; // Ensure isAuthenticated is updated on error
           clearInterval(this.interval);
           alert("Your session has expired, please login again");
           setTimeout(() => {
