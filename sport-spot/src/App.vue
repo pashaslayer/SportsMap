@@ -24,7 +24,7 @@
     data-bs-backdrop="true"
   >
     <div class="offcanvas-header">
-      <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+      <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas"> <b>Menu</b> </h6>
       <button
         type="button"
         class="btn-close text-reset"
@@ -103,7 +103,7 @@ export default {
   },
   mounted() {
     // Call the checkJWTExpired method every 5 seconds
-    this.interval = setInterval(this.checkJWTExpired, 5000);
+    this.interval = setInterval(this.checkJWTExpired, 3000);
   },
   beforeUnmount() {
     // Clear the interval when the component is destroyed

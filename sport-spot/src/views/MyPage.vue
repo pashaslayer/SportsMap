@@ -34,7 +34,7 @@ export default {
     };
   },
   methods: {
-    async getNickname() {
+    async getUserData() {
       try {
         let jwt = localStorage.getItem("jwt_token");
         const response = await axios.post("http://127.0.0.1:5000/user", {
@@ -56,7 +56,7 @@ export default {
       }
     },
     async deleteUser() {
-      let result = confirm("Do you really want to delete the event?");
+      let result = confirm("Are you sure you want to delete your user?");
       if (result) {
         try {
           await axios.delete(
@@ -72,7 +72,7 @@ export default {
     },
   },
   mounted() {
-    this.getNickname();
+    this.getUserData();
   },
 };
 </script>

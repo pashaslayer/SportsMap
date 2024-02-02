@@ -5,8 +5,7 @@
 
       <h4>Organisator:</h4>
       <label for="creator_firstname">
-        Name: {{ creator_firstname + " " }} {{ creator_surname }}</label
-      >
+        Name: {{ creator_firstname + " " }} {{ creator_surname }}</label>
       <label for="email">Email: {{ creator_email }}</label>
       <label for="age">Age: {{ age }}</label>
 
@@ -82,9 +81,6 @@ export default {
         .replace("T", " ");
       return formattedDatetimeStr;
     },
-    enterEvent() {
-      
-    },
     convertSportIdToString() {
       var sportInString = "";
       switch (this.sport) {
@@ -106,12 +102,30 @@ export default {
       }
       return sportInString;
     },
+    async enterEvent() {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/maps/anzeigen/teilnehmen",
+          {
+            coords: this.coords,
+            user_id: this.user_id
+          }
+        );
+
+        console.log(response);
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async loadPointData() {
       try {
         const response = await axios.post(
           "http://127.0.0.1:5000/maps/anzeigen",
           {
             coords: this.selectedEventCoordinates,
+
           }
         );
 

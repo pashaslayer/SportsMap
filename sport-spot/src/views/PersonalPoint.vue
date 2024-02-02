@@ -7,10 +7,10 @@
       <!-- Date -->
       <div v-if="edit">
         <label for="startdate">Date:</label>
-        <input v-model="event_date" type="date" id="startdate" />
+        <input v-model="event_datetime" type="datetime-local" id="startdate" />
       </div>
       <div v-else>
-        <label for="startdate">Date: {{ event_date }}</label>
+        <label for="startdate">Date: {{ event_datetime }}</label>
       </div>
 
       <!-- Duration -->
@@ -99,7 +99,7 @@ export default {
       creator_username: "",
 
       // Event
-      event_date: "",
+      event_datetime: "",
       event_id: null,
       event_lat: null,
       event_lon: null,
@@ -162,7 +162,7 @@ export default {
         //this.creator_id = response.data["creator_id"];
         //this.creator_surname = response.data["creator_surname"];
         this.creator_username = response.data["creator_username"];
-        this.event_date = response.data["event_date"];
+        this.event_datetime = response.data["event_date"];
         this.event_lat = response.data["event_loc"]["latitude"];
         this.event_lon = response.data["event_loc"]["longitude"];
         this.cur_participants = response.data["participants"];
@@ -202,14 +202,16 @@ export default {
           "http://127.0.0.1:5000/maps/change",
           {
             coords: this.selectedEventCoordinates,
-            startdate: this.startdate,
+            startdate: this.event_datetime,
             difficulty: this.difficulty,
-            participants: this.participants,
+            description: this.description,
+            participants: this.maxParticipants,
             duration: this.duration,
           }
         );
         console.log(response);
         this.closePersonalPopup();
+        this.edit = false;
       } catch (error) {
         console.log(error);
       }
