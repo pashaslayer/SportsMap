@@ -8,8 +8,9 @@
       />
       <h1 class="headline">SportsMap</h1>
     </div>
-    <p>{{ tets }}</p>
+    <!--<p>{{ tets }}</p>
     <button v-on:click="deleteJWTFromLocalStorage">Clear Local Storage</button>
+    -->
 
     <div class="bottom-section">
       <div class="text-content">
@@ -57,7 +58,7 @@
 export default {
   data() {
     return {
-      tets: localStorage.getItem("jwt_token"),
+      //tets: localStorage.getItem("jwt_token"),
     };
   },
   methods: {

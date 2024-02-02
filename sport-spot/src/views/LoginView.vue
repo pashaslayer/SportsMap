@@ -148,6 +148,9 @@ export default {
         .post("http://127.0.0.1:5000/login", this.postData)
         .then((response) => {
           this.storeTokenInLocalStorage(response.data.token);
+          setTimeout(() => {
+            this.$router.push("/map");
+          }, 1000);
         })
         .catch((error) => {
           console.log(error);

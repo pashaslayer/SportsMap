@@ -222,7 +222,7 @@ export default {
 
 <style>
 .popup-form {
-  background-color: tan;
+  background-color: lightblue;
   position: absolute;
   top: 50px;
   right: 50px;
@@ -231,7 +231,7 @@ export default {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #fff;
+  color: darkblue;
   width: 300px;
   /* Adjust as needed */
 }

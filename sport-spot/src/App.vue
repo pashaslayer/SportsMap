@@ -12,9 +12,27 @@
     v-if="isAuthenticated"
     @click="redirectToProfile"
     class="btn position-absolute top-0 start-0 ms-0 mt-0"
+    style="margin-right: 1cm;"
   >
     <!-- Font awesome icon -->
     <i class="fa-solid fa-user"></i> {{ username }}
+  </button>
+  <button
+    v-if="isAuthenticated"
+    @click="logoutUser"
+    class="btn float-left"
+  >
+    <!-- Font awesome icon -->
+    <i class="fas fa-sign-out-alt"></i>
+  </button>
+
+  <button
+    v-if="isAuthenticated"
+    @click="redirectToMap"
+    class="btn position-absolute top-0 start-1 ms-0 mt-0"
+  >
+    <!-- Font awesome icon -->
+    <i class="fa-solid fa-map"></i>
   </button>
 
   <div
@@ -102,8 +120,8 @@ export default {
     };
   },
   mounted() {
-    // Call the checkJWTExpired method every 5 seconds
-    this.interval = setInterval(this.checkJWTExpired, 3000);
+    // Call the checkJWTExpired method every 2 seconds
+    this.interval = setInterval(this.checkJWTExpired, 2000);
   },
   beforeUnmount() {
     // Clear the interval when the component is destroyed
@@ -151,6 +169,14 @@ export default {
     redirectToProfile() {
       this.$router.push("/profile");
     },
+    redirectToMap(){
+      this.$router.push("/map");
+    },
+    logoutUser(){
+      localStorage.clear();
+      this.checkJWTExpired()
+      this.$router.push("/");
+    }
   },
 };
 </script>
@@ -175,6 +201,10 @@ body {
 
 nav {
   padding: 30px;
+}
+
+.offcanvas{
+  color: blue; 
 }
 
 nav a {

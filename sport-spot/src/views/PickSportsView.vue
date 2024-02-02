@@ -103,6 +103,9 @@ export default {
         .post("http://127.0.0.1:5000/saveSportsToUser", data)
         .then((response) => {
           console.log(response);
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 1000);
         })
         .catch((error) => {
           console.error(error);
