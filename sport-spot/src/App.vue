@@ -36,7 +36,7 @@
   </button>
 
   <div
-    class="offcanvas offcanvas-start w-15"
+    class="offcanvas offcanvas-end w-15"
     id="offcanvas"
     data-bs-keyboard="false"
     data-bs-backdrop="true"

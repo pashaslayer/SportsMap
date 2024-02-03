@@ -110,6 +110,7 @@ export default {
   },
   methods: {
     closePersonalPopup() {
+      this.edit = false;
       this.$emit("handlepersonalpointclose");
     },
     editPoint() {

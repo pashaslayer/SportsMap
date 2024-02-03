@@ -59,6 +59,7 @@
     :showPersonalPoint="showPersonalPoint"
     :selectedEventCoordinates="selectedEventCoordinates"
     @handlepersonalpointclose="handlePersonalPopupClose"
+    @loadmap="loadMap"
     ></personal-point>
   </ol-map>
 
@@ -240,6 +241,9 @@ export default {
         ),
       });
       this.curFeature.setStyle(iconStyle);
+    },
+    loadMap(){
+      this.loadPoints();
     },
     convertIntToSport(value) {
       let sport = "";

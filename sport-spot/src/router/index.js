@@ -67,7 +67,15 @@ const routes = [
   {
     path: '/pickSports',
     name: 'PickSportsView',
-    component: () => import(/* webpackChunkName: "map" */ '../views/PickSportsView.vue')
+    component: () => import(/* webpackChunkName: "map" */ '../views/PickSportsView.vue'),
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('jwt_token');
+      if (token) {
+        next("/map");
+      } else {
+        next();
+      }
+    },
   },
   {
     path: '/captcha',
