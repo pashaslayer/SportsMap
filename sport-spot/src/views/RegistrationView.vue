@@ -53,6 +53,7 @@
               minlength="6"
               maxlength="10"
             />
+            <p class="error" v-if="usernameError">{{ usernameError }}</p>
           </div>
           <div
             class="col-md-2 border border-white align-items-center d-flex justify-content-center"
@@ -103,6 +104,7 @@
               aria-describedby="passwordHelp"
               required
             />
+            <p class="error" v-if="passwordError">{{ passwordError }}</p>
           </div>
           <div
             class="col-md-2 border border-white align-items-center d-flex justify-content-center"
@@ -163,9 +165,7 @@
         <!-- Sixth Row (2 Columns for Buttons) -->
         <div class="row">
           <div class="col-md-6 d-flex justify-content-end">
-            <button class="btn btn-primary">
-              Bestätigen
-            </button>
+            <button class="btn btn-primary">Bestätigen</button>
           </div>
           <div class="col-md-6 d-flex justify-content-start">
             <button class="btn btn-secondary" @click="clear">Abbrechen</button>
@@ -201,6 +201,121 @@ Daten für die Userregistrierung
 •    Postleizahl
 -->
 
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      title: "SportSpot Registrierung",
+      // Kleines Fenster zur Anzeige von Userinputs bei Verstellung des (testing) Wertes wird dieses angezeigt oder versteckt
+      testing: false,
+      wheelAnimation: false,
+      postData: {
+        firstname: "",
+        surname: "",
+        username: "",
+        password: "",
+        birthdate: "",
+        email: "",
+        sports: [],
+        gender: "",
+        postalcode: "",
+      },
+      usernameError: "",
+      passwordError:"",
+    };
+  },
+  methods: {
+    ////////// [VALIDATION] //////////
+    validateUsername() {
+      // Username validation rules:
+      // 1. Must be between 3 and 15 characters long.
+      // 2. Can contain letters (both uppercase and lowercase), numbers, underscores, and hyphens.
+      // 3. Should not start or end with a space.
+
+      const minLen = 3;
+      const maxLen = 15;
+      const usernameRegex = /^[a-zA-Z0-9_-]{3,15}$/;
+
+      if (
+        this.postData.username.length < minLen ||
+        this.postData.username.length > maxLen
+      ) {
+        this.usernameError = `Username must be between ${minLen} and ${maxLen} characters long.`;
+      } else if (!usernameRegex.test(this.postData.username)) {
+        this.usernameError =
+          "Username can only contain letters, numbers, underscores, and hyphens.";
+      } else {
+        this.usernameError = "";
+      }
+    },
+
+    validatePassword() {
+      if (this.postData.password.length < 6) {
+        this.passwordError = "Password must be longer than 5 characters.";
+      } else if (this.postData.password.length > 16) {
+        this.passwordError = "Password must be shorter than 16 characters.";
+      } else {
+        this.passwordError = "";
+      }
+    },
+
+    isFormValid() {
+      this.validatePassword();
+      this.validateUsername();
+      if (!this.usernameError && !this.passwordError) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    ////////// [END VALIDATION] //////////
+
+    postRegister() {
+      if(this.isFormValid()){
+      axios
+        .post("http://127.0.0.1:5000/register", this.postData)
+        .then((response) => {
+          console.log(response);
+          this.startWheelAnimation();
+
+          console.log(this.postData.email);
+
+          setTimeout(() => {
+            localStorage.setItem("email", this.postData.email);
+            this.$router.push({ name: "PickSportsView" });
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      }
+    },
+    clear() {
+      // löscht alle bisher eingetragenen inputs
+      this.postData.firstname = "";
+      this.postData.surname = "";
+      this.postData.username = "";
+      this.postData.password = "";
+      this.postData.birthdate = "";
+      this.postData.email = "";
+      this.postData.sports = [];
+      this.postData.gender = "";
+      this.postData.firstname = "";
+      this.postData.postalcode = "";
+    },
+    startWheelAnimation() {
+      this.wheelAnimation = true;
+    },
+    stopWheelAnimation() {
+      this.wheelAnimation = false;
+    },
+  },
+};
+</script>
+
 <style>
 .border-bottom-remove {
   border-bottom: none !important;
@@ -229,75 +344,8 @@ img {
     transform: rotate(360deg);
   }
 }
+
+.error{
+  color: red !important;
+}
 </style>
-
-<script>
-import axios from "axios";
-
-export default {
-  data() {
-    return {
-      title: "SportSpot Registrierung",
-      // Kleines Fenster zur Anzeige von Userinputs bei Verstellung des (testing) Wertes wird dieses angezeigt oder versteckt
-      testing: false,
-      wheelAnimation: false,
-      postData: {
-        firstname: "",
-        surname: "",
-        username: "",
-        password: "",
-        birthdate: "",
-        email: "",
-        sports: [],
-        gender: "",
-        postalcode: "",
-      },
-    };
-  },
-  methods: {
-    postRegister() {
-      axios
-        .post("http://127.0.0.1:5000/register", this.postData)
-        .then((response) => {
-          console.log(response);
-          this.startWheelAnimation();
-
-          console.log(this.postData.email);
-
-          setTimeout(() => {
-            localStorage.setItem("email", this.postData.email);
-            this.$router.push({ name:'PickSportsView'});
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    clear() {
-      // löscht alle bisher eingetragenen inputs
-      this.postData.firstname = "";
-      this.postData.surname = "";
-      this.postData.username = "";
-      this.postData.password = "";
-      this.postData.birthdate = "";
-      this.postData.email = "";
-      this.postData.sports = [];
-      this.postData.gender = "";
-      this.postData.firstname = "";
-      this.postData.postalcode = "";
-    },
-    startWheelAnimation() {
-      this.wheelAnimation = true;
-    },
-    stopWheelAnimation() {
-      this.wheelAnimation = false;
-    },
-  },
-};
-
-// JWT Token
-
-// localStorage.setItem("Name", "Bob");
-// localStorage.getItem('Name');
-// localStorage.removeItem('Name');
-</script>

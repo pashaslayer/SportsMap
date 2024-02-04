@@ -40,6 +40,7 @@
           id="username-label"
         />
       </div>
+      <p class="error" v-if="usernameError">{{ usernameError }}</p>
     </div>
 
     <div class="row">
@@ -58,6 +59,8 @@
           required
         />
       </div>
+      <p class="error" v-if="passwordError">{{ passwordError }}</p>
+
       <div class="d-flex justify-content-center">
         <span class="mr-2">Noch nicht registriert?: </span>
         <router-link to="/registration">Register</router-link>
@@ -78,9 +81,11 @@
     </div>
   </div>
 
-  <br>
-  <br>
-  <button type="submit" class="btn btn-secondary" @click="handleCaptchaSuccess">Cheat Button für Testzwecke um Captcha nicht ausfüllen zu müssen</button>
+  <br />
+  <br />
+  <button type="submit" class="btn btn-secondary" @click="handleCaptchaSuccess">
+    Cheat Button für Testzwecke um Captcha nicht ausfüllen zu müssen
+  </button>
 
   <div v-if="showCaptchaModal" class="modal">
     <CaptchaView
@@ -90,31 +95,6 @@
     />
   </div>
 </template>
-
-<style>
-img {
-  /* Verhindert das Auswählen vom image */
-  user-select: none;
-}
-.title {
-  user-select: none;
-}
-body {
-  zoom: 100%;
-}
-.wheel-animation {
-  animation: wheelSpin 2s ease-in-out;
-}
-
-@keyframes wheelSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-</style>
 
 <script>
 import CaptchaView from "./CaptchaView.vue";
@@ -128,15 +108,64 @@ export default {
         username: "",
         password: "",
       },
+      usernameError: "",
+      passwordError: "",
       wheelAnimation: false,
       showCaptchaModal: false,
     };
   },
+
   methods: {
-    postLogin() {
-      this.showCaptchaModal = true;
+    ////////// [VALIDATION] //////////
+    validateUsername() {
+      // Username validation rules:
+      // 1. Must be between 3 and 15 characters long.
+      // 2. Can contain letters (both uppercase and lowercase), numbers, underscores, and hyphens.
+      // 3. Should not start or end with a space.
+
+      const minLen = 3;
+      const maxLen = 15;
+      const usernameRegex = /^[a-zA-Z0-9_-]{3,15}$/;
+
+      if (
+        this.postData.username.length < minLen ||
+        this.postData.username.length > maxLen
+      ) {
+        this.usernameError = `Username must be between ${minLen} and ${maxLen} characters long.`;
+      } else if (!usernameRegex.test(this.postData.username)) {
+        this.usernameError =
+          "Username can only contain letters, numbers, underscores, and hyphens.";
+      } else {
+        this.usernameError = ""; 
+      }
     },
-    closeModal(){
+
+    validatePassword() {
+      if (this.postData.password.length < 6) {
+        this.passwordError = "Password must be longer than 5 characters.";
+      } else if (this.postData.password.length > 14) {
+        this.passwordError = "Password must be shorter than 14 characters.";
+      } else {
+        this.passwordError = "";
+      }
+    },
+
+    isFormValid() {
+      this.validatePassword();
+      this.validateUsername();
+      if (!this.usernameError && !this.passwordError) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    postLogin() {
+      if (this.isFormValid()) {
+        // only open the captcha if the form is valid
+        this.showCaptchaModal = true;
+      }
+    },
+    closeModal() {
       this.showCaptchaModal = false;
     },
     handleCaptchaSuccess() {
@@ -210,10 +239,32 @@ export default {
     CaptchaView,
   },
 };
-
-// JWT Token
-
-// localStorage.setItem("Name", "Bob");
-// localStorage.getItem('Name');
-// localStorage.removeItem('Name');
 </script>
+
+<style>
+img {
+  /* Verhindert das Auswählen vom image */
+  user-select: none;
+}
+.title {
+  user-select: none;
+}
+body {
+  zoom: 100%;
+}
+.wheel-animation {
+  animation: wheelSpin 2s ease-in-out;
+}
+.error {
+  color: red !important;
+}
+
+@keyframes wheelSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
