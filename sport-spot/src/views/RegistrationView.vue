@@ -190,6 +190,11 @@
           </div>
         </div>
       </form>
+      <transition name="fade">
+        <div v-if="showError" class="error-message">
+          {{ errorMessage }}
+        </div>
+      </transition>
     </div>
 
     <div v-if="testing" class="info">
@@ -248,6 +253,8 @@ export default {
       passwordError: "",
       postalcodeError: "",
       birthdateError: "",
+      errorMessage: null,
+      showError: false,
     };
   },
   methods: {
@@ -341,11 +348,22 @@ export default {
         }
 
         if (age < 18) {
+          // Je nachdem was besser ist. 
+          this.displayError("You must be at least 18 years old.");
           this.birthdateError = "You must be at least 18 years old.";
         } else {
           this.birthdateError = "";
         }
       }
+    },
+
+    displayError(message) {
+      this.errorMessage = message;
+      this.showError = true;
+
+      setTimeout(() => {
+        this.showError = false;
+      }, 3000); // Message will disappear after 3000 ms (3 seconds)
     },
 
     isFormValid() {
@@ -416,6 +434,25 @@ export default {
 </script>
 
 <style>
+.error-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000; /* Make sure it's above other elements */
+}
+
+/* Define the fade transition */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+
 .border-bottom-remove {
   border-bottom: none !important;
 }
