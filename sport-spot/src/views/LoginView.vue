@@ -38,6 +38,7 @@
           type="text"
           class="form-control"
           id="username-label"
+          @input="validateUsername"
         />
       </div>
       <p class="error" v-if="usernameError">{{ usernameError }}</p>
@@ -57,6 +58,7 @@
           id="password-label"
           aria-describedby="passwordHelp"
           required
+          @input="validatePassword"
         />
       </div>
       <p class="error" v-if="passwordError">{{ passwordError }}</p>
@@ -136,7 +138,7 @@ export default {
         this.usernameError =
           "Username can only contain letters, numbers, underscores, and hyphens.";
       } else {
-        this.usernameError = ""; 
+        this.usernameError = "";
       }
     },
 
@@ -151,14 +153,14 @@ export default {
     },
 
     isFormValid() {
-      this.validatePassword();
-      this.validateUsername();
       if (!this.usernameError && !this.passwordError) {
         return true;
       } else {
         return false;
       }
     },
+    ////////// [END VALIDATION] //////////
+
     postLogin() {
       if (this.isFormValid()) {
         // only open the captcha if the form is valid

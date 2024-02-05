@@ -36,6 +36,7 @@
               type="text"
               class="form-control"
               id="firstname-label"
+              @input="validateFirstname"
             />
           </div>
           <div
@@ -50,10 +51,8 @@
               type="text"
               class="form-control"
               id="username-label"
-              minlength="6"
-              maxlength="10"
+              @input="validateUsername"
             />
-            <p class="error" v-if="usernameError">{{ usernameError }}</p>
           </div>
           <div
             class="col-md-2 border border-white align-items-center d-flex justify-content-center"
@@ -87,15 +86,16 @@
               type="text"
               class="form-control"
               id="surname-label"
+              @input="validateSurname"
             />
           </div>
           <div
             class="col-md-2 border border-white align-items-center d-flex justify-content-center"
           >
-            <label for="password" class="form-label">Password: </label>
+            <label for="password" class="form-label">Password:</label>
           </div>
-          <div class="col-md-2 border border-white">
-            <!--Input Passwort-->
+          <div class="col-md-2 border border-white d-flex align-items-center">
+            <!-- Input Password -->
             <input
               v-model="postData.password"
               type="password"
@@ -103,8 +103,16 @@
               id="password-label"
               aria-describedby="passwordHelp"
               required
+              ref="passwordInput"
+              @input="validatePassword"
             />
-            <p class="error" v-if="passwordError">{{ passwordError }}</p>
+            <button
+              class="btn"
+              @mousedown="revealPassword"
+              @mouseup="hidePassword"
+            >
+              Show
+            </button>
           </div>
           <div
             class="col-md-2 border border-white align-items-center d-flex justify-content-center"
@@ -118,7 +126,7 @@
               type="text"
               class="form-control"
               id="postalcode-label"
-              maxlength="8"
+              @input="validatePostalcode"
             />
           </div>
         </div>
@@ -139,6 +147,7 @@
               class="form-control"
               type="date"
               v-model="postData.birthdate"
+              @input="validateBirthdate"
             />
           </div>
           <div class="col-md-6">
@@ -155,7 +164,16 @@
           </div>
         </div>
 
-        <div class="row" style="height: 80px"></div>
+        <div class="row align-content-start" style="height: 80px">
+          <div class="col-md-4">
+            <p class="error" v-if="firstnameError">{{ firstnameError }}</p>
+            <p class="error" v-if="usernameError">{{ usernameError }}</p>
+            <p class="error" v-if="surnameError">{{ surnameError }}</p>
+            <p class="error" v-if="passwordError">{{ passwordError }}</p>
+            <p class="error" v-if="postalcodeError">{{ postalcodeError }}</p>
+            <p class="error" v-if="birthdateError">{{ birthdateError }}</p>
+          </div>
+        </div>
 
         <div class="d-flex justify-content-center">
           <span class="mr-2">Bereits registriert?: </span>
@@ -222,8 +240,14 @@ export default {
         gender: "",
         postalcode: "",
       },
+
+      // Validation
+      firstnameError: "",
       usernameError: "",
-      passwordError:"",
+      surnameError: "",
+      passwordError: "",
+      postalcodeError: "",
+      birthdateError: "",
     };
   },
   methods: {
@@ -260,37 +284,112 @@ export default {
         this.passwordError = "";
       }
     },
+    validateFirstname() {
+      // Firstname validation rules:
+      // 1. Must not be empty.
+
+      if (this.postData.firstname.trim() === "") {
+        this.firstnameError = "Firstname is required.";
+      } else {
+        this.firstnameError = "";
+      }
+    },
+
+    validateSurname() {
+      // Surname validation rules:
+      // 1. Must not be empty.
+
+      if (this.postData.surname.trim() === "") {
+        this.surnameError = "Surname is required.";
+      } else {
+        this.surnameError = "";
+      }
+    },
+
+    validatePostalcode() {
+      // Postalcode validation rules:
+      // 1. Must be between 4 and 5 characters.
+      // 2. Must only contain numbers.
+
+      const postalcodeRegex = /^\d{4,5}$/; // Postal code should have 4 or 5 digits
+
+      if (!postalcodeRegex.test(this.postData.postalcode)) {
+        this.postalcodeError =
+          "Postal code must be 4 or 5 digits and contain only numbers.";
+      } else {
+        this.postalcodeError = "";
+      }
+    },
+
+    validateBirthdate() {
+      // Birthdate validation rules:
+      // 1. Birthdate should be older than 18 years from today.
+
+      if (!this.postData.birthdate) {
+        this.birthdateError = "Birthdate is required.";
+      } else {
+        const birthdate = new Date(this.postData.birthdate);
+        const today = new Date();
+        let age = today.getFullYear() - birthdate.getFullYear();
+
+        if (
+          today.getMonth() < birthdate.getMonth() ||
+          (today.getMonth() === birthdate.getMonth() &&
+            today.getDate() < birthdate.getDate())
+        ) {
+          age--; // Subtract 1 year if the birthday hasn't occurred yet this year.
+        }
+
+        if (age < 18) {
+          this.birthdateError = "You must be at least 18 years old.";
+        } else {
+          this.birthdateError = "";
+        }
+      }
+    },
 
     isFormValid() {
-      this.validatePassword();
-      this.validateUsername();
-      if (!this.usernameError && !this.passwordError) {
-        return true;
-      } else {
-        return false;
-      }
+      // Check if all error fields are empty (no errors)
+      return (
+        !this.usernameError &&
+        !this.passwordError &&
+        !this.firstnameError &&
+        !this.surnameError &&
+        !this.postalcodeError &&
+        !this.birthdateError
+      );
     },
 
     ////////// [END VALIDATION] //////////
 
+    revealPassword() {
+      // Change the input type to 'text' to reveal the password
+      this.$refs.passwordInput.type = "text";
+    },
+
+    hidePassword() {
+      // Change the input type back to 'password' to hide the password
+      this.$refs.passwordInput.type = "password";
+    },
+
     postRegister() {
-      if(this.isFormValid()){
-      axios
-        .post("http://127.0.0.1:5000/register", this.postData)
-        .then((response) => {
-          console.log(response);
-          this.startWheelAnimation();
+      if (this.isFormValid()) {
+        axios
+          .post("http://127.0.0.1:5000/register", this.postData)
+          .then((response) => {
+            console.log(response);
+            this.startWheelAnimation();
 
-          console.log(this.postData.email);
+            console.log(this.postData.email);
 
-          setTimeout(() => {
-            localStorage.setItem("email", this.postData.email);
-            this.$router.push({ name: "PickSportsView" });
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+            setTimeout(() => {
+              localStorage.setItem("email", this.postData.email);
+              this.$router.push({ name: "PickSportsView" });
+            }, 2000);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     },
     clear() {
@@ -345,7 +444,7 @@ img {
   }
 }
 
-.error{
+.error {
   color: red !important;
 }
 </style>
