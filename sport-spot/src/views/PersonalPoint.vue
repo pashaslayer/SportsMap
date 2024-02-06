@@ -191,6 +191,7 @@ export default {
             }
           );
           console.log(response);
+
           this.closePersonalPopup();
         } catch (error) {
           console.log(error);

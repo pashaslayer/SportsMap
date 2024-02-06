@@ -225,6 +225,7 @@ export default {
     closePopupOnly() {
       this.showPopup = false;
       this.drawEnable = true;
+      this.loadMap();
     },
     changeIcon(iconSource) {
       let iconSourceInt = parseInt(iconSource)+10;

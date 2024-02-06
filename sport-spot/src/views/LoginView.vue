@@ -141,12 +141,11 @@ export default {
         this.usernameError = "";
       }
     },
-
     validatePassword() {
       if (this.postData.password.length < 6) {
         this.passwordError = "Password must be longer than 5 characters.";
-      } else if (this.postData.password.length > 14) {
-        this.passwordError = "Password must be shorter than 14 characters.";
+      } else if (this.postData.password.length > 16) {
+        this.passwordError = "Password must be shorter than 16 characters.";
       } else {
         this.passwordError = "";
       }
