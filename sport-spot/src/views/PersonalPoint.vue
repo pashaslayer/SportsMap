@@ -148,10 +148,12 @@ export default {
     },
     async loadPointData() {
       try {
+        //let jwt = localStorage.getItem("jwt_token");
         const response = await axios.post(
           "http://127.0.0.1:5000/maps/anzeigen",
           {
             coords: this.selectedEventCoordinates,
+            //jwt: jwt
           }
         );
         console.log(this.selectedEventCoordinates);
@@ -184,10 +186,13 @@ export default {
       let result = confirm("Do you really want to delete the event?");
       if (result) {
         try {
+          //let jwt = localStorage.getItem("jwt_token");
           const response = await axios.post(
             "http://127.0.0.1:5000/map/anzeigen/delete",
             {
               coords: this.selectedEventCoordinates,
+              //jwt: jwt
+
             }
           );
           console.log(response);

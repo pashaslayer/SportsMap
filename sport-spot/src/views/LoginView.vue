@@ -8,14 +8,18 @@
       <div class="col-md-12">
         <img
           v-if="!wheelAnimation"
-          src="@/assets/logo_vektor_01_white.svg"
-          class="rounded mx-auto d-block"
+          src="@/assets/Logo_V3_1_final_noBG_white.svg"
+          class="rounded mx-auto d-block img-fluid"
+          width="150px"
+          height="100px"
           draggable="false"
         />
         <img
           v-if="wheelAnimation"
-          src="@/assets/logo_vektor_01_white.svg"
-          class="rounded mx-auto d-block wheel-animation"
+          src="@/assets/Logo_V3_1_final_noBG_white.svg"
+          class="rounded mx-auto d-block wheel-animation img-fluid"
+          width="150px"
+          height="100px"
           draggable="false"
           @animationend="stopWheelAnimation"
         />
@@ -121,13 +125,13 @@ export default {
     ////////// [VALIDATION] //////////
     validateUsername() {
       // Username validation rules:
-      // 1. Must be between 3 and 15 characters long.
+      // 1. Must be between 5 and 15 characters long.
       // 2. Can contain letters (both uppercase and lowercase), numbers, underscores, and hyphens.
       // 3. Should not start or end with a space.
 
-      const minLen = 3;
+      const minLen = 5;
       const maxLen = 15;
-      const usernameRegex = /^[a-zA-Z0-9_-]{3,15}$/;
+      const usernameRegex = /^[a-zA-Z0-9_-]{5,15}$/;
 
       if (
         this.postData.username.length < minLen ||
@@ -141,11 +145,12 @@ export default {
         this.usernameError = "";
       }
     },
+
     validatePassword() {
       if (this.postData.password.length < 6) {
         this.passwordError = "Password must be longer than 5 characters.";
-      } else if (this.postData.password.length > 16) {
-        this.passwordError = "Password must be shorter than 16 characters.";
+      } else if (this.postData.password.length > 14) {
+        this.passwordError = "Password must be shorter than 14 characters.";
       } else {
         this.passwordError = "";
       }

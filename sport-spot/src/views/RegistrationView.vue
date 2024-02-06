@@ -7,14 +7,18 @@
           <!-- draggable verhindert das verschieben von images -->
           <img
             v-if="!wheelAnimation"
-            src="@/assets/logo_vektor_01_white.svg"
+            src="@/assets/Logo_V3_1_final_noBG_white.svg"
             class="rounded mx-auto d-block img-fluid"
+            width="150px"
+            height="100px"
             draggable="false"
           />
           <img
             v-if="wheelAnimation"
-            src="@/assets/logo_vektor_01_white.svg"
+            src="@/assets/Logo_V3_1_final_noBG_white.svg"
             class="rounded mx-auto d-block wheel-animation img-fluid"
+            width="150px"
+            height="100px"
             draggable="false"
             @animationend="stopWheelAnimation"
           />
@@ -165,6 +169,7 @@
         </div>
 
         <div class="row align-content-start" style="height: 80px">
+          <!--
           <div class="col-md-4">
             <p class="error" v-if="firstnameError">{{ firstnameError }}</p>
             <p class="error" v-if="usernameError">{{ usernameError }}</p>
@@ -173,6 +178,7 @@
             <p class="error" v-if="postalcodeError">{{ postalcodeError }}</p>
             <p class="error" v-if="birthdateError">{{ birthdateError }}</p>
           </div>
+          -->
         </div>
 
         <div class="d-flex justify-content-center">
@@ -191,9 +197,8 @@
         </div>
       </form>
       <transition name="fade">
-        <div v-if="showError" class="error-message">
-          {{ errorMessage }}
-        </div>
+        <!-- Use a <pre> tag, which respects whitespace and line breaks. -->
+        <pre v-if="showError" class="error-message">{{ errorMessage }}</pre>
       </transition>
     </div>
 
@@ -233,7 +238,6 @@ export default {
       title: "SportSpot Registrierung",
       // Kleines Fenster zur Anzeige von Userinputs bei Verstellung des (testing) Wertes wird dieses angezeigt oder versteckt
       testing: false,
-      wheelAnimation: false,
       postData: {
         firstname: "",
         surname: "",
@@ -247,16 +251,35 @@ export default {
       },
 
       // Validation
-      firstnameError: "",
-      usernameError: "",
-      surnameError: "",
-      passwordError: "",
-      postalcodeError: "",
-      birthdateError: "",
+      validator: {
+        firstnameError: "",
+        usernameError: "",
+        surnameError: "",
+        passwordError: "",
+        postalcodeError: "",
+        birthdateError: "",
+      },
       errorMessage: null,
       showError: false,
     };
   },
+  watch: {
+    validator: {
+      handler(newValue) {
+        let errorMessages = [];
+        for (let key in newValue) {
+          if (newValue[key] !== "") {
+            errorMessages.push(newValue[key]);
+          }
+        }
+        if (errorMessages.length > 0) {
+          this.displayError(errorMessages);
+        }
+      },
+      deep: true,
+    },
+  },
+
   methods: {
     ////////// [VALIDATION] //////////
     validateUsername() {
@@ -273,22 +296,24 @@ export default {
         this.postData.username.length < minLen ||
         this.postData.username.length > maxLen
       ) {
-        this.usernameError = `Username must be between ${minLen} and ${maxLen} characters long.`;
+        this.validator.usernameError = `Username must be between ${minLen} and ${maxLen} characters long.`;
       } else if (!usernameRegex.test(this.postData.username)) {
-        this.usernameError =
+        this.validator.usernameError =
           "Username can only contain letters, numbers, underscores, and hyphens.";
       } else {
-        this.usernameError = "";
+        this.validator.usernameError = "";
       }
     },
 
     validatePassword() {
       if (this.postData.password.length < 6) {
-        this.passwordError = "Password must be longer than 5 characters.";
+        this.validator.passwordError =
+          "Password must be longer than 5 characters.";
       } else if (this.postData.password.length > 16) {
-        this.passwordError = "Password must be shorter than 16 characters.";
+        this.validator.passwordError =
+          "Password must be shorter than 16 characters.";
       } else {
-        this.passwordError = "";
+        this.validator.passwordError = "";
       }
     },
     validateFirstname() {
@@ -296,9 +321,9 @@ export default {
       // 1. Must not be empty.
 
       if (this.postData.firstname.trim() === "") {
-        this.firstnameError = "Firstname is required.";
+        this.validator.firstnameError = "Firstname is required.";
       } else {
-        this.firstnameError = "";
+        this.validator.firstnameError = "";
       }
     },
 
@@ -307,9 +332,9 @@ export default {
       // 1. Must not be empty.
 
       if (this.postData.surname.trim() === "") {
-        this.surnameError = "Surname is required.";
+        this.validator.surnameError = "Surname is required.";
       } else {
-        this.surnameError = "";
+        this.validator.surnameError = "";
       }
     },
 
@@ -321,10 +346,10 @@ export default {
       const postalcodeRegex = /^\d{4,5}$/; // Postal code should have 4 or 5 digits
 
       if (!postalcodeRegex.test(this.postData.postalcode)) {
-        this.postalcodeError =
+        this.validator.postalcodeError =
           "Postal code must be 4 or 5 digits and contain only numbers.";
       } else {
-        this.postalcodeError = "";
+        this.validator.postalcodeError = "";
       }
     },
 
@@ -333,7 +358,7 @@ export default {
       // 1. Birthdate should be older than 18 years from today.
 
       if (!this.postData.birthdate) {
-        this.birthdateError = "Birthdate is required.";
+        this.validator.birthdateError = "Birthdate is required.";
       } else {
         const birthdate = new Date(this.postData.birthdate);
         const today = new Date();
@@ -346,35 +371,35 @@ export default {
         ) {
           age--; // Subtract 1 year if the birthday hasn't occurred yet this year.
         }
-
         if (age < 18) {
-          // Je nachdem was besser ist. 
-          this.displayError("You must be at least 18 years old.");
-          this.birthdateError = "You must be at least 18 years old.";
+          this.validator.birthdateError = "You must be at least 18 years old.";
         } else {
-          this.birthdateError = "";
+          this.validator.birthdateError = "";
         }
       }
     },
 
-    displayError(message) {
-      this.errorMessage = message;
-      this.showError = true;
+    displayError(messages) {
+      if (Array.isArray(messages) && messages.length > 0) {
+        // Join messages into a single string, separated by line breaks, or handle them as per your UI requirement
+        this.errorMessage = messages.join("\n"); // or "<br/>" if you plan to display them in HTML
+        this.showError = true;
 
-      setTimeout(() => {
-        this.showError = false;
-      }, 3000); // Message will disappear after 3000 ms (3 seconds)
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000); // Message will disappear after 3000 ms (3 seconds)
+      }
     },
 
     isFormValid() {
       // Check if all error fields are empty (no errors)
       return (
-        !this.usernameError &&
-        !this.passwordError &&
-        !this.firstnameError &&
-        !this.surnameError &&
-        !this.postalcodeError &&
-        !this.birthdateError
+        !this.validator.usernameError &&
+        !this.validator.passwordError &&
+        !this.validator.firstnameError &&
+        !this.validator.surnameError &&
+        !this.validator.postalcodeError &&
+        !this.validator.birthdateError
       );
     },
 
@@ -408,6 +433,19 @@ export default {
           .catch((error) => {
             console.error(error);
           });
+      } else {
+        this.collectErrorMessagesFromValidator();
+      }
+    },
+    collectErrorMessagesFromValidator() {
+      let errorMessages = [];
+      for (let key in this.validator) {
+        if (this.validator[key] !== "") {
+          errorMessages.push(this.validator[key]);
+        }
+      }
+      if (errorMessages.length > 0) {
+        this.displayError(errorMessages);
       }
     },
     clear() {
@@ -446,7 +484,8 @@ export default {
 }
 
 /* Define the fade transition */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
