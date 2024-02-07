@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-// Blaue Symbole 
+// blue symbols 
 import markerIcon from "../assets/symbols_blau/kreis_blau.svg";
 import cyclingIcon from "../assets/symbols_blau/cycling_kreis_blau.svg";
 import hikingIcon from "../assets/symbols_blau/hiking_kreis_blau.svg";
@@ -77,7 +77,7 @@ import runningIcon from "../assets/symbols_blau/running_kreis_blau.svg";
 import skiingIcon from "../assets/symbols_blau/skiing_kreis_blau.svg";
 import weightliftingIcon from "../assets/symbols_blau/weightlifting_kreis_blau.svg";
 
-// Grüne Symbole
+// green symbols
 import markerIconGreen from "../assets/symbols_gruen/kreis_grün.svg";
 import cyclingIconGreen from "../assets/symbols_gruen/cycling_kreis_grün.svg";
 import hikingIconGreen from "../assets/symbols_gruen/hiking_kreis_grün.svg";
@@ -151,23 +151,6 @@ export default {
     this.loadPoints();
   },
   methods: {
-    handleData(
-      sport,
-      duration,
-      startdate,
-      difficulty,
-      participants,
-      description
-    ) {
-      console.log(
-        sport,
-        duration,
-        startdate,
-        difficulty,
-        participants,
-        description
-      );
-    },
     source_change(e) {
       console.log(e);
     },
@@ -322,7 +305,7 @@ export default {
       if (!this.showPopup) {
         // this disables the ability to draw points after the popup has been opened
         this.drawEnable = false;
-        console.log(typeof event);
+
         const feature = event.feature;
         this.curFeature = event.feature;
         const geometry = feature.getGeometry();
@@ -332,6 +315,7 @@ export default {
             this.coords = geometry.getCoordinates();
             console.log("Point coordinates:", this.coords);
             break;
+            /*
           case "LineString":
             this.coords = geometry.getCoordinates();
             console.log("LineString coordinates:", this.coords);
@@ -340,6 +324,7 @@ export default {
             this.coords = geometry.getCoordinates()[0];
             console.log("Polygon coordinates:", this.coords);
             break;
+            */
           default:
             console.log("Unknown geometry type");
         }
@@ -430,11 +415,7 @@ export default {
     ) {
       let jwt = localStorage.getItem("jwt_token");
 
-      // console.log("JWT: " + jwt);
-
       if (this.coords && this.coords.length !== 0) {
-        // console.log(this.type);
-        // console.log(this.coords);
         try {
           const response = await axios.post("http://127.0.0.1:5000/maps/add", {
             jwt: jwt,
@@ -458,15 +439,6 @@ export default {
       } else {
         console.log("No coordinates to send");
       }
-    },
-    // Method to add a feature with a dynamic style
-    addFeatureWithStyle(feature) {
-      feature.setStyle();
-      this.vectorSource.addFeature(feature);
-    },
-    // Call this method to update the style of a feature reactively
-    updateFeatureStyle(feature) {
-      feature.setStyle();
     },
   },
   components: {

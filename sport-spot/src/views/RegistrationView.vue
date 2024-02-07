@@ -20,11 +20,13 @@
         <!-- @submit.prevent="postRegister"> -->
         <div class="row">
           <div
-            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-2 border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
             <label for="firstname" class="text-center">Firstname:</label>
           </div>
-          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+          <div
+            class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-start-0 rounded-end"
+          >
             <input
               v-model="postData.firstname"
               type="text"
@@ -34,11 +36,13 @@
             />
           </div>
           <div
-            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-2 border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
             <label for="username" class="text-center">Username: </label>
           </div>
-          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+          <div
+            class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-start-0 rounded-end"
+          >
             <!--Input Benutzername-->
             <input
               v-model="postData.username"
@@ -49,11 +53,13 @@
             />
           </div>
           <div
-            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-2 border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
             <label for="email-label" class="text-center">Email: </label>
           </div>
-          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+          <div
+            class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-start-0 rounded-end"
+          >
             <!--Input Email-->
             <input
               v-model="postData.email"
@@ -69,11 +75,13 @@
         <!-- Third Row (6 Columns) -->
         <div class="row">
           <div
-            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-2 border-top-0 border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
             <label for="surname" class="text-center">Surname: </label>
           </div>
-          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+          <div
+            class="col-md-2 m-0 p-0 bg-white border border-2 border-top-0 border-white border-start-0 rounded-end"
+          >
             <!--Input Nachname-->
             <input
               v-model="postData.surname"
@@ -84,11 +92,13 @@
             />
           </div>
           <div
-            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-2 border-top-0 border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
             <label for="password" class="text-center">Password:</label>
           </div>
-          <div class="col-md-2 m-0 p-0 border bg-white border-white d-flex align-items-center rounded-end">
+          <div
+            class="col-md-2 m-0 p-0 border border-2 border-top-0 bg-white border-white d-flex align-items-center rounded-end"
+          >
             <!-- Input Password -->
             <input
               v-model="postData.password"
@@ -109,12 +119,14 @@
             </button>
           </div>
           <div
-            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-2 border-top-0 border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
             <label for="postalcode" class="text-center">Postalcode: </label>
           </div>
-          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
-            <!--Input Plz-->
+          <div
+            class="col-md-2 m-0 p-0 bg-white border border-2 border-top-0 border-white border-start-0 rounded-end"
+          >
+            <!--Input Postalcode-->
             <input
               v-model="postData.postalcode"
               type="text"
@@ -158,30 +170,22 @@
           </div>
         </div>
 
-        <div class="row align-content-start" style="height: 80px">
-          <!--
-          <div class="col-md-4">
-            <p class="error" v-if="firstnameError">{{ firstnameError }}</p>
-            <p class="error" v-if="usernameError">{{ usernameError }}</p>
-            <p class="error" v-if="surnameError">{{ surnameError }}</p>
-            <p class="error" v-if="passwordError">{{ passwordError }}</p>
-            <p class="error" v-if="postalcodeError">{{ postalcodeError }}</p>
-            <p class="error" v-if="birthdateError">{{ birthdateError }}</p>
-          </div>
-          -->
-        </div>
+        <div class="row align-content-start" style="height: 80px"></div>
 
         <div class="d-flex justify-content-center">
           <span class="mr-2">Bereits registriert?: </span>
           <router-link to="/login">Login</router-link>
         </div>
 
-        <!-- Sixth Row (2 Columns for Buttons) -->
         <div class="row">
-          <div class="col-md-6 d-flex justify-content-end">
+          <div
+            class="col-12 col-md-6 d-flex justify-content-md-end justify-content-center mb-2"
+          >
             <button class="btn btn-primary">Bestätigen</button>
           </div>
-          <div class="col-md-6 d-flex justify-content-start">
+          <div
+            class="col-12 col-md-6 d-flex justify-content-md-start justify-content-center mb-2"
+          >
             <button class="btn btn-secondary" @click="clear">Abbrechen</button>
           </div>
         </div>
@@ -190,18 +194,6 @@
         <!-- Use a <pre> tag, which respects whitespace and line breaks. -->
         <pre v-if="showError" class="error-message">{{ errorMessage }}</pre>
       </transition>
-    </div>
-
-    <div v-if="testing" class="info">
-      <p>Firstname: {{ postData.firstname }}</p>
-      <p>Surname: {{ postData.surname }}</p>
-      <p>Username: {{ postData.username }}</p>
-      <p>Password: {{ postData.password }}</p>
-      <p>Birthdate: {{ postData.birthdate }}</p>
-      <p>Email: {{ postData.email }}</p>
-      <p>Sports: {{ postData.sports }}</p>
-      <p>Gender: {{ postData.gender }}</p>
-      <p>Postalcode: {{ postData.postalcode }}</p>
     </div>
   </div>
 </template>
@@ -226,8 +218,6 @@ export default {
   data() {
     return {
       title: "SportSpot Registrierung",
-      // Kleines Fenster zur Anzeige von Userinputs bei Verstellung des (testing) Wertes wird dieses angezeigt oder versteckt
-      testing: false,
       postData: {
         firstname: "",
         surname: "",
@@ -392,7 +382,6 @@ export default {
         !this.validator.birthdateError
       );
     },
-
     ////////// [END VALIDATION] //////////
 
     revealPassword() {
@@ -411,8 +400,6 @@ export default {
           .post("http://127.0.0.1:5000/register", this.postData)
           .then((response) => {
             console.log(response);
-            this.startWheelAnimation();
-
             console.log(this.postData.email);
 
             setTimeout(() => {

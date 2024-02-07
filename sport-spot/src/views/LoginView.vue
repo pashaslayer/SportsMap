@@ -22,11 +22,11 @@
 
     <div class="row justify-content-center">
       <div
-        class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+        class="col-md-2 bg-info bg-opacity-25 border border-2 border-white rounded-start border-end align-items-center d-flex justify-content-center"
       >
         <label for="username" class="text-center">Username:</label>
       </div>
-      <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+      <div class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-start-0 rounded-end">
         <input
           v-model="postData.username"
           type="text"
@@ -39,11 +39,11 @@
 
     <div class="row justify-content-center">
       <div
-        class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+        class="col-md-2 bg-info bg-opacity-25 border border-2 border-top-0 border-white rounded-start border-end align-items-center d-flex justify-content-center"
       >
         <label for="password" class="text-center">Password: </label>
       </div>
-      <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+      <div class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-top-0 border-start-0 rounded-end">
         <input
           v-model="postData.password"
           type="password"
@@ -64,12 +64,12 @@
     <div class="row" style="height: 20px"></div>
 
     <div class="row">
-      <div class="col-md-6 d-flex justify-content-end">
+      <div class="col-12 col-md-6 d-flex justify-content-md-end justify-content-center mb-2">
         <button type="submit" class="btn btn-primary" @click="postLogin">
           Bestätigen
         </button>
       </div>
-      <div class="col-md-6 d-flex justify-content-start">
+      <div class="col-12 col-md-6 d-flex justify-content-md-start justify-content-center mb-2">
         <button type="submit" class="btn btn-secondary">Abbrechen</button>
       </div>
     </div>

@@ -36,7 +36,7 @@
   </button>
 
   <div
-    class="offcanvas offcanvas-end w-15"
+    class="offcanvas offcanvas-end w-10"
     id="offcanvas"
     data-bs-keyboard="false"
     data-bs-backdrop="true"
@@ -57,35 +57,35 @@
       >
         <li class="nav-item">
           <a class="nav-link text-truncate">
-            <span class="ms-1 d-none d-sm-inline"
+            <span class="ms-1 d-sm-inline"
               ><router-link to="/">Home</router-link></span
             >
           </a>
         </li>
         <li>
           <a class="nav-link text-truncate">
-            <span class="ms-1 d-none d-sm-inline"
+            <span class="ms-1 d-sm-inline"
               ><router-link to="/about">About</router-link></span
             >
           </a>
         </li>
         <li>
           <a class="nav-link text-truncate">
-            <span class="ms-1 d-none d-sm-inline"
+            <span class="ms-1 d-sm-inline"
               ><router-link to="/login">Login</router-link></span
             >
           </a>
         </li>
         <li>
           <a class="nav-link text-truncate">
-            <span class="ms-1 d-none d-sm-inline"
+            <span class="ms-1 d-sm-inline"
               ><router-link to="/registration">Registration</router-link></span
             >
           </a>
         </li>
         <li>
           <a class="nav-link text-truncate">
-            <span class="ms-1 d-none d-sm-inline"
+            <span class="ms-1 d-sm-inline"
               ><router-link to="/admin">Admin</router-link></span
             >
           </a>

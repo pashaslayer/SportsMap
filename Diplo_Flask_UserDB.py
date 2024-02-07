@@ -511,9 +511,6 @@ def delete_event(): #jetzt auch mit jwt
             cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
             cur.execute("DELETE FROM event_point WHERE event_id = %s;", (event_id,))
             cur.execute("DELETE FROM event WHERE event_id = %s;", (event_id,))
-            cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
-            cur.execute("DELETE FROM event_point WHERE event_id = %s;", (event_id,))
-            cur.execute("DELETE FROM event WHERE event_id = %s;", (event_id,))
 
             conn.commit()  # Don't forget to commit your changes to the database
 
