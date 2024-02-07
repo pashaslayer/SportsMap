@@ -80,6 +80,11 @@ body {
   overflow-x: hidden;
 }
 
+body, html{
+  max-height: 100vh;
+  overflow:hidden;
+}
+
 .home {
   text-align: center;
   margin: 0;

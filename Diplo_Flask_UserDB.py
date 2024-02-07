@@ -52,6 +52,26 @@ def decode_token(token):
         return None
 
 
+def get_user_map_data(data):
+    if not data:
+        return jsonify({'message': f'Bad Request: Keine Daten'}), 400
+    print(data)
+    jwt_data = data.get('jwt')
+    print(jwt_data)
+    payload = decode_token(jwt_data)
+    print(payload)
+    dataset = {
+        'event_loc': data['coords'],
+        'user_id': payload['user_id'],
+    }
+
+    event_loc = dataset.get('event_loc')
+    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+
+    user_id = dataset.get('user_id')
+    return user_id, event_loc_convert
+
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -332,101 +352,91 @@ def event_hinzuegen():
 
 
 @app.route('/maps/anzeigen', methods=['POST'])
-def event_anzeigen():
+def event_anzeigen(): #jetzt auch mit jwt
     data = request.get_json()
-    event_loc = data.get('coords')
-    if not event_loc:
-        return jsonify({'message': f'Bad Request'}), 405
-    else:
-        event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+    user_id, event_loc_convert = get_user_map_data(data)
+    try:
         conn = get_db_connection()
-        if conn is not None:
-            try:
-                cur = conn.cursor()
-                cur.execute("SELECT type FROM event WHERE event_loc = %s;", (event_loc_convert,))
-                result = cur.fetchone()
-                # TheMap.vue =>  320
-                if result is not None:
-                    v_event_type = result[0]
-                    if v_event_type == 'p':
-                        cur.execute("SELECT e.event_id, e.event_loc AS event_loc, e.sport AS sport, e.event_date, "
-                                    "e.type, e.difficulty, e.duration, e.info, e.max_participants, "
-                                    "e.creator_id AS creator_id, u.firstname AS creator_firstname,"
-                                    "u.surname AS creator_surname, u.username AS creator_username, EXTRACT(YEAR FROM "
-                                    "CURRENT_DATE) - EXTRACT(YEAR FROM u.birthdate) AS birthdate, u.email AS "
-                                    "creator_email, COUNT(ep.user_id) AS participants FROM event_point e JOIN users u "
-                                    "ON e.creator_id = u.user_id LEFT JOIN event_participants ep ON e.event_id = "
-                                    "ep.event_id LEFT JOIN users up ON ep.user_id = up.user_id WHERE e.event_loc = %s "
-                                    "GROUP BY e.event_id, e.event_loc, e.sport, e.event_date, e.type, e.difficulty, "
-                                    "e.duration, e.info, e.max_participants, e.creator_id,"
-                                    "u.firstname, u.surname, u.username, u.email, u.user_id; ", (event_loc_convert,))
-                        event = cur.fetchone()
-                        if event:
-                            event = list(event)
-                            output_dict = {
-                                "event_id": event[0],
-                                "event_loc": event[1],
-                                "sport": event[2],
-                                "event_date": event[3],
-                                "type": event[4],
-                                "difficulty": event[5],
-                                "duration": event[6],
-                                "description": event[7],
-                                "max_participants": event[8],
-                                "creator_id": event[9],
-                                "creator_firstname": event[10],
-                                "creator_surname": event[11],
-                                "creator_username": event[12],
-                                "age": event[13],
-                                "creator_email": event[14],
-                                "participants": event[15]
-                            }
+        cur = conn.cursor()
+        cur.execute("SELECT type, event_id FROM event WHERE event_loc = %s;", (event_loc_convert,))
+        result = cur.fetchone()
+        # TheMap.vue =>  320
+        if result is not None:
+            v_event_type = result[0]
+            event_id = result[1]
+            cur.execute("SELECT * FROM event_participants WHERE event_id = %s AND user_id = %s",
+                        (event_id, user_id))
+            teilgenommen = cur.fetchone()
+            if teilgenommen:
+                teilgenommen = True
+            else :
+                teilgenommen = False
 
-                        else:
-                            return jsonify({"message": "Event not found"}), 404
+            if v_event_type == 'p':
+                cur.execute("SELECT e.event_id, e.event_loc AS event_loc, e.sport AS sport, e.event_date, "
+                            "e.type, e.difficulty, e.duration, e.info, e.max_participants, "
+                            "e.creator_id AS creator_id, u.firstname AS creator_firstname,"
+                            "u.surname AS creator_surname, u.username AS creator_username, EXTRACT(YEAR FROM "
+                            "CURRENT_DATE) - EXTRACT(YEAR FROM u.birthdate) AS birthdate, u.email AS "
+                            "creator_email, COUNT(ep.user_id) AS participants FROM event_point e JOIN users u "
+                            "ON e.creator_id = u.user_id LEFT JOIN event_participants ep ON e.event_id = "
+                            "ep.event_id LEFT JOIN users up ON ep.user_id = up.user_id WHERE e.event_loc = %s "
+                            "GROUP BY e.event_id, e.event_loc, e.sport, e.event_date, e.type, e.difficulty, "
+                            "e.duration, e.info, e.max_participants, e.creator_id,"
+                            "u.firstname, u.surname, u.username, u.email, u.user_id; ", (event_loc_convert,))
+                event = cur.fetchone()
+                if event:
+                    event = list(event)
+                    output_dict = {
+                        "event_id": event[0],
+                        "event_loc": event[1],
+                        "sport": event[2],
+                        "event_date": event[3],
+                        "type": event[4],
+                        "difficulty": event[5],
+                        "duration": event[6],
+                        "description": event[7],
+                        "max_participants": event[8],
+                        "creator_id": event[9],
+                        "creator_firstname": event[10],
+                        "creator_surname": event[11],
+                        "creator_username": event[12],
+                        "age": event[13],
+                        "creator_email": event[14],
+                        "participants": event[15]
+                    }
 
-                    elif v_event_type == 'r':
-                        cur.execute("SELECT * FROM event_route WHERE event_loc = %s;", (event_loc_convert,))
-                        event = cur.fetchone()
-
-                    return jsonify(output_dict), 201
                 else:
-                    return jsonify({'message': f'Bad Request'}), 400
-            except Exception as e:
-                print(e)
+                    return jsonify({"message": "Event not found"}), 404
+
+            elif v_event_type == 'r':
+                cur.execute("SELECT * FROM event_route WHERE event_loc = %s;", (event_loc_convert,))
+                event = cur.fetchone()
+
+            return jsonify(output_dict, teilgenommen), 201
         else:
-            return jsonify({'message': f'Internal Server Error'}), 500
+            return jsonify({'message': f'Bad Request'}), 400
+    except Exception as e:
+        print(e)
 
 
-@app.route('/maps/anzeigen/teilnehmen', methods=['POST'])
-def take_part():
+@app.route('/maps/anzeigen/teilnehmer', methods=['POST'])
+def show_participants():
     data = request.get_json()
     if not data:
         return jsonify({'message': f'Bad Request: Keine Daten'}), 400
 
-    jwt_data = data.get('jwt')
-    payload = decode_token(jwt_data)
-
-    dataset = {
-        'event_loc': data['coords'],
-        'user_id': payload["user_id"],
-    }
-
-    event_loc = dataset.get('event_loc')
+    event_loc = data.get('coords')
     event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
-
-    user_id = dataset.get('user_id')
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT event_id FROM event WHERE event_loc = %s", (event_loc_convert,))
-        event_id = cur.fetchone()
-        event_id = event_id[1]
-        if event_id:
-            return jsonify({event_id}), 501
 
-        cur.execute("INSERT INTO public.event_participants(event_id, user_id) VALUES (%s, %s);", (event_id, user_id))
+        cur.execute("SELECT event_id FROM event WHERE event_loc = %s", event_loc_convert)
+        event_id = cur.fetchone()
+
+        cur.execute("SELECT * FROM event_participants WHERE event_id = %s", event_id)
 
         conn.commit()
         return jsonify({'message': 'Successful'}), 200
@@ -435,37 +445,81 @@ def take_part():
         return jsonify({'message': 'Internal Server Error'}), 500
 
 
-@app.route('/map/anzeigen/delete', methods=['POST'])
-def delete_event():
+@app.route('/maps/anzeigen/teilnehmen', methods=['POST'])
+def take_part():
     data = request.get_json()
-    if not data:
-        return jsonify({'message': 'Bad Request: Keine Daten'}), 400
+    user_id, event_loc_convert = get_user_map_data(data)
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT event_id FROM event WHERE event_loc = %s", (event_loc_convert,))
+        event_id = cur.fetchone()
+        cur.execute("SELECT e.max_participants, COUNT(ep.user_id) AS participants FROM event_point e JOIN "
+                    "event_participants ep ON e.event_id = ep.event_id WHERE e.event_id = %s GROUP BY "
+                    "e.max_participants HAVING COUNT(ep.user_id) = e.max_participants;", event_id)
+        full = cur.fetchall()
+        if full:
+            return jsonify({'message': 'Event ist Voll'}), 404
 
-    event_loc = data.get('coords')
-    if not event_loc:
-        return jsonify({'message': 'Bad Request: Fehlende Koordinaten'}), 400
+        cur.execute("INSERT INTO public.event_participants(event_id, user_id) VALUES (%s::integer, %s);",
+                    (event_id, user_id))
 
-    event_loc_convert = '{{"latitude": {}, "longitude": {}}}'.format(event_loc[0], event_loc[1])
+        conn.commit()
+        return jsonify({'message': 'Successful'}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Internal Server Error'}), 500
 
+
+@app.route('/map/anzeigen/verlassen', methods=['DELETE'])
+def delete_particpant():
+    data = request.get_json()
+    user_id, event_loc_convert = get_user_map_data(data)
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT event_id FROM event WHERE event_loc = %s", (event_loc_convert,))
+        event_id = cur.fetchone()
+        cur.execute("DELETE FROM event_participants WHERE event_id = %s AND user_id = %s;", (event_id, user_id))
+
+        conn.commit()
+
+        return jsonify({'message': 'Successful'}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'Internal Server Error'}), 500
+
+
+@app.route('/map/anzeigen/delete', methods=['DELETE'])
+def delete_event(): #jetzt auch mit jwt
+    data = request.get_json()
+    user_id, event_loc_convert = get_user_map_data(data)
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT event_id FROM event WHERE event_loc = %s;", (event_loc_convert,))
         event_id_result = cur.fetchone()
 
-        if event_id_result is None:
-            return jsonify({'message': 'Kein event gefunden'}), 404  # Using 404 Not Found for consistency
-
         event_id = event_id_result[0]
 
-        # Execute each DELETE statement separately
-        cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
-        cur.execute("DELETE FROM event_point WHERE event_id = %s;", (event_id,))
-        cur.execute("DELETE FROM event WHERE event_id = %s;", (event_id,))
+        cur.execute("SELECT * FROM event WHERE event_id = %s AND creator_id = %s",
+                    (event_id, user_id))
+        created = cur.fetchone()
+        if created:
+             # Execute each DELETE statement separately
+            cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
+            cur.execute("DELETE FROM event_point WHERE event_id = %s;", (event_id,))
+            cur.execute("DELETE FROM event WHERE event_id = %s;", (event_id,))
+            cur.execute("DELETE FROM event_participants WHERE event_id = %s;", (event_id,))
+            cur.execute("DELETE FROM event_point WHERE event_id = %s;", (event_id,))
+            cur.execute("DELETE FROM event WHERE event_id = %s;", (event_id,))
 
-        conn.commit()  # Don't forget to commit your changes to the database
+            conn.commit()  # Don't forget to commit your changes to the database
 
-        return jsonify({'message': 'Successful'}), 200  # Using 200 OK for successful deletion
+            return jsonify({'message': 'Successful'}), 200  # Using 200 OK for successful deletion
+        else:
+            return jsonify({'message': 'No Permission'}), 505
     except Exception as e:
         print(e)
         return jsonify({'message': 'Internal Server Error'}), 500  # Return a 500 Internal Server Error on exception

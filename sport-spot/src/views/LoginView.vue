@@ -86,6 +86,7 @@ export default {
         usernameError: "",
         passwordError: "",
       },
+      captchaError: "",
       wheelAnimation: false,
       showCaptchaModal: false,
       errorMessage: null,
@@ -136,8 +137,8 @@ export default {
     validatePassword() {
       if (this.postData.password.length < 6) {
         this.validator.passwordError = "Password must be longer than 5 characters.";
-      } else if (this.postData.password.length > 14) {
-        this.validator.passwordError = "Password must be shorter than 14 characters.";
+      } else if (this.postData.password.length > 16) {
+        this.validator.passwordError = "Password must be shorter than 16 characters.";
       } else {
         this.validator.passwordError = "";
       }
@@ -206,8 +207,7 @@ export default {
     },
 
     handleCaptchaFail() {
-      // Show an error message and fetch a new captcha
-      // You might need to implement a method in CaptchaView.vue to refresh the captcha
+      this.displayError("niggaer");
     },
 
     async getExpirationTime() {

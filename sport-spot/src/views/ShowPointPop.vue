@@ -104,11 +104,12 @@ export default {
     },
     async enterEvent() {
       try {
+        let jwt = localStorage.getItem("jwt_token");
         const response = await axios.post(
           "http://127.0.0.1:5000/maps/anzeigen/teilnehmen",
           {
-            coords: this.coords,
-            user_id: this.user_id
+            coords: this.selectedEventCoordinates,
+            jwt: jwt
           }
         );
 
@@ -121,33 +122,36 @@ export default {
 
     async loadPointData() {
       try {
+        let jwt = localStorage.getItem("jwt_token");
         const response = await axios.post(
           "http://127.0.0.1:5000/maps/anzeigen",
           {
             coords: this.selectedEventCoordinates,
-
+            jwt: jwt
           }
         );
 
-        this.event_id = response.data["event_id"];
-        this.creator_email = response.data["creator_email"];
-        this.creator_firstname = response.data["creator_firstname"];
-        this.age = response.data["age"];
-        this.creator_id = response.data["creator_id"];
-        this.creator_surname = response.data["creator_surname"];
-        this.creator_username = response.data["creator_username"];
-        this.event_date = response.data["event_date"];
-        this.event_lat = response.data["event_loc"]["latitude"];
-        this.event_lon = response.data["event_loc"]["longitude"];
-        this.cur_participants = response.data["participants"];
-        this.sport = response.data["sport"];
-        this.difficulty = response.data["difficulty"];
-        this.description = response.data["description"];
-        this.maxParticipants = response.data["max_participants"];
-        this.duration = response.data["duration"];
+        this.event_id = response.data[0]["event_id"];
+        this.creator_email = response.data[0]["creator_email"];
+        this.creator_firstname = response.data[0]["creator_firstname"];
+        this.age = response.data[0]["age"];
+        this.creator_id = response.data[0]["creator_id"];
+        this.creator_surname = response.data[0]["creator_surname"];
+        this.creator_username = response.data[0]["creator_username"];
+        this.event_date = response.data[0]["event_date"];
+        this.event_lat = response.data[0]["event_loc"]["latitude"];
+        this.event_lon = response.data[0]["event_loc"]["longitude"];
+        this.cur_participants = response.data[0]["participants"];
+        this.sport = response.data[0]["sport"];
+        this.difficulty = response.data[0]["difficulty"];
+        this.description = response.data[0]["description"];
+        this.maxParticipants = response.data[0]["max_participants"];
+        this.duration = response.data[0]["duration"];
 
-        console.log(response.data);
-        console.log(response.data["age"]);
+        this.took_part = response.data[1];
+        //console.log(response);
+        //console.log(response.data);
+        //console.log(response.data["age"]);
       } catch (error) {
         console.log(error);
       }
