@@ -6,7 +6,7 @@
     <div class="info">
       <p><span>Name:</span> {{ firstname + " " + surname }}</p>
       <p><span>Email:</span> {{ email }}</p>
-      <p><span>Age:</span> {{ birthdate }}</p>
+      <p><span>Birthdate:</span> {{ birthdate }}</p>
       <p><span>Sports:</span> {{ sports }}</p>
       <p><span>Gender:</span> {{ gender }}</p>
       <p><span>Postal Code:</span> {{ postalcode }}</p>

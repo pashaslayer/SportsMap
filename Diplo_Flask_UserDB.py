@@ -491,7 +491,7 @@ def delete_particpant():
         return jsonify({'message': 'Internal Server Error'}), 500
 
 
-@app.route('/map/anzeigen/delete', methods=['DELETE'])
+@app.route('/map/anzeigen/delete', methods=['POST'])
 def delete_event(): #jetzt auch mit jwt
     data = request.get_json()
     user_id, event_loc_convert = get_user_map_data(data)
