@@ -12,16 +12,12 @@
     v-if="isAuthenticated"
     @click="redirectToProfile"
     class="btn position-absolute top-0 start-0 ms-0 mt-0"
-    style="margin-right: 1cm;"
+    style="margin-right: 1cm"
   >
     <!-- Font awesome icon -->
     <i class="fa-solid fa-user"></i> {{ username }}
   </button>
-  <button
-    v-if="isAuthenticated"
-    @click="logoutUser"
-    class="btn float-left"
-  >
+  <button v-if="isAuthenticated" @click="logoutUser" class="btn float-left">
     <!-- Font awesome icon -->
     <i class="fas fa-sign-out-alt"></i>
   </button>
@@ -42,7 +38,9 @@
     data-bs-backdrop="true"
   >
     <div class="offcanvas-header">
-      <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas"> <b>Menu</b> </h6>
+      <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">
+        <b>Menu</b>
+      </h6>
       <button
         type="button"
         class="btn-close text-reset"
@@ -169,14 +167,14 @@ export default {
     redirectToProfile() {
       this.$router.push("/profile");
     },
-    redirectToMap(){
+    redirectToMap() {
       this.$router.push("/map");
     },
-    logoutUser(){
+    logoutUser() {
       localStorage.clear();
-      this.checkJWTExpired()
+      this.checkJWTExpired();
       this.$router.push("/");
-    }
+    },
   },
 };
 </script>
@@ -203,8 +201,8 @@ nav {
   padding: 30px;
 }
 
-.offcanvas{
-  color: blue; 
+.offcanvas {
+  color: blue;
 }
 
 nav a {
