@@ -1,13 +1,18 @@
 <template>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
   <div class="container mt-5">
     <div class="row text-center mx-auto">
       <div class="col-md-12">
-        <img v-if="!wheelAnimation" src="@/assets/Logo_V3_1_final_noBG_white.svg"
-          class="rounded mx-auto d-block img-fluid" width="150px" height="100px" draggable="false" />
-        <img v-if="wheelAnimation" src="@/assets/Logo_V3_1_final_noBG_white.svg"
-          class="rounded mx-auto d-block wheel-animation img-fluid" width="150px" height="100px" draggable="false"
-          @animationend="stopWheelAnimation" />
+        <img
+          src="@/assets/Logo_V3_1_final_noBG_white.svg"
+          class="rounded mx-auto d-block img-fluid"
+          width="150px"
+          height="100px"
+          draggable="false"
+        />
         <h1 class="title">{{ title }}</h1>
       </div>
     </div>
@@ -15,23 +20,39 @@
     <!-- Für einen Abstand falls es so besser ausschaut -->
     <!-- <div class="row" style="height: 40px"></div> -->
 
-    <div class="row">
-      <div class="col-md-6 border border-white align-items-center d-flex justify-content-center">
-        <label for="username" class="form-label">Username:</label>
+    <div class="row justify-content-center">
+      <div
+        class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+      >
+        <label for="username" class="text-center">Username:</label>
       </div>
-      <div class="col-md-6 border border-white">
-        <input v-model="postData.username" type="text" class="form-control" id="username-label"
-          @input="validateUsername" />
+      <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+        <input
+          v-model="postData.username"
+          type="text"
+          class="form-control"
+          id="username-label"
+          @input="validateUsername"
+        />
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6 border border-white align-items-center d-flex justify-content-center">
-        <label for="password" class="form-label">Password: </label>
+    <div class="row justify-content-center">
+      <div
+        class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
+      >
+        <label for="password" class="text-center">Password: </label>
       </div>
-      <div class="col-md-6 border border-white">
-        <input v-model="postData.password" type="password" class="form-control" id="password-label"
-          aria-describedby="passwordHelp" required @input="validatePassword" />
+      <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
+        <input
+          v-model="postData.password"
+          type="password"
+          class="form-control"
+          id="password-label"
+          aria-describedby="passwordHelp"
+          required
+          @input="validatePassword"
+        />
       </div>
 
       <div class="d-flex justify-content-center">
@@ -61,7 +82,11 @@
   </button>
 
   <div v-if="showCaptchaModal" class="modal">
-    <CaptchaView @captcha-success="handleCaptchaSuccess" @captcha-fail="handleCaptchaFail" @close-modal="closeModal" />
+    <CaptchaView
+      @captcha-success="handleCaptchaSuccess"
+      @captcha-fail="handleCaptchaFail"
+      @close-modal="closeModal"
+    />
   </div>
 
   <transition name="fade">
@@ -86,8 +111,6 @@ export default {
         usernameError: "",
         passwordError: "",
       },
-      captchaError: "",
-      wheelAnimation: false,
       showCaptchaModal: false,
       errorMessage: null,
       showError: false,
@@ -136,9 +159,11 @@ export default {
 
     validatePassword() {
       if (this.postData.password.length < 6) {
-        this.validator.passwordError = "Password must be longer than 5 characters.";
+        this.validator.passwordError =
+          "Password must be longer than 5 characters.";
       } else if (this.postData.password.length > 16) {
-        this.validator.passwordError = "Password must be shorter than 16 characters.";
+        this.validator.passwordError =
+          "Password must be shorter than 16 characters.";
       } else {
         this.validator.passwordError = "";
       }
@@ -159,7 +184,7 @@ export default {
 
         setTimeout(() => {
           this.showError = false;
-        }, 3000); // Message will disappear after 3000 ms (3 seconds)
+        }, 3000);
       }
     },
     ////////// [END VALIDATION] //////////
@@ -168,8 +193,7 @@ export default {
       if (this.isFormValid()) {
         // only open the captcha if the form is valid
         this.showCaptchaModal = true;
-      }
-      else {
+      } else {
         // If the form still contains validation errors they should be shown
         this.collectErrorMessagesFromValidator();
       }
@@ -177,6 +201,25 @@ export default {
     closeModal() {
       this.showCaptchaModal = false;
     },
+    collectErrorMessagesFromValidator() {
+      let errorMessages = [];
+      for (let key in this.validator) {
+        if (this.validator[key] !== "") {
+          errorMessages.push(this.validator[key]);
+        }
+      }
+      if (errorMessages.length > 0) {
+        this.displayError(errorMessages);
+      }
+    },
+
+    handleCaptchaFail() {
+      console.log(
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      );
+      this.displayError("Failed to ");
+    },
+
     handleCaptchaSuccess() {
       // Hide Captcha modal
       this.showCaptchaModal = false;
@@ -194,64 +237,13 @@ export default {
           console.log(error);
         });
     },
-    collectErrorMessagesFromValidator() {
-      let errorMessages = [];
-      for (let key in this.validator) {
-        if (this.validator[key] !== "") {
-          errorMessages.push(this.validator[key]);
-        }
-      }
-      if (errorMessages.length > 0) {
-        this.displayError(errorMessages);
-      }
-    },
-
-    handleCaptchaFail() {
-      this.displayError("niggaer");
-    },
-
-    async getExpirationTime() {
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:5000/getExpirationTime",
-          {
-            token: localStorage.getItem("jwt_token"),
-          }
-        );
-        // convert to milliseconds
-        return response.data * 1000;
-      } catch (error) {
-        console.error("Error getting expiration time:", error);
-        throw error;
-      }
-    },
-    startWheelAnimation() {
-      this.wheelAnimation = true;
-    },
-    stopWheelAnimation() {
-      this.wheelAnimation = false;
-    },
     storeTokenInLocalStorage(token) {
       try {
         // Use a secure method to store the token in local storage
         localStorage.setItem("jwt_token", token);
-        // Optionally, store the token expiration time
-
-        // Send JWT Token for extracting expirationTime on server side due to security reasons
-
-        // const expirationTime = this.getExpirationTime();
-        // localStorage.setItem("jwt_token_exp", expirationTime);
       } catch (error) {
         console.error("Error storing token in local storage:", error);
       }
-    },
-    // Check for Token Expiration Date compare it with current time
-    isTokenExpired() {
-      const expirationTime = localStorage.getItem("jwt_token_exp");
-      if (expirationTime) {
-        return new Date().getTime() > parseInt(expirationTime, 10);
-      }
-      return true;
     },
   },
   components: {
@@ -282,8 +274,7 @@ export default {
 .fade-enter,
 .fade-leave-to
 
-/* .fade-leave-active in <2.1.8 */
-  {
+/* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
 
@@ -300,20 +291,7 @@ body {
   zoom: 100%;
 }
 
-.wheel-animation {
-  animation: wheelSpin 2s ease-in-out;
-}
-
 .error {
   color: red !important;
 }
-
-@keyframes wheelSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}</style>
+</style>

@@ -6,23 +6,13 @@
         <div class="col-md-12">
           <!-- draggable verhindert das verschieben von images -->
           <img
-            v-if="!wheelAnimation"
             src="@/assets/Logo_V3_1_final_noBG_white.svg"
             class="rounded mx-auto d-block img-fluid"
             width="150px"
             height="100px"
             draggable="false"
           />
-          <img
-            v-if="wheelAnimation"
-            src="@/assets/Logo_V3_1_final_noBG_white.svg"
-            class="rounded mx-auto d-block wheel-animation img-fluid"
-            width="150px"
-            height="100px"
-            draggable="false"
-            @animationend="stopWheelAnimation"
-          />
-          <h1>{{ title }}</h1>
+          <h1 class="title">{{ title }}</h1>
         </div>
       </div>
 
@@ -30,11 +20,11 @@
         <!-- @submit.prevent="postRegister"> -->
         <div class="row">
           <div
-            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
-            <label for="firstname" class="form-label">Firstname:</label>
+            <label for="firstname" class="text-center">Firstname:</label>
           </div>
-          <div class="col-md-2 border border-white">
+          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
             <input
               v-model="postData.firstname"
               type="text"
@@ -44,11 +34,11 @@
             />
           </div>
           <div
-            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
-            <label for="username" class="form-label">Username: </label>
+            <label for="username" class="text-center">Username: </label>
           </div>
-          <div class="col-md-2 border border-white">
+          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
             <!--Input Benutzername-->
             <input
               v-model="postData.username"
@@ -59,11 +49,11 @@
             />
           </div>
           <div
-            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
-            <label for="email-label" class="form-label">Email: </label>
+            <label for="email-label" class="text-center">Email: </label>
           </div>
-          <div class="col-md-2 border border-white">
+          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
             <!--Input Email-->
             <input
               v-model="postData.email"
@@ -79,11 +69,11 @@
         <!-- Third Row (6 Columns) -->
         <div class="row">
           <div
-            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
-            <label for="surname" class="form-label">Surname: </label>
+            <label for="surname" class="text-center">Surname: </label>
           </div>
-          <div class="col-md-2 border border-white">
+          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
             <!--Input Nachname-->
             <input
               v-model="postData.surname"
@@ -94,11 +84,11 @@
             />
           </div>
           <div
-            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
-            <label for="password" class="form-label">Password:</label>
+            <label for="password" class="text-center">Password:</label>
           </div>
-          <div class="col-md-2 border border-white d-flex align-items-center">
+          <div class="col-md-2 m-0 p-0 border bg-white border-white d-flex align-items-center rounded-end">
             <!-- Input Password -->
             <input
               v-model="postData.password"
@@ -119,11 +109,11 @@
             </button>
           </div>
           <div
-            class="col-md-2 border border-white align-items-center d-flex justify-content-center"
+            class="col-md-2 bg-info bg-opacity-25 border border-white rounded-start border-end align-items-center d-flex justify-content-center"
           >
-            <label for="postalcode" class="form-label">Postalcode: </label>
+            <label for="postalcode" class="text-center">Postalcode: </label>
           </div>
-          <div class="col-md-2 border border-white">
+          <div class="col-md-2 m-0 p-0 bg-white border border-white border-start-0 rounded-end">
             <!--Input Plz-->
             <input
               v-model="postData.postalcode"
@@ -461,12 +451,6 @@ export default {
       this.postData.firstname = "";
       this.postData.postalcode = "";
     },
-    startWheelAnimation() {
-      this.wheelAnimation = true;
-    },
-    stopWheelAnimation() {
-      this.wheelAnimation = false;
-    },
   },
 };
 </script>
@@ -510,14 +494,8 @@ img {
   user-select: none;
 }
 
-/* Logik für das Drehen vom Logo */
-@keyframes wheelSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.title {
+  user-select: none;
 }
 
 .error {
