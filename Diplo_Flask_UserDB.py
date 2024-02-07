@@ -471,7 +471,7 @@ def take_part():
         return jsonify({'message': 'Internal Server Error'}), 500
 
 
-@app.route('/map/anzeigen/verlassen', methods=['DELETE'])
+@app.route('/map/anzeigen/verlassen', methods=['POST'])
 def delete_particpant():
     data = request.get_json()
     user_id, event_loc_convert = get_user_map_data(data)

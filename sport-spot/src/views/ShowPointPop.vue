@@ -15,14 +15,15 @@
 
       <label for="difficulty">Difficulty: {{ difficulty }}</label>
 
-      <label for="participants">Participants: {{ participants }} / {{ maxParticipants }}</label>
+      <label for="participants">Participants: {{ cur_participants }} / {{ maxParticipants }}</label>
 
       <label> Description: {{ description }}</label>
 
       <label> Coordinates: {{ this.selectedEventCoordinates }}</label>
 
       <div class="buttons">
-        <button @click="enterEvent">Take part</button>
+        <button v-if="!this.took_part" @click="enterEvent">Take part</button>
+        <button v-if="this.took_part" class="button-delete" @click="leaveEvent">Leave Event</button>
         <button @click="closePointPopup">Close</button>
       </div>
     </div>
@@ -42,7 +43,6 @@ export default {
       sport: 0,
       duration: null,
       difficulty: "",
-      participants: 0,
       maxParticipants: "",
       description: "",
 
@@ -60,6 +60,8 @@ export default {
       event_lat: null,
       event_lon: null,
       cur_participants: null,
+
+      took_part: false
     };
   },
   watch: {
@@ -107,6 +109,24 @@ export default {
         let jwt = localStorage.getItem("jwt_token");
         const response = await axios.post(
           "http://127.0.0.1:5000/maps/anzeigen/teilnehmen",
+          {
+            coords: this.selectedEventCoordinates,
+            jwt: jwt
+          }
+        );
+
+        console.log(response);
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async leaveEvent() {
+      try {
+        let jwt = localStorage.getItem("jwt_token");
+        const response = await axios.post(
+          "http://127.0.0.1:5000/map/anzeigen/verlassen",
           {
             coords: this.selectedEventCoordinates,
             jwt: jwt

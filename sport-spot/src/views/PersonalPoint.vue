@@ -197,6 +197,7 @@ export default {
           console.log(response);
 
           this.closePersonalPopup();
+          this.$emit("loadmap");
         } catch (error) {
           console.log(error);
         }

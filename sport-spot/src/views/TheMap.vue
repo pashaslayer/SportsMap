@@ -1,14 +1,28 @@
 <template>
-  <ol-map ref="olMap" :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height: 800px">
-    <ol-view ref="view" :center="center" :zoom="zoom" :projection="projection" />
+  <ol-map
+    ref="olMap"
+    :loadTilesWhileAnimating="true"
+    :loadTilesWhileInteracting="true"
+    style="height: 800px"
+  >
+    <ol-view
+      ref="view"
+      :center="center"
+      :zoom="zoom"
+      :projection="projection"
+    />
 
     <ol-tile-layer ref="osmLayer" title="OSM">
       <ol-source-osm />
     </ol-tile-layer>
 
     <ol-control-bar>
-      <ol-toggle-control html="🔘" className="edit" title="Point"
-        :onToggle="(active) => changeDrawType(active, 'Point')" />
+      <ol-toggle-control
+        html="🔘"
+        className="edit"
+        title="Point"
+        :onToggle="(active) => changeDrawType(active, 'Point')"
+      />
       <!--
       <ol-toggle-control
         html="🔹"
@@ -28,7 +42,12 @@
     <ol-vector-layer ref="vectorLayer">
       <ol-source-vector ref="vectorSource" @change="source_change">
         <!-- Drwing interaction -->
-        <ol-interaction-draw v-if="drawEnable" :key="drawKey.value" :type="drawType" @drawend="drawend" />
+        <ol-interaction-draw
+          v-if="drawEnable"
+          :key="drawKey.value"
+          :type="drawType"
+          @drawend="drawend"
+        />
 
         <!-- Feature Selection Interaction -->
         <ol-interaction-select @select="featureSelected">
@@ -41,35 +60,33 @@
       </ol-style>
     </ol-vector-layer>
 
-    <popup-form 
-    :showPopup="showPopup" 
-    @handleclose="handlePopupClose" 
-    @sportIconChange="changeIcon"
-    @closePopup="closePopupOnly" 
-    @sendData="postMap"
+    <popup-form
+      :showPopup="showPopup"
+      @handleclose="handlePopupClose"
+      @sportIconChange="changeIcon"
+      @closePopup="closePopupOnly"
+      @sendData="postMap"
     ></popup-form>
 
-    <show-point-pop 
-    :showPopupPoint="showPopupPoint" 
-    :selectedEventCoordinates="selectedEventCoordinates"
-    @handlepointclose="handlePointPopupClose"
+    <show-point-pop
+      :showPopupPoint="showPopupPoint"
+      :selectedEventCoordinates="selectedEventCoordinates"
+      @handlepointclose="handlePointPopupClose"
     ></show-point-pop>
 
     <personal-point
-    :showPersonalPoint="showPersonalPoint"
-    :selectedEventCoordinates="selectedEventCoordinates"
-    @handlepersonalpointclose="handlePersonalPopupClose"
-    @loadmap="loadMap"
+      :showPersonalPoint="showPersonalPoint"
+      :selectedEventCoordinates="selectedEventCoordinates"
+      @handlepersonalpointclose="handlePersonalPopupClose"
+      @loadmap="loadMap"
     ></personal-point>
   </ol-map>
-
-
 
   <br />
 </template>
 
 <script setup>
-// blue symbols 
+// blue symbols
 import markerIcon from "../assets/symbols_blau/kreis_blau.svg";
 import cyclingIcon from "../assets/symbols_blau/cycling_kreis_blau.svg";
 import hikingIcon from "../assets/symbols_blau/hiking_kreis_blau.svg";
@@ -134,7 +151,7 @@ export default {
       showPersonalPoint: false,
 
       // Mypoints
-      my_points: []
+      my_points: [],
     };
   },
   mounted() {
@@ -162,8 +179,7 @@ export default {
       if (this.showPopup) {
         this.handlePointPopupClose();
         this.handlePersonalPopupClose();
-      }
-      else if (event.selected.length > 0) {
+      } else if (event.selected.length > 0) {
         const selectedFeature = event.selected[0];
         const geometry = selectedFeature.getGeometry();
 
@@ -175,28 +191,30 @@ export default {
         // here we can work with the selectedFeature
         this.selectedEventCoordinates = geometry.getCoordinates();
         console.log(this.selectedEventCoordinates);
-        
 
         if (selectedFeature["values_"]["myPoint"] == true) {
           // Opens the menu to edit / delete a personal made point
           this.showPersonalPoint = true;
           var myIconStyle = new Style({
             image: new Icon(
-              /** @type {olx.style.IconOptions} */({
-                src: this.convertIntToSport(selectedFeature["values_"]["sport"]+10),
+              /** @type {olx.style.IconOptions} */ ({
+                src: this.convertIntToSport(
+                  selectedFeature["values_"]["sport"] + 10
+                ),
                 scale: 0.08,
               })
             ),
           });
           selectedFeature.setStyle(myIconStyle);
-        }
-        else {
-          // Opens the menu watch / take part 
+        } else {
+          // Opens the menu watch / take part
           this.showPopupPoint = true;
           var iconStyle = new Style({
             image: new Icon(
-              /** @type {olx.style.IconOptions} */({
-                src: this.convertIntToSport(selectedFeature["values_"]["sport"]),
+              /** @type {olx.style.IconOptions} */ ({
+                src: this.convertIntToSport(
+                  selectedFeature["values_"]["sport"]
+                ),
                 scale: 0.08,
               })
             ),
@@ -211,14 +229,14 @@ export default {
       this.loadMap();
     },
     changeIcon(iconSource) {
-      let iconSourceInt = parseInt(iconSource)+10;
+      let iconSourceInt = parseInt(iconSource) + 10;
       let iconSrc = this.convertIntToSport(iconSourceInt);
       console.log("source: ");
       console.log(iconSrc);
 
       var iconStyle = new Style({
         image: new Icon(
-          /** @type {olx.style.IconOptions} */({
+          /** @type {olx.style.IconOptions} */ ({
             src: iconSrc,
             scale: 0.05,
           })
@@ -226,9 +244,16 @@ export default {
       });
       this.curFeature.setStyle(iconStyle);
     },
-    loadMap(){
+    loadMap() {
+      // Clear existing features from the vector source
+      if (this.olVectorSource) {
+        this.olVectorSource.clear();
+      }
+
+      // Refetch and render the updated list of points
       this.loadPoints();
     },
+
     convertIntToSport(value) {
       let sport = "";
       let valueToInt = parseInt(value);
@@ -298,7 +323,7 @@ export default {
     handlePointPopupClose() {
       this.showPopupPoint = false;
     },
-    handlePersonalPopupClose(){
+    handlePersonalPopupClose() {
       this.showPersonalPoint = false;
     },
     drawend(event) {
@@ -315,7 +340,7 @@ export default {
             this.coords = geometry.getCoordinates();
             console.log("Point coordinates:", this.coords);
             break;
-            /*
+          /*
           case "LineString":
             this.coords = geometry.getCoordinates();
             console.log("LineString coordinates:", this.coords);
@@ -345,9 +370,8 @@ export default {
         let jwt = localStorage.getItem("jwt_token");
 
         const response = await axios.post("http://127.0.0.1:5000/maps", {
-          jwt: jwt
-        }
-        );
+          jwt: jwt,
+        });
 
         response.data.events.forEach((element) => {
           let pointCor1 = element["event_loc"]["latitude"];
@@ -358,14 +382,14 @@ export default {
           var iconFeature = new Feature({
             geometry: new Point(geoData),
             sport: iconSourceInt,
-            myPoint: false
+            myPoint: false,
           });
 
           let iconSrc = this.convertIntToSport(iconSourceInt);
 
           var iconStyle = new Style({
             image: new Icon(
-              /** @type {olx.style.IconOptions} */({
+              /** @type {olx.style.IconOptions} */ ({
                 src: iconSrc,
                 scale: 0.05,
               })
@@ -385,14 +409,14 @@ export default {
           var iconFeature = new Feature({
             geometry: new Point(geoData),
             sport: iconSourceInt,
-            myPoint: true
+            myPoint: true,
           });
 
           let iconSrc = this.convertIntToSport(iconSourceInt + 10);
 
           var iconStyle = new Style({
             image: new Icon(
-              /** @type {olx.style.IconOptions} */({
+              /** @type {olx.style.IconOptions} */ ({
                 src: iconSrc,
                 scale: 0.05,
               })
@@ -444,7 +468,7 @@ export default {
   components: {
     PopupForm,
     ShowPointPop,
-    PersonalPoint
+    PersonalPoint,
   },
 };
 </script>
