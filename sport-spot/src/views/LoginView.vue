@@ -26,7 +26,9 @@
       >
         <label for="username" class="text-center">Username:</label>
       </div>
-      <div class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-start-0 rounded-end">
+      <div
+        class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-start-0 rounded-end"
+      >
         <input
           v-model="postData.username"
           type="text"
@@ -43,7 +45,9 @@
       >
         <label for="password" class="text-center">Password: </label>
       </div>
-      <div class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-top-0 border-start-0 rounded-end">
+      <div
+        class="col-md-2 m-0 p-0 bg-white border border-2 border-white border-top-0 border-start-0 rounded-end"
+      >
         <input
           v-model="postData.password"
           type="password"
@@ -64,12 +68,16 @@
     <div class="row" style="height: 20px"></div>
 
     <div class="row">
-      <div class="col-12 col-md-6 d-flex justify-content-md-end justify-content-center mb-2">
+      <div
+        class="col-12 col-md-6 d-flex justify-content-md-end justify-content-center mb-2"
+      >
         <button type="submit" class="btn btn-primary" @click="postLogin">
           Bestätigen
         </button>
       </div>
-      <div class="col-12 col-md-6 d-flex justify-content-md-start justify-content-center mb-2">
+      <div
+        class="col-12 col-md-6 d-flex justify-content-md-start justify-content-center mb-2"
+      >
         <button type="submit" class="btn btn-secondary">Abbrechen</button>
       </div>
     </div>

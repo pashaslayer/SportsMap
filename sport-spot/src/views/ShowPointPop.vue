@@ -115,6 +115,7 @@ export default {
           }
         );
 
+        this.loadPointData();
         console.log(response);
 
       } catch (error) {
@@ -133,6 +134,7 @@ export default {
           }
         );
 
+        this.loadPointData();
         console.log(response);
 
       } catch (error) {

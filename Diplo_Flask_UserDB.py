@@ -69,7 +69,7 @@ def get_user_map_data(data):
     user_id = dataset.get('user_id')
     return user_id, event_loc_convert
 
-
+# Funktion für die Ausgabe von Werten
 def printout(data):
     print(data)
 
@@ -604,6 +604,8 @@ def change_point():
         'duration': data['duration'],
     }
 
+    event_id = data['event_id']
+
     event_loc = dataset.get('event_loc')
     event_date = dataset.get('event_date')
     info = dataset.get('info')
@@ -625,6 +627,22 @@ def change_point():
                                                          event_loc_convert,))
         cur.execute("UPDATE event SET event_date = %s WHERE event_loc = %s;", (event_date, event_loc_convert,))
 
+        cur.execute(
+            "SELECT u.firstname, u.surname, u.Email, e.sport, c.firstname, c.surname "
+            "FROM event_point e "
+            "JOIN event_participants ep ON e.event_id = ep.event_id "
+            "JOIN users u ON ep.user_id = u.user_id "
+            "JOIN users c ON e.creator_id = c.user_id "
+            "WHERE e.event_id = %s",
+            (event_id,)
+        )
+        participants = cur.fetchall()
+
+        # Iterate over each record
+        for participant in participants:
+            email, subject, body = smtp.prepare_mail_change_event(participant, event_date, duration)  
+            smtp.send_mail(email, body, subject)
+          
         conn.commit()
         return jsonify({'message': 'Successful'}), 200
     except Exception as e:

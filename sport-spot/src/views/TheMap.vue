@@ -149,9 +149,6 @@ export default {
 
       // Edit / delete single coordinate
       showPersonalPoint: false,
-
-      // Mypoints
-      my_points: [],
     };
   },
   mounted() {
@@ -400,7 +397,6 @@ export default {
         });
 
         response.data.my_events.forEach((elementt) => {
-          this.my_points.push(elementt);
           let pointCor1 = elementt["event_loc"]["latitude"];
           let pointCor2 = elementt["event_loc"]["longitude"];
           let iconSourceInt = elementt["sport"];
@@ -451,6 +447,8 @@ export default {
             description: description,
             coords: this.coords,
           });
+
+          this.loadPoints();
           // Ausgabe von Typ und geoDaten
           console.log("Type:", this.type);
           console.log("Coordinates:", this.coords);

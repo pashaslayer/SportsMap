@@ -42,7 +42,7 @@
       </div>
       <div v-else>
         <label for="participants"
-          >Participants: {{ participants }} / {{ maxParticipants }}</label
+          >Participants: {{ cur_participants }} / {{ maxParticipants }}</label
         >
       </div>
 
@@ -86,7 +86,6 @@ export default {
       sport: 0,
       duration: null,
       difficulty: "",
-      participants: 0,
       maxParticipants: "",
       description: "",
 
@@ -208,6 +207,7 @@ export default {
         const response = await axios.post(
           "http://127.0.0.1:5000/maps/change",
           {
+            event_id: this.event_id,
             coords: this.selectedEventCoordinates,
             startdate: this.event_datetime,
             difficulty: this.difficulty,
