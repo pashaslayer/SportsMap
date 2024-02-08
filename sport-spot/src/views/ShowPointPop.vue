@@ -5,7 +5,8 @@
 
       <h4>Organisator:</h4>
       <label for="creator_firstname">
-        Name: {{ creator_firstname + " " }} {{ creator_surname }}</label>
+        Name: {{ creator_firstname + " " }} {{ creator_surname }}</label
+      >
       <label for="email">Email: {{ creator_email }}</label>
       <label for="age">Age: {{ age }}</label>
 
@@ -15,7 +16,9 @@
 
       <label for="difficulty">Difficulty: {{ difficulty }}</label>
 
-      <label for="participants">Participants: {{ cur_participants }} / {{ maxParticipants }}</label>
+      <label for="participants"
+        >Participants: {{ cur_participants }} / {{ maxParticipants }}</label
+      >
 
       <label> Description: {{ description }}</label>
 
@@ -23,7 +26,9 @@
 
       <div class="buttons">
         <button v-if="!this.took_part" @click="enterEvent">Take part</button>
-        <button v-if="this.took_part" class="button-delete" @click="leaveEvent">Leave Event</button>
+        <button v-if="this.took_part" class="button-delete" @click="leaveEvent">
+          Leave Event
+        </button>
         <button @click="closePointPopup">Close</button>
       </div>
     </div>
@@ -61,7 +66,7 @@ export default {
       event_lon: null,
       cur_participants: null,
 
-      took_part: false
+      took_part: false,
     };
   },
   watch: {
@@ -73,15 +78,6 @@ export default {
   methods: {
     closePointPopup() {
       this.$emit("handlepointclose");
-    },
-    formatDatetime(originalDatetimeStr) {
-      // Convert the string to a Date object
-      const originalDatetime = new Date(originalDatetimeStr);
-      const formattedDatetimeStr = originalDatetime
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-      return formattedDatetimeStr;
     },
     convertSportIdToString() {
       var sportInString = "";
@@ -111,13 +107,12 @@ export default {
           "http://127.0.0.1:5000/maps/anzeigen/teilnehmen",
           {
             coords: this.selectedEventCoordinates,
-            jwt: jwt
+            jwt: jwt,
           }
         );
 
         this.loadPointData();
         console.log(response);
-
       } catch (error) {
         console.log(error);
       }
@@ -130,13 +125,12 @@ export default {
           "http://127.0.0.1:5000/map/anzeigen/verlassen",
           {
             coords: this.selectedEventCoordinates,
-            jwt: jwt
+            jwt: jwt,
           }
         );
 
         this.loadPointData();
         console.log(response);
-
       } catch (error) {
         console.log(error);
       }
@@ -149,7 +143,7 @@ export default {
           "http://127.0.0.1:5000/maps/anzeigen",
           {
             coords: this.selectedEventCoordinates,
-            jwt: jwt
+            jwt: jwt,
           }
         );
 
@@ -171,10 +165,6 @@ export default {
         this.duration = response.data[0]["duration"];
 
         this.took_part = response.data[1];
-        //console.log(response);
-        //console.log(response.data);
-        //console.log(response.data["age"]);
-        console.log(response.data[0]["participants"]);
       } catch (error) {
         console.log(error);
       }
@@ -212,15 +202,6 @@ export default {
 label {
   margin-bottom: 5px;
   font-weight: bold;
-}
-
-input[type="number"],
-select {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
 }
 
 #description {

@@ -85,7 +85,9 @@ export default {
   max-width: 400px;
   margin: auto;
   margin-top: 50vh; /* This pushes the top of the container to the middle of the viewport */
-  transform: translateY(-90%); /* This pulls the container back up by half its own height */
+  transform: translateY(
+    -90%
+  ); /* This pulls the container back up by half its own height */
   background-color: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

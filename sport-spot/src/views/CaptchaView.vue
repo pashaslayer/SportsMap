@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" style="display: block;">
+  <div class="modal" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -9,21 +9,36 @@
           </button>
         </div>
         <div class="modal-body">
-          <div v-if="svg" v-html="svg" class="captcha-image" @click="fetchCaptcha"></div>
-          <input v-model="compare.input" type="text" class="form-control mt-3" required placeholder="Enter Captcha Here" />
-          <p v-if="compare.input.length < 5 || compare.input.length > 5" class="text-danger mt-2">
+          <div
+            v-if="svg"
+            v-html="svg"
+            class="captcha-image"
+            @click="fetchCaptcha"
+          ></div>
+          <input
+            v-model="compare.input"
+            type="text"
+            class="form-control mt-3"
+            required
+            placeholder="Enter Captcha Here"
+          />
+          <p
+            v-if="compare.input.length < 5 || compare.input.length > 5"
+            class="text-danger mt-2"
+          >
             Input should be exactly 5 characters.
           </p>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" @click="compareCaptcha">Send</button>
+          <button type="submit" class="btn btn-primary" @click="compareCaptcha">
+            Send
+          </button>
         </div>
       </div>
     </div>
   </div>
   <div class="modal-backdrop"></div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -54,21 +69,21 @@ export default {
       }
     },
     async compareCaptcha() {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:5000/compareInput",
-        this.compare
-      );
-      if (response.status == 201) {
-        this.$emit('captcha-success');
-      } else {
-        this.$emit('captcha-fail');
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/compareInput",
+          this.compare
+        );
+        if (response.status == 201) {
+          this.$emit("captcha-success");
+        } else {
+          this.$emit("captcha-fail");
+        }
+      } catch (error) {
+        console.error("Error comparing captcha:", error);
+        this.fetchCaptcha();
       }
-    } catch (error) {
-      console.error("Error comparing captcha:", error);
-      this.fetchCaptcha();
-    }
-  },
+    },
   },
 };
 </script>
@@ -86,8 +101,8 @@ export default {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-.modal-title{
-  color:#0056b3;
+.modal-title {
+  color: #0056b3;
 }
 
 .modal-content {
@@ -98,7 +113,8 @@ export default {
   max-width: 500px;
 }
 
-.modal-header, .modal-footer {
+.modal-header,
+.modal-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;

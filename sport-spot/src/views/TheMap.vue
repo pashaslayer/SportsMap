@@ -23,20 +23,6 @@
         title="Point"
         :onToggle="(active) => changeDrawType(active, 'Point')"
       />
-      <!--
-      <ol-toggle-control
-        html="🔹"
-        className="edit"
-        title="Polygon"
-        :onToggle="(active) => changeDrawType(active, 'Polygon')"
-      />
-      <ol-toggle-control
-        html="〰️"
-        className="edit"
-        title="LineString"
-        :onToggle="(active) => changeDrawType(active, 'LineString')"
-      />
-      -->
     </ol-control-bar>
 
     <ol-vector-layer ref="vectorLayer">
@@ -133,8 +119,6 @@ export default {
       drawKey: 0,
       map: null, // Referenz zur OpenLayers-Karte
       vectorLayer: null, // Referenz zum VectorLayer
-
-      symbolLink: "",
 
       // features
       features: [],
@@ -337,16 +321,6 @@ export default {
             this.coords = geometry.getCoordinates();
             console.log("Point coordinates:", this.coords);
             break;
-          /*
-          case "LineString":
-            this.coords = geometry.getCoordinates();
-            console.log("LineString coordinates:", this.coords);
-            break;
-          case "Polygon":
-            this.coords = geometry.getCoordinates()[0];
-            console.log("Polygon coordinates:", this.coords);
-            break;
-            */
           default:
             console.log("Unknown geometry type");
         }

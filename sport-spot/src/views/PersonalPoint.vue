@@ -57,7 +57,9 @@
 
       <div class="buttons">
         <button v-if="!edit" @click="editPoint">Edit</button>
-        <button v-if="edit" class="button-save" @click="changePoint">Save</button>
+        <button v-if="edit" class="button-save" @click="changePoint">
+          Save
+        </button>
         <button @click="closePersonalPopup">Close</button>
         <button v-if="edit" class="button-delete" @click="deleteEvent">
           Delete
@@ -76,7 +78,6 @@ export default {
     selectedEventCoordinates: Array,
   },
   watch: {
-    // Dieser watcher schaut auf Änderungen von den Koordinaten und macht dann einen call zur Datenbank
     selectedEventCoordinates() {
       this.loadPointData();
     },
@@ -89,12 +90,6 @@ export default {
       maxParticipants: "",
       description: "",
 
-      // User
-      //creator_id: null,
-      //age: null,
-      //creator_email: "",
-      //creator_firstname: "",
-      //creator_surname: "",
       creator_username: "",
 
       // Event
@@ -114,15 +109,6 @@ export default {
     },
     editPoint() {
       this.edit = true;
-    },
-    formatDatetime(originalDatetimeStr) {
-      // Convert the string to a Date object
-      const originalDatetime = new Date(originalDatetimeStr);
-      const formattedDatetimeStr = originalDatetime
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-      return formattedDatetimeStr;
     },
     convertSportIdToString() {
       var sportInString = "";
@@ -152,10 +138,9 @@ export default {
           "http://127.0.0.1:5000/maps/anzeigen",
           {
             coords: this.selectedEventCoordinates,
-            jwt: jwt
+            jwt: jwt,
           }
         );
-        console.log(this.selectedEventCoordinates);
 
         this.event_id = response.data[0]["event_id"];
         //this.creator_email = response.data["creator_email"];
@@ -173,15 +158,11 @@ export default {
         this.description = response.data[0]["description"];
         this.maxParticipants = response.data[0]["max_participants"];
         this.duration = response.data[0]["duration"];
-
-        console.log(response.data);
-
       } catch (error) {
         console.log(error);
       }
     },
     async deleteEvent() {
-      /* false / true values */
       let result = confirm("Do you really want to delete the event?");
       if (result) {
         try {
@@ -190,7 +171,7 @@ export default {
             "http://127.0.0.1:5000/map/anzeigen/delete",
             {
               coords: this.selectedEventCoordinates,
-              jwt: jwt
+              jwt: jwt,
             }
           );
           console.log(response);
@@ -204,18 +185,15 @@ export default {
     },
     async changePoint() {
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:5000/maps/change",
-          {
-            event_id: this.event_id,
-            coords: this.selectedEventCoordinates,
-            startdate: this.event_datetime,
-            difficulty: this.difficulty,
-            description: this.description,
-            participants: this.maxParticipants,
-            duration: this.duration,
-          }
-        );
+        const response = await axios.post("http://127.0.0.1:5000/maps/change", {
+          event_id: this.event_id,
+          coords: this.selectedEventCoordinates,
+          startdate: this.event_datetime,
+          difficulty: this.difficulty,
+          description: this.description,
+          participants: this.maxParticipants,
+          duration: this.duration,
+        });
         console.log(response);
         this.closePersonalPopup();
         this.edit = false;
@@ -234,13 +212,11 @@ export default {
   top: 50px;
   right: 50px;
   z-index: 1000;
-  /* Ensure it's above the map */
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: darkblue;
   width: 300px;
-  /* Adjust as needed */
 }
 
 .popup-content {

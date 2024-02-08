@@ -638,7 +638,6 @@ def change_point():
         )
         participants = cur.fetchall()
 
-        # Iterate over each record
         for participant in participants:
             email, subject, body = smtp.prepare_mail_change_event(participant, event_date, duration)  
             smtp.send_mail(email, body, subject)
@@ -734,16 +733,6 @@ def compare_captcha_input():
 ###########
 # JWT TOKEN
 ###########
-'''
-@app.route("/getTimeFromJWT", methods=["GET"])
-def get_user_from_jwt():
-    jwt_data = request
-    payload = decode_token(jwt_data)
-    print(payload)
-    return payload["exp"]
-
-'''
-
 
 @app.route("/jwt/isExpired", methods=["POST"])
 def get_expired():
