@@ -172,6 +172,7 @@ export default {
         //console.log(response);
         //console.log(response.data);
         //console.log(response.data["age"]);
+        console.log(response.data[0]["participants"]);
       } catch (error) {
         console.log(error);
       }

@@ -11,6 +11,7 @@ from flask_cors import CORS
 from psycopg2.extras import Json
 
 from Captcha.first_main import *
+import smtp as smtp 
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -55,11 +56,8 @@ def decode_token(token):
 def get_user_map_data(data):
     if not data:
         return jsonify({'message': f'Bad Request: Keine Daten'}), 400
-    print(data)
     jwt_data = data.get('jwt')
-    print(jwt_data)
     payload = decode_token(jwt_data)
-    print(payload)
     dataset = {
         'event_loc': data['coords'],
         'user_id': payload['user_id'],
@@ -70,6 +68,10 @@ def get_user_map_data(data):
 
     user_id = dataset.get('user_id')
     return user_id, event_loc_convert
+
+
+def printout(data):
+    print(data)
 
 
 @app.route('/login', methods=['POST'])
@@ -406,6 +408,8 @@ def event_anzeigen(): #jetzt auch mit jwt
                         "participants": event[15]
                     }
 
+                    printout(output_dict)
+
                 else:
                     return jsonify({"message": "Event not found"}), 404
 
@@ -460,9 +464,27 @@ def take_part():
         full = cur.fetchall()
         if full:
             return jsonify({'message': 'Event ist Voll'}), 404
+        
+        cur.execute("INSERT INTO public.event_participants(event_id, user_id) VALUES (%s, %s);",
+            (event_id, user_id))
 
-        cur.execute("INSERT INTO public.event_participants(event_id, user_id) VALUES (%s::integer, %s);",
-                    (event_id, user_id))
+        cur.execute("SELECT u.firstname, u.surname, u.Email, e.event_date, e.sport, e.duration, c.firstname, c.surname "
+                    "FROM event_participants ep "
+                    "JOIN Users u ON ep.user_id = u.user_id "
+                    "RIGHT JOIN event_point e ON ep.event_id = e.event_id "
+                    "RIGHT JOIN users c ON e.creator_id = c.user_id "
+                    "WHERE ep.event_id = %s AND ep.user_id = %s "
+                    "GROUP BY u.firstname, u.surname, u.Email, e.event_date, e.sport, e.duration, c.firstname, c.surname;"
+                    , (event_id, user_id))
+        smtp_data = cur.fetchone()
+
+        email, subject, body = smtp.prepare_mail(smtp_data)
+        smtp.send_mail(email, body, subject)
+
+        # Email data
+        printout(email)
+        printout(body)
+
 
         conn.commit()
         return jsonify({'message': 'Successful'}), 200

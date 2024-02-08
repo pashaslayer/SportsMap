@@ -39,3 +39,37 @@ def send_mail(to, send_body, send_subject):
         print(f"Failed to send email: {e}")
 
 
+def prepare_mail(data):
+    vorname = data[0]
+    nachname = data[1]
+    email = data[2]
+    datum_Event = data[3].strftime("%Y-%m-%d %H:%M")
+    sport = data[4]
+    duration = data[5]
+    vorname_creator = data[6]
+    nachname_creator = data[7]
+
+    subject = "Vielen Dank für Ihre Teilnahme am Event"
+    body = f"""Sehr geehrte/r {vorname} {nachname},
+
+    Vielen Dank, dass Sie sich für das Event am {datum_Event} angemeldet haben. Wir freuen uns, Sie dabei zu haben!
+
+    Hier sind die Details zum Event:
+    - Sportart: {sport}
+    - Datum und Uhrzeit: {datum_Event}
+    - Dauer: {duration} Stunden
+
+    Das Event wurde von {vorname_creator} {nachname_creator} organisiert.
+
+    Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+
+    Mit freundlichen Grüßen,
+    [SportSpot]"""
+
+    print(body)
+    print(subject)
+    print(email)
+
+    return email, subject, body
+
+
