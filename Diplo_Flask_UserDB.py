@@ -478,7 +478,8 @@ def take_part():
                     , (event_id, user_id))
         smtp_data = cur.fetchone()
 
-        email, subject, body = smtp.prepare_mail(smtp_data)
+        # Verschicken einer Email
+        email, subject, body = smtp.prepare_mail_enter_event(smtp_data)
         smtp.send_mail(email, body, subject)
 
         # Email data
@@ -503,7 +504,24 @@ def delete_particpant():
         cur = conn.cursor()
         cur.execute("SELECT event_id FROM event WHERE event_loc = %s", (event_loc_convert,))
         event_id = cur.fetchone()
+
+
+        cur.execute("SELECT u.firstname, u.surname, u.Email, e.event_date, e.sport, e.duration, c.firstname, c.surname "
+            "FROM event_participants ep "
+            "JOIN Users u ON ep.user_id = u.user_id "
+            "RIGHT JOIN event_point e ON ep.event_id = e.event_id "
+            "RIGHT JOIN users c ON e.creator_id = c.user_id "
+            "WHERE ep.event_id = %s AND ep.user_id = %s "
+            "GROUP BY u.firstname, u.surname, u.Email, e.event_date, e.sport, e.duration, c.firstname, c.surname;"
+            , (event_id, user_id))
+        
+        smtp_data = cur.fetchone()
+
         cur.execute("DELETE FROM event_participants WHERE event_id = %s AND user_id = %s;", (event_id, user_id))
+
+        # Verschicken einer Email
+        email, subject, body = smtp.prepare_mail_leave_event(smtp_data)
+        smtp.send_mail(email, body, subject)
 
         conn.commit()
 
