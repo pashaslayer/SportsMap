@@ -1,2 +1,2 @@
-# SportSpot
+# SportsMap
 Diplomarbeitsprojekt

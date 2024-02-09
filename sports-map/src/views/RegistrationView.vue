@@ -217,7 +217,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      title: "SportSpot Registrierung",
+      title: "SportsMap Registrierung",
       postData: {
         firstname: "",
         surname: "",

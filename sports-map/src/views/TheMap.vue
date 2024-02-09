@@ -102,7 +102,7 @@ import Point from "ol/geom/Point.js";
 export default {
   data() {
     return {
-      title: "SportSpot Map",
+      title: "SportsMap Map",
       type: "",
       coordinates: [],
       showPopup: false,

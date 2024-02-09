@@ -3,14 +3,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Sender and recipient email addresses
-sender_email = "sportspotaustria@outlook.com"
-receiver_email = "pavel.khakhlou@gmx.at"
+sender_email = "sportsmapaustria@outlook.com"
 
 # SMTP server configuration
 smtp_server = "smtp-mail.outlook.com"
 smtp_port = 587  # For SSL, use 465
-smtp_user = "sportspotaustria@outlook.com"
-smtp_password = "4jGpP5GsQXUF9R9"
+smtp_user = "sportsmapaustria@outlook.com"
+smtp_password = "g_g3aWJAM!YD6ns"
 
 
 
@@ -77,7 +76,7 @@ def prepare_mail_enter_event(data):
     Bei Fragen stehen wir Ihnen gerne zur Verfügung.
 
     Mit freundlichen Grüßen,
-    [SportSpot]"""
+    [SportsMap]"""
 
     print(body)
     print(subject)
@@ -113,7 +112,7 @@ def prepare_mail_leave_event(data):
     Wir hoffen, Sie bald bei einem unserer zukünftigen Events begrüßen zu dürfen und wünschen Ihnen bis dahin alles Gute.
 
     Mit freundlichen Grüßen,
-    [SportSpot]"""
+    [SportsMap]"""
 
 
     print(body)
@@ -145,7 +144,7 @@ def prepare_mail_change_event(data, new_date, new_duration):
     Wir danken Ihnen für Ihr Verständnis und Ihre Flexibilität.
 
     Mit freundlichen Grüßen,
-    [SportSpot]"""
+    [SportsMap]"""
 
     print(body)
     print(subject)

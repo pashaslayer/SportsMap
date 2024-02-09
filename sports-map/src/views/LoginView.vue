@@ -110,7 +110,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      title: "SportSpot Login",
+      title: "SportsMap Login",
       postData: {
         username: "",
         password: "",
