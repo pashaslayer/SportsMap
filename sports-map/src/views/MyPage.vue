@@ -8,7 +8,7 @@
       <p><span>Email:</span> {{ email }}</p>
       <p><span>Birthdate:</span> {{ birthdate }}</p>
       <p><span>Sports:</span> {{ sports }}</p>
-      <p><span>Gender:</span> {{ gender }}</p>
+      <p><span>Gender:</span> {{ this.getGender(gender) }}</p>
       <p><span>Postal Code:</span> {{ postalcode }}</p>
     </div>
     <div class="actions">
@@ -34,6 +34,10 @@ export default {
     };
   },
   methods: {
+    getGender(input) {
+      const genderMap = { m: "male", f: "female", o: "other" };
+      return genderMap[input] || "Invalid input";
+    },
     async getUserData() {
       try {
         let jwt = localStorage.getItem("jwt_token");
