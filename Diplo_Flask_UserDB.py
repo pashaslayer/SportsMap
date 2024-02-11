@@ -277,7 +277,6 @@ def event_hinzuegen():
     data = request.get_json()
     if not data:
         return jsonify({'message': f'Bad Request: Keine Daten'}), 400
-    print(data)
     jwt_data = data.get('jwt')
     payload = decode_token(jwt_data)
 
@@ -303,8 +302,6 @@ def event_hinzuegen():
     max_participants = dataset.get('participants')
     duration = dataset.get('duration')
     difficulty = dataset.get('difficulty')
-
-    print(dataset)
 
     if None in [event_loc, sport, creator_id, event_date, type, event_name]:
         return jsonify({'message': 'Bad Request: Fehlende Daten'}), 400
@@ -407,8 +404,6 @@ def event_anzeigen(): #jetzt auch mit jwt
                         "creator_email": event[14],
                         "participants": event[15]
                     }
-
-                    printout(output_dict)
 
                 else:
                     return jsonify({"message": "Event not found"}), 404

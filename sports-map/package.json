@@ -16,7 +16,6 @@
     "bootstrap": "^5.3.2",
     "core-js": "^3.8.3",
     "node-git-hooks": "^1.0.7",
-    "vee-validate": "^4.12.5",
     "vue": "^3.3.8",
     "vue-loader": "^15.0.0",
     "vue-router": "^4.0.3",
