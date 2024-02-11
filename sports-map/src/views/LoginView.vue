@@ -222,10 +222,7 @@ export default {
     },
 
     handleCaptchaFail() {
-      console.log(
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      );
-      this.displayError("Failed to ");
+      this.displayError("Failed to handle Captcha");
     },
 
     handleCaptchaSuccess() {

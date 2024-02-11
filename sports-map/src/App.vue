@@ -104,16 +104,29 @@
     ></i>
   </button>
   <br />
+
+  <privacy-policies-pop
+    :showPopupPolicies="showPopupPolicies"
+    @handlepoliciespopupclose="handlePoliciesPopupClose"
+  ></privacy-policies-pop>
+
   <router-view />
+
+
 </template>
 
 <script>
 import axios from "axios";
+import PrivacyPoliciesPop from "./views/PrivacyPoliciesPop.vue";
 
 export default {
+  components: {
+    PrivacyPoliciesPop,
+  },
   data() {
     return {
       isAuthenticated: false,
+      showPopupPolicies: true,
       username: "",
     };
   },
@@ -163,6 +176,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    handlePoliciesPopupClose() {
+      this.showPopupPolicies = false;
     },
     redirectToProfile() {
       this.$router.push("/profile");

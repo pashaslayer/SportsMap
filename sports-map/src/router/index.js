@@ -92,7 +92,7 @@ const routes = [
         next('/login');
       }
     },
-  },
+  },  
 
   // for every other route it should redirect back to the home page
   {

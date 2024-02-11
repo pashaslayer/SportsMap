@@ -477,11 +477,6 @@ def take_part():
         email, subject, body = smtp.prepare_mail_enter_event(smtp_data)
         smtp.send_mail(email, body, subject)
 
-        # Email data
-        printout(email)
-        printout(body)
-
-
         conn.commit()
         return jsonify({'message': 'Successful'}), 200
     except Exception as e:
