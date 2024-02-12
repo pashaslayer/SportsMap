@@ -9,8 +9,8 @@
       </p>
       <div class="policy-links">
         <!-- target="_blank => opens a new window"-->
-        <a href="./../assets/privacy-policy.pdf" @click="openPdf">Datenschutzerklärung</a> |
-        <router-link to="/about" @click="handleImpressum">About</router-link>
+        <a href="privacy-policy.pdf" target="_blank"> Datenschutzerklärung </a> |
+        <router-link to="/about" @click="handleImpressum"> About </router-link>
       </div>
       <div class="cookie-options">
         <div class="cookie-option">
@@ -61,11 +61,6 @@ export default {
     handleImpressum(){
       this.closePopup();
     },
-    openPdf() {
-      const pdfPath = '../assets/privacy-policy.pdf';
-      const pdfUrl = `${window.location.origin}/${pdfPath}`;
-            window.open(pdfUrl, '_blank');
-    },
     savePreferences() {
       // Logic to save preferences
       this.closePopup();
@@ -87,18 +82,18 @@ export default {
 
 <style>
 .popup-form {
-  background-color: #fff; /* changed from lightblue to white */
-  position: fixed; /* changed from absolute to fixed */
+  background-color: #fff;
+  position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* this centers the popup */
+  transform: translate(-50%, -50%);
   z-index: 1000;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #333; /* changed from darkblue to a softer dark color */
-  width: 50%; /* changed to a percentage to adapt to different screen sizes */
-  max-width: 500px; /* maximum width of the popup */
+  color: #333; 
+  width: 50%;
+  max-width: 500px; 
 }
 
 .popup-content {
@@ -145,8 +140,8 @@ button {
 
 .policy-links {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px; /* Add some space before the cookie options */
+  justify-content: end;
+  margin-bottom: 10px; 
 }
 
 .policy-links a {
