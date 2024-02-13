@@ -1,6 +1,6 @@
 <template>
-  <div v-if="showPopupPolicies" class="popup-form">
-    <div class="popup-content">
+  <div v-if="showPopupPolicies" class="popup-form-privacy">
+    <div class="popup-content-privacy">
       <h2>Privatsphäre-Einstellungen</h2>
       <p>
         Diese Seite nutzt Website-Tracking-Technologien von Dritten, um ihre
@@ -9,8 +9,8 @@
       </p>
       <div class="policy-links">
         <!-- target="_blank => opens a new window"-->
-        <a href="privacy-policy.pdf" target="_blank"> Datenschutzerklärung </a> |
-        <router-link to="/about" @click="handleImpressum"> About </router-link>
+        <a href="privacy_policy.pdf" target="_blank"> Datenschutzerklärung </a> |
+        <router-link to="/about" target="_blank"> About </router-link>
       </div>
       <div class="cookie-options">
         <div class="cookie-option">
@@ -58,9 +58,6 @@ export default {
     closePopup() {
       this.$emit("handlepoliciespopupclose");
     },
-    handleImpressum(){
-      this.closePopup();
-    },
     savePreferences() {
       // Logic to save preferences
       this.closePopup();
@@ -74,14 +71,13 @@ export default {
     acceptAll() {
       this.acceptMarketing = true;
       this.acceptFunctional = true;
-      this.savePreferences();
     },
   },
 };
 </script>
 
 <style>
-.popup-form {
+.popup-form-privacy {
   background-color: #fff;
   position: fixed;
   top: 50%;
@@ -96,13 +92,13 @@ export default {
   max-width: 500px; 
 }
 
-.popup-content {
+.popup-content-privacy {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.popup-content h3 {
+.popup-content-privacy h3 {
   margin-top: 0;
 }
 
@@ -140,7 +136,7 @@ button {
 
 .policy-links {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin-bottom: 10px; 
 }
 
