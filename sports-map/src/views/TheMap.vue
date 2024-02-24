@@ -67,7 +67,6 @@
       @loadmap="loadMap"
     ></personal-point>
   </ol-map>
-
   <br />
 </template>
 

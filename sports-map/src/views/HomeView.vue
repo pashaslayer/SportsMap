@@ -8,6 +8,9 @@
       />
       <h1 class="headline">SportsMap</h1>
     </div>
+    <!--<p>{{ tets }}</p>
+    <button v-on:click="deleteJWTFromLocalStorage">Clear Local Storage</button>
+    -->
 
     <div class="bottom-section">
       <div class="text-content">
@@ -77,10 +80,9 @@ body {
   overflow-x: hidden;
 }
 
-body,
-html {
+body, html{
   max-height: 100vh;
-  overflow: hidden;
+  overflow:auto;
 }
 
 .home {
@@ -91,7 +93,7 @@ html {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   max-width: 100%;
 }
 

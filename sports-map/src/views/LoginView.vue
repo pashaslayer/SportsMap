@@ -17,9 +17,6 @@
       </div>
     </div>
 
-    <!-- Für einen Abstand falls es so besser ausschaut -->
-    <!-- <div class="row" style="height: 40px"></div> -->
-
     <div class="row justify-content-center">
       <div
         class="col-md-2 bg-info bg-opacity-25 border border-2 border-white rounded-start border-end align-items-center d-flex justify-content-center"
@@ -186,8 +183,7 @@ export default {
     },
     displayError(messages) {
       if (Array.isArray(messages) && messages.length > 0) {
-        // Join messages into a single string, separated by line breaks, or handle them as per your UI requirement
-        this.errorMessage = messages.join("\n"); // or "<br/>" if you plan to display them in HTML
+        this.errorMessage = messages.join("\n"); 
         this.showError = true;
 
         setTimeout(() => {
@@ -226,10 +222,8 @@ export default {
     },
 
     handleCaptchaSuccess() {
-      // Hide Captcha modal
       this.showCaptchaModal = false;
 
-      // Proceed with sending login data
       axios
         .post("http://127.0.0.1:5000/login", this.postData)
         .then((response) => {
@@ -244,7 +238,6 @@ export default {
     },
     storeTokenInLocalStorage(token) {
       try {
-        // Use a secure method to store the token in local storage
         localStorage.setItem("jwt_token", token);
       } catch (error) {
         console.error("Error storing token in local storage:", error);

@@ -131,11 +131,9 @@ export default {
     };
   },
   mounted() {
-    // Call the checkJWTExpired method every 2 seconds
     this.interval = setInterval(this.checkJWTExpired, 2000);
   },
   beforeUnmount() {
-    // Clear the interval when the component is destroyed
     clearInterval(this.interval);
   },
   methods: {
@@ -143,19 +141,19 @@ export default {
       try {
         let jwt = localStorage.getItem("jwt_token");
         if (!jwt) {
-          this.isAuthenticated = false; // Update isAuthenticated if no token
+          this.isAuthenticated = false; 
           return;
         }
         const response = await axios.post(
           "http://127.0.0.1:5000/jwt/isExpired",
           { jwt: jwt }
         );
-        // Update isAuthenticated based on the expiration status
         this.getNickname();
-        this.isAuthenticated = !response.data.expired;
+        this.isAuthenticated = true;
+        console.log(response.data.expired);
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          this.isAuthenticated = false; // Ensure isAuthenticated is updated on error
+          this.isAuthenticated = false; 
           clearInterval(this.interval);
           alert("Your session has expired, please login again");
           setTimeout(() => {
