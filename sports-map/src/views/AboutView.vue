@@ -116,24 +116,24 @@ export default {
 
 .developer-image {
   width: 100%;
-  max-width: 200px; /* Maximale Breite für die Bilder */
+  max-width: 200px; 
   height: auto;
-  border-radius: 8px; /* Alle vier Ecken abgerundet */
+  border-radius: 8px; 
 }
 
 .text-container {
-  padding-top: 10px; /* Platz über dem Text, damit er nicht direkt am Bildrand liegt */
+  padding-top: 10px; 
 }
 
 .project-info {
-  margin-top: 40px; /* Abstand über dem Abschnitt "Ausgangslage" */
+  margin-top: 40px; 
 }
 
 .impressum {
-  background-color: white; /* Hintergrund des Impressums weiß */
+  background-color: white; 
   padding: 20px;
   border-radius: 8px;
-  margin-top: 40px; /* Abstand über dem Impressumsblock */
+  margin-top: 40px; 
 }
 
 .impressum h3,

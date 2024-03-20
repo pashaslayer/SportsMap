@@ -260,10 +260,8 @@ export default {
   padding: 10px;
   border-radius: 5px;
   z-index: 1000;
-  /* Make sure it's above other elements */
 }
 
-/* Define the fade transition */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -277,7 +275,6 @@ export default {
 }
 
 img {
-  /* Verhindert das Auswählen vom image */
   user-select: none;
 }
 

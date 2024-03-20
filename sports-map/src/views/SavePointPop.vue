@@ -113,12 +113,12 @@ export default {
   position: absolute;
   top: 50px;
   left: 50px;
-  z-index: 1000; /* Ensure it's above the map */
+  z-index: 1000; 
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: darkblue;
-  width: 300px; /* Adjust as needed */
+  width: 300px; 
 }
 
 .popup-content {
