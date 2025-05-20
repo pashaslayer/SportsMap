@@ -36,3 +36,6 @@ Images:
 
 ![grafik](https://github.com/user-attachments/assets/c47bd1ef-1735-411a-a821-11837d467e3d)
 
+![grafik](https://github.com/user-attachments/assets/5a4db75d-2ea5-44e2-a1ef-b9fde0260b94)
+
+
