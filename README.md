@@ -36,6 +36,7 @@ Images:
 
 ![grafik](https://github.com/user-attachments/assets/c47bd1ef-1735-411a-a821-11837d467e3d)
 
-![grafik](https://github.com/user-attachments/assets/5a4db75d-2ea5-44e2-a1ef-b9fde0260b94)
+![grafik](https://github.com/user-attachments/assets/3e82ddd1-2671-4360-ae5a-5194c3f8bc7c)
+
 
 
